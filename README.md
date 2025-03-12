@@ -8,7 +8,6 @@ This is the frontend application for Nappio, a reusable nappy subscription servi
 - [Running the Development Server](#running-the-development-server)
 - [Building the Project](#building-the-project)
 - [Deployment](#deployment)
-- [Folder Structure](#folder-structure)
 
 ## Prerequisites
 
