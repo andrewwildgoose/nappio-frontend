@@ -1,61 +1,38 @@
-# Nappio Frontend
+# sv
 
-This is the frontend application for Nappio, a reusable nappy subscription service. The frontend is built with **SvelteKit** and is responsible for handling the user interface, interacting with the backend API, and delivering a smooth and responsive experience for customers.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Development Server](#running-the-development-server)
-- [Building the Project](#building-the-project)
-- [Deployment](#deployment)
+## Creating a project
 
-## Prerequisites
-
-Before running the frontend application, ensure you have the following installed on your machine:
-- **Node.js** (v16.8 or later) - [Download Node.js](https://nodejs.org/)
-- **Git** - [Download Git](https://git-scm.com/)
-
-## Installation
-
-### 1. Clone the repository to your local machine:
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-git clone git@github.com:your-username/nappio-frontend.git
-cd nappio-frontend
+# create a new project in the current directory
+npx sv create
+
+# create a new project in my-app
+npx sv create my-app
 ```
-### 2. Install the required dependencies:
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-    npm install
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
 
-## Running the Development Server
+## Building
 
-To start the development server and view the application locally:
-
-### 1.Run the following command:
-
-```bash
-    npm run dev
-```
-
-### 2. Open your browser and go to http://localhost:3000 to see the app in action. The app will automatically reload if you make changes to the code.
-
-## Building the Project
-
-To build the project for production, use the following command:
+To create a production version of your app:
 
 ```bash
 npm run build
 ```
 
-This will generate a static site in the build/ directory, which can be deployed to any static hosting service (like Netlify or Vercel).
-Deployment
+You can preview the production build with `npm run preview`.
 
-The frontend is deployed using Netlify. After pushing changes to your GitHub repository, Netlify will automatically build and deploy the application.
-
-## Deployment Steps:
-
-- Push your changes to the main branch of the repository.
-- Netlify will automatically detect changes and begin the deployment process.
-- You can monitor the deployment status in the Netlify dashboard.
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
