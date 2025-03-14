@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Ranchers&display=swap');
 @import 'tailwindcss';
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import 'flowbite';
 @plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/typography'; */
+
+@theme {
+    --color-dark-turqiose: #264653;
+    --color-teal: #2A9D8F;
+    --color-warm-mustard: #E9C46A;
+    --color-pale-orange: #F4A261;
+    --color-terracotta: #E76F5;
+
+    --font-ranchers: 'Ranchers', cursive;
+}
