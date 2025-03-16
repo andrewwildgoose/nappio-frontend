@@ -57,7 +57,7 @@
 </style>
 
 
-<div class="flex flex-col items-center justify-center m-20">
+<div class="flex flex-col items-center justify-center">
     <h1 
         class="font-ranchers text-6xl text-warm-mustard fade-in"
         class:move-up={animate}
