@@ -17,7 +17,7 @@
         height: 0;
         border-left: 50px solid transparent;
         border-right: 50px solid transparent;
-        border-top: 50px solid #e9c46a;
+        border-top: 50px solid #FAB700;
         animation: bounce 0.5s;
         animation-direction: alternate;
         animation-timing-function: cubic-bezier(.5, 0.05, 1, .5);
@@ -73,7 +73,7 @@
     class:fade-in={animate}
     >
     <h1 
-        class="font-ranchers text-6xl text-terracotta"
+        class="font-ranchers text-6xl text-tertiary"
     >
         but how does it work...?
     </h1>

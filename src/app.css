@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Ranchers&display=swap');
+@import 'flowbite';
 @import 'tailwindcss';
+
+@plugin 'flowbite/plugin';
 
 /* @tailwind base;
 @tailwind components;
@@ -9,11 +12,25 @@
 @plugin '@tailwindcss/typography'; */
 
 @theme {
-    --color-dark-turqiose: #264653;
+    --color-dark-turquoise: #264653;
     --color-teal: #2A9D8F;
     --color-warm-mustard: #E9C46A;
     --color-pale-orange: #F4A261;
     --color-terracotta: #E76F51;
 
+    --color-uranian-blue: #B1D4FC;
+    --color-viridian: #4f8a6e;
+    --color-hunter-green: #31654C;
+    --color-selective-yellow: #FAB700;
+    --color-penn-blue: #161A56;
+
+    --color-primary: var(--color-uranian-blue);
+    --color-secondary: var(--color-viridian);
+    --color-tertiary: var(--color-hunter-green);
+    --color-accent: var(--color-selective-yellow);
+    --color-dark-blue: var(--color-penn-blue);
+
     --font-ranchers: 'Ranchers', cursive;
 }
+
+@source "../node_modules/flowbite-svelte/dist";

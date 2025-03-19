@@ -59,7 +59,7 @@
 
 <div class="flex flex-col items-center justify-center">
     <h1 
-        class="font-ranchers text-6xl text-warm-mustard fade-in"
+        class="font-ranchers text-6xl text-accent fade-in"
         class:move-up={animate}
     >
         nappio
@@ -70,19 +70,19 @@
         class:fade-out={fadeOut}
         >
         <h2 
-            class="font-ranchers text-3xl text-pale-orange"
+            class="font-ranchers text-3xl text-secondary"
             class:fade-out={fadeOut}
             >
                 ethical.
         </h2>
         <h2 
-            class="font-ranchers text-3xl text-dark-turqiose"
+            class="font-ranchers text-3xl text-dark-blue"
             class:fade-out={fadeOut}
             >
                 stylish.
         </h2>
         <h2 
-            class="font-ranchers text-3xl text-terracotta"
+            class="font-ranchers text-3xl text-tertiary"
             class:fade-out={fadeOut}
             >
                 clean

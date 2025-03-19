@@ -50,13 +50,13 @@
         class:move-right={animate}
         class:fade-in={animate}
         >
-        <div class="w-96 h-80 absolute top-0 right-0 z-0 border-solid border-4 border-pale-orange rounded-sm">
+        <div class="w-96 h-80 absolute top-0 right-0 z-0 border-solid border-4 border-dark-blue rounded-sm">
             <img 
                 src="/images/product_example_1.jpg" 
                 alt="product example 1" 
                 class="h-full w-full object-cover">        
         </div>
-        <div class="w-96 h-80 absolute bottom-0 left-0 z-1 border-solid border-4 border-warm-mustard rounded-sm">
+        <div class="w-96 h-80 absolute bottom-0 left-0 z-1 border-solid border-4 border-accent rounded-sm">
             <img 
                 src="/images/product_example_2.jpg" 
                 alt="product example 2" 
@@ -65,7 +65,7 @@
     </div>
     <div>
         <p 
-            class="font-ranchers text-5xl text-pale-orange hidden"
+            class="font-ranchers text-5xl text-tertiary hidden"
             class:move-left={animate}
             class:fade-in={animate}
             >
