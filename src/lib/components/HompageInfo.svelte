@@ -65,14 +65,14 @@
     </div>
     <div>
         <p 
-            class="font-ranchers text-5xl text-tertiary hidden"
+            class="font-commissioner text-2xl text-text-colour hidden"
             class:move-left={animate}
             class:fade-in={animate}
             >
-            the reusable nappy<br>
+            The reusable nappy<br>
             service for people who<br>
             don't have time for<br>
-            reusable nappies
+            reusable nappies.
         </p>
     </div>
 </div>

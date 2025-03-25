@@ -70,19 +70,19 @@
         class:fade-out={fadeOut}
         >
         <h2 
-            class="font-ranchers text-3xl text-secondary"
+            class="font-commissioner text-3xl text-text-colour"
             class:fade-out={fadeOut}
             >
                 ethical.
         </h2>
         <h2 
-            class="font-ranchers text-3xl text-dark-blue"
+            class="font-commissioner text-3xl text-text-colour"
             class:fade-out={fadeOut}
             >
                 stylish.
         </h2>
         <h2 
-            class="font-ranchers text-3xl text-tertiary"
+            class="font-commissioner text-3xl text-text-colour"
             class:fade-out={fadeOut}
             >
                 clean

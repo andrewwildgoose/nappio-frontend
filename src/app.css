@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Ranchers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap');
 @import 'flowbite';
 @import 'tailwindcss';
 
@@ -30,7 +31,13 @@
     --color-accent: var(--color-selective-yellow);
     --color-dark-blue: var(--color-penn-blue);
 
+    --color-text-colour: #333132;
+
     --font-ranchers: 'Ranchers', cursive;
+    --font-serif: var(--font-ranchers);
+    --font-commissioner: 'Commissioner', sans-serif;
+    --font-sans: var(--font-commissioner);
+
 }
 
 @source "../node_modules/flowbite-svelte/dist";
