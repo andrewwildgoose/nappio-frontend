@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-    <div class="h-screen w-full p-10 bg-primary items-center justify-center">
+    <div class="h-screen w-full p-10 bg-background items-center justify-center">
         <EmailForm {form} />
     </div>
 </div>

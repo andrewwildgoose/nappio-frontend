@@ -13,23 +13,35 @@
 @plugin '@tailwindcss/typography'; */
 
 @theme {
+    /* 70s colours */
     --color-dark-turquoise: #264653;
     --color-teal: #2A9D8F;
     --color-warm-mustard: #E9C46A;
     --color-pale-orange: #F4A261;
     --color-terracotta: #E76F51;
 
+    /* Rosa colours 1 */
     --color-uranian-blue: #B1D4FC;
     --color-viridian: #4f8a6e;
     --color-hunter-green: #31654C;
     --color-selective-yellow: #FAB700;
     --color-penn-blue: #161A56;
+    
+    /* muted colours 1 */
+    --color-soft-green: #A8D5BA;
+    --color-soft-blue: #B4E0F1;
+    --color-muted-mustard: #F7C873;
+    --color-terracotta2: #F2A1A1;
+    --color-off-white: #F7F5E7;
+    --color-dark-turquoise2: #1E656D;
 
-    --color-primary: var(--color-uranian-blue);
-    --color-secondary: var(--color-viridian);
-    --color-tertiary: var(--color-hunter-green);
-    --color-accent: var(--color-selective-yellow);
-    --color-dark-blue: var(--color-penn-blue);
+    /* Main palette */
+    --color-primary: var(--color-soft-green);
+    --color-secondary: var(--color-soft-blue);
+    --color-tertiary: var(--color-muted-mustard);
+    --color-accent: var(--color-dark-turquoise2);
+    --color-accent2: var(--color-terracotta2);
+    --color-background: var(--color-off-white);
 
     --color-text-colour: #333132;
 
@@ -38,6 +50,12 @@
     --font-commissioner: 'Commissioner', sans-serif;
     --font-sans: var(--font-commissioner);
 
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--color-text-colour);
+    background-color: var(--color-background);
 }
 
 @source "../node_modules/flowbite-svelte/dist";
