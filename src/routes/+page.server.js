@@ -1,6 +1,5 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
-
 
 export const actions = {
     subscribe: async ({ request }) => {
@@ -13,34 +12,41 @@ export const actions = {
             const response = await fetch(`${BACKEND_API_URL}/newsletter/subscribe`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ first_name, email, postcode: postcode ? postcode.toUpperCase() : '' })
+                body: JSON.stringify({ first_name, email, postcode: postcode ? postcode.toUpperCase() : '' }),
             });
 
             const result = await response.json();
-            
-            console.log('result', result);
 
-            if (!response.ok) {
-                console.log('response', response);
-                return fail(400, {
-                    error: result.detail,
-                    first_name,
-                    email,
-                    postcode
-                });
+            // Handle successful subscription
+            if (response.ok) {
+                console.log('Subscription successful:', result);
+                return { success: true, status: 303, location: '/success' };
             }
 
-            return { success: true };
-        } catch (error) {
-            console.log('error', error);
-            return fail(500, {
-                error: 'Server error occurred',
+            // Handle expected errors (validation, duplicate email, etc.)
+            console.log('Error from backend:', result.detail);
+            let errorMessage;
+            
+            if (typeof result.detail === 'string') {
+                errorMessage = result.detail;
+            } else if (Array.isArray(result.detail)) {
+                errorMessage = result.detail.map((err) => err.msg).join(', ');
+            } else {
+                errorMessage = 'An unknown error occurred';
+            }
+
+            return fail(response.status, {
+                error: errorMessage,
                 first_name,
                 email,
-                postcode
+                postcode,
             });
+
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            throw redirect(303, '/error');
         }
-    }
+    },
 };

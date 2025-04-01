@@ -1,7 +1,6 @@
 <script>
     import StartAnimation from '../lib/components/StartAnimation.svelte';
     import HompageInfo from '$lib/components/HompageInfo.svelte';
-    import How from '$lib/components/How.svelte';
 
     import EmailForm from "$lib/components/EmailForm.svelte";
     export let form; // This receives form data from the server
@@ -15,6 +14,7 @@
             animate = true;
         }, 3000); // Small delay before animation starts
     });
+
 </script>
 
 <style>
