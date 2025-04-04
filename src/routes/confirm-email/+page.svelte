@@ -8,7 +8,6 @@
         message?: string;
         error?: string;
     };
-    console.log('Email:', data.email);
 </script>
 
 <div class="flex flex-col items-center justify-center h-screen bg-background text-text-colour">

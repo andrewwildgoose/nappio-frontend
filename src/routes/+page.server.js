@@ -14,7 +14,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ first_name, email, postcode: postcode ? postcode.toUpperCase() : '' }),
+                body: JSON.stringify({ first_name, email, postcode: postcode ? postcode.toUpperCase() : postcode }),
             });
 
             const result = await response.json();
@@ -22,7 +22,10 @@ export const actions = {
             // Handle successful subscription
             if (response.ok) {
                 console.log('Subscription successful:', result);
-                return { success: true, status: 303, location: '/success' };
+                return {
+                    success: true,
+                    email: email
+                };
             }
 
             // Handle expected errors (validation, duplicate email, etc.)
