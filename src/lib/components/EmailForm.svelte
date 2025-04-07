@@ -23,14 +23,14 @@
     }
 </script>
 
-<div class="flex flex-col items-center justify-center m-5">
+<div class="flex flex-col items-center justify-center m-5 w-full max-w-screen-sm">
     <form 
         method="POST" 
         action="?/subscribe" 
-        class="flex flex-col items-center justify-center"
+        class="flex flex-col items-center justify-center w-full max-w-screen-sm"
         use:enhance={handleSubmit}
     >
-        <div class="w-96 mb-6">
+        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
             <Label for="first_name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Enter your first name
             </Label>
@@ -44,7 +44,7 @@
                 placeholder="Type your first name here" 
             />
         </div>        
-        <div class="w-96 mb-6">
+        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
             <Label for="email-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Enter your email address
             </Label>
@@ -60,7 +60,7 @@
             />
         </div>
 
-        <div class="w-96 mb-6">
+        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
             <Label for="postcode-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Enter your postcode area (first 3-4 letters)
             </Label>
