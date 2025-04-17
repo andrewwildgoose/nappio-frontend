@@ -68,7 +68,7 @@ export const actions = {
             if (response.ok) {
                 console.log('Subscription successful:', result);
                 return {
-                    success: true,
+                    status: 'success',
                     email: email // Return success status and email
                 };
             }

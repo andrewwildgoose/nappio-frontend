@@ -1,21 +1,26 @@
-import { createClient } from '@supabase/supabase-js'
+// This file is used to handle server-side logic in a SvelteKit application.
 import type { Handle } from '@sveltejs/kit';
-import { SUPABASE_URL, SUPABASE_KEY } from '$env/static/private';
+import { supabase } from "$lib/server/supabaseClient";
+import { updateUserStore } from '$lib/stores/auth';
 
-// Initialize Supabase client
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
-// Handle function runs on every request to the server
 export const handle: Handle = async ({ event, resolve }) => {
-    // Get the current user session from Supabase
-    const session = await supabase.auth.getSession();
-    
-    // Add the user object to event.locals for use throughout the app
-    // If no session exists, user will be null
-    event.locals.user = session.data.session?.user || null;
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-    // Continue with the request and get the response
+    if (error) {
+        console.error('Session error:', error);
+    }
+
+    // Make session and user available to all routes
+    event.locals.session = session;
+    event.locals.user = session?.user || null;
+
+    event.locals.supabase = supabase;
+
+    // Update the user store if we have a session
+    if (session?.user) {
+        updateUserStore(session.user);
+    }
+
     const response = await resolve(event);
-
-	return response;
+    return response;
 };
