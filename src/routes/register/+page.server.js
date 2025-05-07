@@ -10,7 +10,7 @@ export const actions = {
         const postcode = data.get('postcode');
 
         try {
-            const response = await fetch(`${BACKEND_API_URL}/newsletter/subscribe`, {
+            const response = await fetch(`${BACKEND_API_URL}/api/v1/newsletter/subscribe`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

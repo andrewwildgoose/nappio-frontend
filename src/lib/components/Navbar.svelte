@@ -3,7 +3,9 @@
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-primary md:bg-transparent md:text-primary";
-    let nonActiveClass = "text-secondary hover:bg-accent md:hover:bg-transparent md:border-0 md:hover:text-accent";
+    let nonActiveClass = "text-text-colour hover:bg-transparent md:hover:bg-transparent md:border-0 md:hover:text-accent";
+    const ulClasses = "bg-background dark:bg-background text-text-colour dark:text-text-colour rounded-lg border border-text-colour dark:border-text-colour md:border-none md:dark:border-none divide-text-colour dark:divide-text-colour flex flex-col p-4 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:text-l md:font-medium";
+
 </script>
 
 <Navbar class="bg-background dark:bg-background border-text-colour dark:border-text-colour md:bg-background dark:md:bg-background md:border-text-colour dark:md:border-text-colour">
@@ -17,8 +19,8 @@
             </h1>
         </span>
     </NavBrand>
-    <NavHamburger />
-    <NavUl {activeUrl} {activeClass} {nonActiveClass}>
+    <NavHamburger/>
+    <NavUl ulClass={ulClasses} {activeUrl} {activeClass} {nonActiveClass}>
         <NavLi href="/">Home</NavLi>
         <NavLi href="/plans">Subscription plans</NavLi>
         <NavLi href="/register">Newsletter</NavLi>

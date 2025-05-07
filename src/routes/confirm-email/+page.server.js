@@ -13,7 +13,7 @@ export async function load({ url }) {
 
     try {
         console.log(JSON.stringify({ email }))
-        const response = await fetch(`${BACKEND_API_URL}/newsletter/verify`, {
+        const response = await fetch(`${BACKEND_API_URL}/api/v1/newsletter/verify`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

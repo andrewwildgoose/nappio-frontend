@@ -1,12 +1,22 @@
 <script lang="ts">
     import type { Plan } from '$lib/types/plans';
     import { Button, Card } from 'flowbite-svelte';
+    import { user } from '$lib/stores/auth';
+    import { goto } from '$app/navigation';
 
     export let plans: Plan[] = [];
     export let error: string | null = null;
 
     function formatPrice(price: number): string {
         return `£${(price / 100).toFixed(2)}`;
+    }
+
+    function handleSubscribe(stripeLink: string) {
+        if (!$user) {
+            goto('/signin');
+            return;
+        }
+        window.location.href = stripeLink;
     }
 </script>
 
@@ -42,7 +52,7 @@
                                 <td class="p-4">{formatPrice(plan.price)}</td>
                                 <td class="p-4">
                                     <Button
-                                        href={plan.stripe_link}
+                                        on:click={() => handleSubscribe(plan.stripe_link)}
                                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
                                     >
                                         Subscribe

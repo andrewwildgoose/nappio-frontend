@@ -9,6 +9,7 @@ export const load: PageServerLoad = async () => {
         .order('sort_order');
 
     if (error) {
+        console.log('Error fetching subscription plans:', error.message);
         return {
             plans: [],
             error: error.message

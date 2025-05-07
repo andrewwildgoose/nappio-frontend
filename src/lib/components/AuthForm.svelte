@@ -45,7 +45,7 @@
     }
 </script>
 
-<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-8">
+<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8">
     <div class="w-full flex justify-center mb-6">
         <Button
             color="light"
@@ -70,7 +70,7 @@
         use:enhance={handleSubmit}
     >
         {#if isSignUp}
-            <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
+            <div class="w-full sm:w-96 mb-6 px-0">
                 <Label for="first-name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     First Name
                 </Label>
@@ -86,7 +86,7 @@
                 />
             </div>
 
-            <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
+            <div class="w-full sm:w-96 mb-6 px-0">
                 <Label for="surname-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     Surname
                 </Label>
@@ -102,7 +102,7 @@
                 />
             </div>
 
-            <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
+            <div class="w-full sm:w-96 mb-6 px-0">
                 <Label for="postcode-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     Postcode
                 </Label>
@@ -119,7 +119,7 @@
             </div>
         {/if}
 
-        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
+        <div class="w-full sm:w-96 mb-6 px-0">
             <Label for="email-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Email address
             </Label>
