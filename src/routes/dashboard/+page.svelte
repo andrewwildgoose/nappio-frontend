@@ -2,21 +2,22 @@
     import type { PageData } from './$types';
     import { Button } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
+    import { goto } from '$app/navigation';
+    import { handleSignOut } from '$lib/stores/auth';
 
     export let data: PageData;
 
-    async function handleSignOut() {
-        const response = await fetch('/api/auth', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ action: 'signout' })
-        });
-
-        if (response.ok) {
-            window.location.href = '/signin';
-        }
+    async function handleSignoutSubmit() {
+        return async () => {
+            console.log('Client: Starting signout process');
+            try {
+                await handleSignOut();
+                console.log('Client: Signout successful, redirecting');
+                await goto('/signin');
+            } catch (error) {
+                console.error('Client: Signout error:', error);
+            }
+        };
     }
 </script>
 
@@ -32,12 +33,19 @@
             </div>
 
             <div class="flex justify-end">
-                <Button 
-                    on:click={handleSignOut}
-                    class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-xl rounded-none transition-colors duration-200"
+                <form 
+                    action="/signin?/auth" 
+                    method="POST" 
+                    use:enhance={handleSignoutSubmit}
                 >
-                    Sign Out
-                </Button>
+                    <input type="hidden" name="type" value="signout">
+                    <Button 
+                        type="submit"
+                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-xl rounded-none transition-colors duration-200"
+                    >
+                        Sign Out
+                    </Button>
+                </form>
             </div>
         </div>
     </div>

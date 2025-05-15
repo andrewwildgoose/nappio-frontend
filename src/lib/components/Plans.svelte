@@ -1,22 +1,29 @@
 <script lang="ts">
     import type { Plan } from '$lib/types/plans';
-    import { Button, Card } from 'flowbite-svelte';
-    import { user } from '$lib/stores/auth';
-    import { goto } from '$app/navigation';
+    import { Button } from 'flowbite-svelte';
+    import { enhance } from '$app/forms';
 
     export let plans: Plan[] = [];
     export let error: string | null = null;
+    let isLoading = false;
+
+    function handleSubscribe() {
+        isLoading = true;
+        return async ({ result }: { result: { type: string; data: { checkout_url?: string; error?: string } } }) => {
+            try {
+                if (result.type === 'success' && result.data.checkout_url) {
+                    window.location.href = result.data.checkout_url;
+                } else if (result.type === 'failure') {
+                    error = result.data?.error || 'Failed to create checkout session';
+                }
+            } finally {
+                isLoading = false;
+            }
+        };
+    }
 
     function formatPrice(price: number): string {
         return `£${(price / 100).toFixed(2)}`;
-    }
-
-    function handleSubscribe(stripeLink: string) {
-        if (!$user) {
-            goto('/signin');
-            return;
-        }
-        window.location.href = stripeLink;
     }
 </script>
 
@@ -51,12 +58,24 @@
                                 <td class="p-4 text-text-colour text-left">{plan.description}</td>
                                 <td class="p-4">{formatPrice(plan.price)}</td>
                                 <td class="p-4">
+                                    <form 
+                                    action="?/subscribe" 
+                                    method="POST" 
+                                    use:enhance={handleSubscribe}
+                                >
+                                    <input type="hidden" name="priceId" value={plan.stripe_price_id}>
                                     <Button
-                                        on:click={() => handleSubscribe(plan.stripe_link)}
+                                        type="submit"
+                                        disabled={isLoading}
                                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
                                     >
-                                        Subscribe
+                                        {#if isLoading}
+                                            Creating checkout...
+                                        {:else}
+                                            Subscribe
+                                        {/if}
                                     </Button>
+                                </form>
                                 </td>
                             </tr>
                         {/each}

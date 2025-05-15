@@ -25,6 +25,10 @@
         isSubmitting = true;
         return async ({ result }) => {
             try {
+                if (result.type === 'redirect') {
+                    return; // Let SvelteKit handle the redirect
+                }
+                
                 if (result.type === 'success' && result.data?.success) {
                     if (result.data.message) {
                         form = result.data;
@@ -33,9 +37,9 @@
                     }
                 } else if (result.type === 'failure') {
                     form = {
-                        error: 'Invalid login credentials',
-                        invalidCredentials: true,
-                        email: result.data?.[2] // Capture the email from the error response
+                        error: result.data?.error || 'An error occurred',
+                        invalidCredentials: result.status === 400,
+                        email: result.data?.email
                     };
                 }
             } finally {

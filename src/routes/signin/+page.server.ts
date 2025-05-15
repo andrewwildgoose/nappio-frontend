@@ -1,7 +1,6 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/server/supabaseClient';
-import type { PageServerLoad } from './$types';
-import type { Actions } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 import { requireUnauth } from '$lib/server/auth-helper';
 
 export const load: PageServerLoad = async (event) => {
@@ -9,70 +8,107 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions = {
-    auth: async ({ request, url }) => {
+    auth: async ({ request, locals: { supabase }, url }) => {
         const data = await request.formData();
-        const email = data.get('email') as string;
-        const password = data.get('password') as string;
-        const type = data.get('type') as 'signin' | 'signup';
+        const type = data.get('type') as 'signin' | 'signup' | 'signout';
+
+        console.log('[Server] Processing auth action:', { type });
 
         try {
-            if (type === 'signup') {
-                const first_name = data.get('first_name') as string;
-                const surname = data.get('surname') as string;
-                const postcode = data.get('postcode') as string;
-
-                const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            first_name,
-                            surname,
-                            postcode: postcode.toUpperCase()
-                        },
-                        emailRedirectTo: `${url.origin}/auth/callback`
+            switch (type) {
+                case 'signout': {
+                    console.log('[Server] Processing signout');
+                    const { error } = await supabase.auth.signOut();
+                    
+                    if (error) {
+                        console.error('[Server] Signout error:', error);
+                        return fail(500, { error: error.message });
                     }
-                });
 
-                if (authError) {
-                    return fail(400, {
-                        error: authError.message,
-                        email,
-                        first_name,
-                        surname,
-                        postcode
-                    });
+                    console.log('[Server] Signout successful');
+                    return { success: true, signedOut: true };
                 }
 
-                return {
-                    success: true,
-                    message: 'Check your email for the confirmation link!',
-                    email
-                };
-            } else {
-                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
+                case 'signup':
+                    return handleSignup({ data, url });
 
-                if (authError) {
-                    return fail(400, {
-                        error: authError.message,
-                        email
-                    });
+                case 'signin':
+                    return handleSignin({ data });
+
+                default:
+                    return fail(400, { error: 'Invalid action type' });
                 }
-
-                return {
-                    success: true,
-                    email
-                };
+            } catch (error) {
+                if (error instanceof redirect) throw error;
+                console.error('Auth error:', error);
+                return fail(500, { error: 'An unexpected error occurred' });
             }
-        } catch (error) {
-            console.error('Auth error:', error);
-            return fail(500, {
-                error: 'An unexpected error occurred',
-                email
-            });
         }
+    } satisfies Actions;
+
+async function handleSignup({ data, url }: { data: FormData; url: URL }) {
+    const email = data.get('email')?.toString();
+    const password = data.get('password')?.toString();
+    const first_name = data.get('first_name')?.toString();
+    const surname = data.get('surname')?.toString();
+    const postcode = data.get('postcode')?.toString();
+
+    if (!email || !password || !first_name || !surname || !postcode) {
+        return fail(400, { error: 'Missing required fields' });
     }
-} satisfies Actions;
+
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                first_name,
+                surname,
+                postcode: postcode.toUpperCase()
+            },
+            emailRedirectTo: `${url.origin}/auth/callback`
+        }
+    });
+
+    if (authError) {
+        return fail(400, {
+            error: authError.message,
+            email,
+            first_name,
+            surname,
+            postcode
+        });
+    }
+
+    return {
+        success: true,
+        message: 'Check your email for the confirmation link!',
+        email
+    };
+}
+
+async function handleSignin({ data }: { data: FormData }) {
+    const email = data.get('email')?.toString();
+    const password = data.get('password')?.toString();
+
+    if (!email || !password) {
+        return fail(400, { error: 'Missing email or password' });
+    }
+
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (authError) {
+        return fail(400, {
+            error: authError.message,
+            email
+        });
+    }
+
+    return {
+        success: true,
+        email
+    };
+}
