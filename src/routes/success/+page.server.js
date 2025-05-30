@@ -13,7 +13,7 @@ export async function load({ url, locals: { supabase } }) {
     if (sessionId) {
         try {
             const { data: { session } } = await supabase.auth.getSession();
-            const response = await fetch(`${BACKEND_API_URL}/subscription-details`, {
+            const response = await fetch(`${BACKEND_API_URL}/api/v1/subscription-details`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${session?.access_token}`,
