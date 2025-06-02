@@ -69,6 +69,7 @@
                 id="postcode-input"
                 name="postcode"
                 required
+                maxlength=4
                 value={form?.postcode ?? ''}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 size="lg" 

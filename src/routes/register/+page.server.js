@@ -32,7 +32,10 @@ export const actions = {
                 });
             }
 
-            return { success: true };
+            return { 
+                success: true,
+                ...result
+            };
         } catch (error) {
             console.log('error', error);
             return fail(500, {
