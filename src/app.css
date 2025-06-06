@@ -35,15 +35,26 @@
     --color-off-white: #F7F5E7;
     --color-dark-turquoise2: #1E656D;
 
+    --color-off-black: #333132;
+
+    /* toucan tango colours */
+    --color-toucan-tango-blue: #aedbd9;
+    --color-toucan-tango-green: #7cc4a7;
+    --color-toucan-tango-yellow: #ffe670;
+    --color-toucan-tango-orange: #f7b18a;
+    --color-toucan-tango-pink: #f7b6af;
+    --color-toucan-tango-off-white: #f4f3ed;
+    --color-toucan-tango-off-black: #262625;
+
     /* Main palette */
-    --color-primary: var(--color-soft-green);
-    --color-secondary: var(--color-soft-blue);
-    --color-tertiary: var(--color-muted-mustard);
-    --color-accent: var(--color-dark-turquoise2);
-    --color-accent2: var(--color-terracotta2);
+    --color-primary: var(--color-toucan-tango-orange);
+    --color-secondary: var(--color-toucan-tango-blue);
+    --color-tertiary: var(--color-toucan-tango-green);
+    --color-accent: var(--color-toucan-tango-pink);
+    --color-accent2: var(--color-toucan-tango-orange);
     --color-background: var(--color-off-white);
 
-    --color-text-colour: #333132;
+    --color-text-colour: var(--color-toucan-tango-off-black);
 
     --font-ranchers: 'Ranchers', cursive;
     --font-serif: var(--font-ranchers);
@@ -55,6 +66,7 @@
 body {
     font-family: var(--font-sans);
     color: var(--color-text-colour);
+    background-image: url('/images/Nappio-Background1.svg'), url('/images/Nappio-Background2.svg'), url('/images/Nappio-Background3.svg');
     background-color: var(--color-background);
     margin: 0 auto; /* Center content */
     max-width: 100%; /* Ensure content doesn't overflow */

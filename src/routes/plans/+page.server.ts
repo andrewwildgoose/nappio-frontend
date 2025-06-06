@@ -34,11 +34,12 @@ export const actions = {
 
         if (!session.data.session) {
             console.log('No session found, redirecting to sign-in');
-            throw redirect(303, '/signin');
+            return redirect(303, '/signin');
         }
 
         const data = await request.formData();
         const priceId = data.get('priceId') as string;
+        const cancelUrl = '/plans';
 
         if (!priceId) {
             return fail(400, { error: 'Missing price ID' });
@@ -55,7 +56,7 @@ export const actions = {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${jwt}`
                 },
-                body: JSON.stringify({ priceId })
+                body: JSON.stringify({ priceId, cancelUrl })
             });
 
             if (!response.ok) {

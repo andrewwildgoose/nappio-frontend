@@ -2,6 +2,7 @@
     import type { Plan } from '$lib/types/plans';
     import { Button } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
+    import { goto } from '$app/navigation';
 
     export let plans: Plan[] = [];
     export let error: string | null = null;
@@ -9,12 +10,14 @@
 
     function handleSubscribe() {
         isLoading = true;
-        return async ({ result }: { result: { type: string; data: { checkout_url?: string; error?: string } } }) => {
+        return async ({ result }) => {
             try {
                 if (result.type === 'success' && result.data.checkout_url) {
                     window.location.href = result.data.checkout_url;
                 } else if (result.type === 'failure') {
                     error = result.data?.error || 'Failed to create checkout session';
+                } else if (result.type === 'redirect') {
+                    await goto(result.location);
                 }
             } finally {
                 isLoading = false;
