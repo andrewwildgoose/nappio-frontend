@@ -53,14 +53,14 @@
     <div class="w-full flex justify-center mb-6">
         <Button
             color="light"
-            class="w-32 {!isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none"
+            class="w-32 {!isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none focus:ring-0"
             on:click={() => isSignUp = false}
         >
             Sign In
         </Button>
         <Button
             color="light"
-            class="w-32 {isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none"
+            class="w-32 {isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none focus:ring-0 border-l-0"
             on:click={() => isSignUp = true}
         >
             Sign Up

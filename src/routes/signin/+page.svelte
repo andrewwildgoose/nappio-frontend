@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-    <div class="h-screen w-full p-10 bg-background items-center justify-center">
+    <div class="h-screen w-full p-10 items-center justify-center">
         <AuthForm />
     </div>
 </div>

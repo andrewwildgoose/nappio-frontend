@@ -23,11 +23,11 @@
     }
 </script>
 
-<div class="flex flex-col items-center justify-center md:m-5 w-full max-w-screen-sm">
+<div class="flex flex-col items-center justify-center md:m-5 w-full sm:max-w-screen-sm">
     <form 
         method="POST" 
         action="?/subscribe" 
-        class="flex flex-col items-center justify-center w-full max-w-screen-sm"
+        class="flex flex-col items-center justify-center md:w-full max-w-screen-sm"
         use:enhance={handleSubmit}
     >
         <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">

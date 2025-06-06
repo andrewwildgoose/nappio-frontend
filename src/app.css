@@ -51,7 +51,7 @@
     --color-secondary: var(--color-toucan-tango-blue);
     --color-tertiary: var(--color-toucan-tango-green);
     --color-accent: var(--color-toucan-tango-pink);
-    --color-accent2: var(--color-toucan-tango-orange);
+    --color-accent2: var(--color-toucan-tango-yellow);
     --color-background: var(--color-off-white);
 
     --color-text-colour: var(--color-toucan-tango-off-black);
@@ -78,5 +78,3 @@ body {
         padding: 0 1px;
     }
 }
-
-@source "../node_modules/flowbite-svelte/dist";
