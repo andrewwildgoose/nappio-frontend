@@ -15,6 +15,8 @@ declare global {
         interface PageData {
             plans?: Plan[];
             error?: string | null;
+			subscriptions?: SubscriptionDetailsResponse[];
+			addresses?: AddressResponse[];
         }
 		// interface PageState {}
 		// interface Platform {}

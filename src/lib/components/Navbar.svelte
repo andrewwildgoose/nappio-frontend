@@ -19,11 +19,15 @@
             </h1>
         </span>
     </NavBrand>
-        <NavHamburger 
+    <NavHamburger 
         class="text-text-colour hover:text-accent2 focus:ring-accent2"
-        
         menuClass="focus:outline-none hover:bg-transparent focus:ring-2" />
-    <NavUl ulClass={ulClasses} {activeUrl} {activeClass} {nonActiveClass}>
+    <NavUl 
+        ulClass={ulClasses} 
+        {activeUrl} 
+        {activeClass} 
+        {nonActiveClass}
+        divClass="w-full md:block md:w-auto">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/plans">Subscription plans</NavLi>
         <NavLi href="/register">Newsletter</NavLi>
