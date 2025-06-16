@@ -4,12 +4,15 @@ import { BACKEND_API_URL } from '$env/static/private';
 import { supabase } from '$lib/server/supabaseClient';
 
 interface SubscriptionDetailsResponse {
+    id: string;
     plan_name: string;
     status: string;
     monthly_cost: number;
     start_date: string;
     end_date?: string;
     next_payment_date?: string;
+    address_id?: string;  // Add this field
+    address?: UserAddress;  // Add this field for the matched address
 }
 
 interface AddressResponse {
@@ -19,6 +22,35 @@ interface AddressResponse {
     country: string;
     postcode: string;
     address_notes?: string;
+}
+
+interface UserAddress {
+    id: string;
+    user_id: string;
+    address_line_1: string;
+    address_line_2?: string;
+    city: string;
+    postcode: string;
+    country: string;
+    address_notes?: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+interface AddAddressResponse {
+    success: boolean;
+    message: string;
+    address?: UserAddress;
+}
+
+interface DeleteAddressResponse {
+    message: string;
+}
+
+// Add new interface for the assign address response
+interface AssignAddressResponse {
+    success: boolean;
+    message: string;
 }
 
 export const load: PageServerLoad = async ({ locals, fetch }) => {
@@ -55,27 +87,55 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
             })
         ]);
 
-        if (!subscriptionsResponse.ok) {
-            console.error('Subscriptions HTTP error:', subscriptionsResponse.status);
-            throw new Error(`Subscriptions HTTP error! status: ${subscriptionsResponse.status}`);
-        }
-
-        if (!addressesResponse.ok) {
-            console.error('Addresses HTTP error:', addressesResponse.status);
-            throw new Error(`Addresses HTTP error! status: ${addressesResponse.status}`);
+        if (!subscriptionsResponse.ok || !addressesResponse.ok) {
+            console.error('HTTP error:', {
+                subscriptions: subscriptionsResponse.status,
+                addresses: addressesResponse.status
+            });
+            throw new Error(`HTTP error! status: ${subscriptionsResponse.status}, ${addressesResponse.status}`);
         }
 
         const subscriptions: SubscriptionDetailsResponse[] = await subscriptionsResponse.json();
-        const addresses: AddressResponse[] = await addressesResponse.json();
+        const addresses: UserAddress[] = await addressesResponse.json();
 
-        console.log('Fetched subscriptions:', subscriptions);
-        console.log('Fetched addresses:', addresses);
+        console.log('Raw subscriptions:', subscriptions);
+        console.log('Available addresses:', addresses);
+
+        // Match addresses to subscriptions
+        const subscriptionsWithAddresses = subscriptions.map(subscription => {
+            if (subscription.address_id) {
+                console.log(`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`);
+                const matchedAddress = addresses.find(addr => addr.id === subscription.address_id);
+                
+                if (matchedAddress) {
+                    console.log(`Found matching address for subscription ${subscription.id}:`, matchedAddress);
+                    return {
+                        ...subscription,
+                        address: matchedAddress
+                    };
+                } else {
+                    console.log(`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`);
+                    return {
+                        ...subscription,
+                        address: null
+                    };
+                }
+            }
+            
+            console.log(`Subscription ${subscription.id} has no address_id`);
+            return {
+                ...subscription,
+                address: null
+            };
+        });
+
+        console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
 
         return {
             user: {
                 ...userData,
             },
-            subscriptions,
+            subscriptions: subscriptionsWithAddresses,
             addresses
         };
     } catch (error) {
@@ -84,7 +144,6 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
             user: userData,
             subscriptions: [],
             addresses: [],
-
         };
     }
 };
@@ -92,48 +151,115 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 export const actions: Actions = {
     address: async ({ request, fetch, locals }) => {
         const formData = await request.formData();
-        const address = {
-            address_line_1: formData.get('address_line1'),
-            address_line_2: formData.get('address_line2'),
-            city: formData.get('city'),
-            country: formData.get('country'),
-            postcode: formData.get('postcode'),
-            address_notes: formData.get('address_notes')
-        };
-
-        console.log('Updating address with data:', address);
-
+        const action = formData.get('action');
+        
         try {
             const session = await supabase.auth.getSession();
             const jwt = session.data.session?.access_token;
 
-            const response = await fetch(`${BACKEND_API_URL}/api/v1/user/update-user-address`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`
-                },
-                body: JSON.stringify(address)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                return fail(response.status, {
-                    error: errorData.detail || 'Failed to update address',
-                    ...address
+            if (action === 'assign') {
+                const addressId = formData.get('address_id');
+                const subscriptionId = formData.get('subscription_id');
+                
+                console.log('Starting address assignment:', {
+                    addressId,
+                    subscriptionId,
+                    action
                 });
+                
+                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/assign-subscription-address`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    },
+                    body: JSON.stringify({
+                        address_id: addressId,
+                        subscription_id: subscriptionId
+                    })
+                });
+
+                console.log('Assignment response status:', response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Assignment failed:', {
+                        status: response.status,
+                        error: errorData
+                    });
+                    return fail(response.status, {
+                        error: errorData.detail || 'Failed to assign address to subscription'
+                    });
+                }
+
+                const data: AssignAddressResponse = await response.json();
+                console.log('Assignment successful:', data);
+                
+                return {
+                    success: true,
+                    message: data.message
+                };
+            } else if (action === 'delete') {
+                const addressId = formData.get('id');
+                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    return fail(response.status, {
+                        error: errorData.detail || 'Failed to delete address'
+                    });
+                }
+
+                const data: DeleteAddressResponse = await response.json();
+                return {
+                    success: true,
+                    message: data.message
+                };
+            } else {
+                // Handle address addition
+                const address = {
+                    address_line_1: formData.get('address_line1'),
+                    address_line_2: formData.get('address_line2') || undefined,
+                    city: formData.get('city'),
+                    country: formData.get('country'),
+                    postcode: formData.get('postcode'),
+                    address_notes: formData.get('address_notes') || undefined
+                };
+
+                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/add-address`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    },
+                    body: JSON.stringify(address)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    return fail(response.status, {
+                        error: errorData.detail || 'Failed to add address',
+                        ...address
+                    });
+                }
+
+                const data: AddAddressResponse = await response.json();
+                return {
+                    success: data.success,
+                    message: data.message,
+                    address: data.address
+                };
             }
-
-            return {
-                message: 'Address updated successfully',
-                ...address
-            };
-
         } catch (error) {
-            console.error('Error updating address:', error);
+            console.error('Error handling address:', error);
             return fail(500, {
-                error: 'Failed to update address',
-                ...address
+                error: 'Failed to process address request',
+                action
             });
         }
     }

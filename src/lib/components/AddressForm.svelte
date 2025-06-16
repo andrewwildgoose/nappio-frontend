@@ -51,7 +51,7 @@
                     }
                 } else if (result.type === 'failure') {
                     form = {
-                        error: result.data?.error || 'Failed to update address',
+                        error: result.data?.error || 'Failed to add address',
                         ...result.data
                     };
                 }
@@ -70,6 +70,7 @@
         use:enhance={handleSubmit}
     >
         <div class="w-full sm:w-96 mb-6 px-0">
+            <input type="hidden" name="action" value={address?.id ? 'delete' : 'add'} />
             <Label for="address-line1" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Address Line 1
             </Label>

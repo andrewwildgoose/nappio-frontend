@@ -10,9 +10,34 @@
     let showAddressForm = false;
     let selectedAddress: typeof data.addresses[0] | null = null;
 
-    function handleAddressEdit(address: typeof data.addresses[0]) {
-        selectedAddress = address;
-        showAddressForm = true;
+    // Add state for address selection modal
+    let showAddressSelector = false;
+    let selectedSubscription: typeof data.subscriptions[0] | null = null;
+
+    // State for address selection
+    let selectingAddressFor: typeof data.subscriptions[0] | null = null;
+
+    function handleAddressDelete(address: typeof data.addresses[0]) {
+        // Create and submit form programmatically
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '?/address';
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'delete';
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = address.id;
+
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
     }
 
     async function handleSignoutSubmit() {
@@ -39,6 +64,43 @@
             style: 'currency', 
             currency: 'GBP' 
         }).format(amount);
+    }
+
+    function handleAddressSelect(address: typeof data.addresses[0] | null) {
+        selectedAddress = address;
+        showAddressForm = true;
+    }
+
+    function handleAddressAssign(subscription: typeof data.subscriptions[0], address: typeof data.addresses[0]) {
+        // Create and submit form programmatically
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '?/address';
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'assign';
+
+        const addressInput = document.createElement('input');
+        addressInput.type = 'hidden';
+        addressInput.name = 'address_id';
+        addressInput.value = address.id;
+
+        const subscriptionInput = document.createElement('input');
+        subscriptionInput.type = 'hidden';
+        subscriptionInput.name = 'subscription_id';
+        subscriptionInput.value = subscription.id;
+
+        form.appendChild(actionInput);
+        form.appendChild(addressInput);
+        form.appendChild(subscriptionInput);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+
+        // Reset selection state
+        selectingAddressFor = null;
     }
 </script>
 
@@ -93,9 +155,9 @@
                                             <Button
                                                 color="light"
                                                 class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200 h-fit"
-                                                on:click={() => handleAddressEdit(address)}
+                                                on:click={() => handleAddressDelete(address)}
                                             >
-                                                Update
+                                                Delete
                                             </Button>
                                         </div>
                                     </div>
@@ -114,20 +176,69 @@
                     <div class="space-y-4">
                         {#each data.subscriptions as subscription}
                             <div class="border rounded-lg p-4 bg-background">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-lg font-commissioner">{subscription.plan_name}</h3>
-                                    <span class="px-3 py-1 rounded-full {subscription.status === 'active' ? 'bg-tertiary text-white' : 'bg-accent text-text-colour'}">
-                                        {subscription.status}
-                                    </span>
+                                <div class="flex justify-between">
+                                    <div class="w-full">
+                                        <p><strong>Plan:</strong> {subscription.plan_name}</p>
+                                        <p><strong>Status:</strong> {subscription.status}</p>
+                                        <p><strong>Cost:</strong> {formatCurrency(subscription.monthly_cost)}</p>
+                                        {#if subscription.address}
+                                            <div class="mt-2">
+                                                <p><strong>Delivery Address:</strong></p>
+                                                <p>{subscription.address.address_line_1}</p>
+                                                {#if subscription.address.address_line_2}
+                                                    <p>{subscription.address.address_line_2}</p>
+                                                {/if}
+                                                <p>{subscription.address.city}</p>
+                                                <p>{subscription.address.postcode}</p>
+                                                <Button
+                                                    color="light"
+                                                    class="mt-2 bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200"
+                                                    on:click={() => selectingAddressFor = subscription}
+                                                >
+                                                    Change Address
+                                                </Button>
+                                            </div>
+                                        {:else}
+                                            <div class="mt-2">
+                                                <p class="text-sm italic mb-2">No delivery address specified</p>
+                                                <Button
+                                                    color="light"
+                                                    class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200"
+                                                    on:click={() => selectingAddressFor = subscription}
+                                                >
+                                                    Select Address
+                                                </Button>
+                                            </div>
+                                        {/if}
+
+                                        {#if selectingAddressFor?.id === subscription.id}
+                                            <div class="mt-4 border-t pt-4">
+                                                <p class="font-commissioner mb-2">Select a delivery address:</p>
+                                                <div class="space-y-2">
+                                                    {#each data.addresses as address}
+                                                        <button
+                                                            class="w-full p-2 text-left border rounded hover:bg-accent hover:text-text-colour transition-colors duration-200"
+                                                            on:click={() => handleAddressAssign(subscription, address)}
+                                                        >
+                                                            <p class="font-bold">{address.address_line_1}</p>
+                                                            {#if address.address_line_2}
+                                                                <p>{address.address_line_2}</p>
+                                                            {/if}
+                                                            <p>{address.city}, {address.postcode}</p>
+                                                        </button>
+                                                    {/each}
+                                                </div>
+                                                <Button
+                                                    color="light"
+                                                    class="mt-2 w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-commissioner text-l rounded-none"
+                                                    on:click={() => selectingAddressFor = null}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </div>
+                                        {/if}
+                                    </div>
                                 </div>
-                                <p><strong>Monthly Cost:</strong> {formatCurrency(subscription.monthly_cost)}</p>
-                                <p><strong>Start Date:</strong> {formatDate(subscription.start_date)}</p>
-                                {#if subscription.next_payment_date}
-                                    <p><strong>Next Payment Date:</strong> {formatDate(subscription.next_payment_date)}</p>
-                                {/if}
-                                {#if subscription.end_date}
-                                    <p><strong>End Date:</strong> {formatDate(subscription.end_date)}</p>
-                                {/if}
                             </div>
                         {/each}
                     </div>
