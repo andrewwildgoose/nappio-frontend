@@ -79,7 +79,7 @@
 
         <Button 
             type="submit" 
-            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
+            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl border-1 border-solid border-text-colour rounded-none transition-colors duration-200" 
             size="lg"
             disabled={isSubmitting}
         >
