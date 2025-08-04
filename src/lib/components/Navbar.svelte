@@ -1,5 +1,7 @@
 <script>
     import { page } from "$app/state";
+    let user = page.data.user;
+    console.log("User in Navbar:", user);
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-tertiary bg-transparent";
@@ -39,8 +41,12 @@
         divClass="w-full lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/plans">Subscription plans</NavLi>
-        <NavLi href="/register">Newsletter</NavLi>
+        <!-- <NavLi href="/register">Newsletter</NavLi> -->
+        {#if user === null}
         <NavLi href="/signin">Sign in</NavLi>
+        {:else}
+        <NavLi href="/dashboard">Dashboard</NavLi>
+        {/if}
     </NavUl>        
 </Navbar>
 
