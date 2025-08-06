@@ -2,6 +2,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 import { supabase } from '$lib/server/supabaseClient';
+import { addAddress, assignAddress } from '$lib/api/address';
 
 interface SubscriptionDetailsResponse {
     id: string;
@@ -44,12 +45,6 @@ interface AddAddressResponse {
 }
 
 interface DeleteAddressResponse {
-    message: string;
-}
-
-// Add new interface for the assign address response
-interface AssignAddressResponse {
-    success: boolean;
     message: string;
 }
 
@@ -149,7 +144,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 };
 
 export const actions: Actions = {
-    address: async ({ request, fetch, locals }) => {
+    address: async ({ request, locals }) => {
         const formData = await request.formData();
         const action = formData.get('action');
         
@@ -158,8 +153,8 @@ export const actions: Actions = {
             const jwt = session.data.session?.access_token;
 
             if (action === 'assign') {
-                const addressId = formData.get('address_id');
-                const subscriptionId = formData.get('subscription_id');
+                const addressId = String(formData.get('address_id'));
+                const subscriptionId = String(formData.get('subscription_id'));
                 
                 console.log('Starting address assignment:', {
                     addressId,
@@ -167,38 +162,13 @@ export const actions: Actions = {
                     action
                 });
                 
-                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/assign-subscription-address`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwt}`
-                    },
-                    body: JSON.stringify({
-                        address_id: addressId,
-                        subscription_id: subscriptionId
-                    })
-                });
+            try {
+                const data = await assignAddress(addressId, subscriptionId, jwt);
+                return { success: true, message: data.message };
+            } catch (error) {
+                return fail(400, { error: error instanceof Error ? error.message : String(error) });
+            }
 
-                console.log('Assignment response status:', response.status);
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Assignment failed:', {
-                        status: response.status,
-                        error: errorData
-                    });
-                    return fail(response.status, {
-                        error: errorData.detail || 'Failed to assign address to subscription'
-                    });
-                }
-
-                const data: AssignAddressResponse = await response.json();
-                console.log('Assignment successful:', data);
-                
-                return {
-                    success: true,
-                    message: data.message
-                };
             } else if (action === 'delete') {
                 const addressId = formData.get('id');
                 const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
@@ -220,40 +190,22 @@ export const actions: Actions = {
                     success: true,
                     message: data.message
                 };
-            } else {
-                // Handle address addition
-                const address = {
-                    address_line_1: formData.get('address_line1'),
-                    address_line_2: formData.get('address_line2') || undefined,
-                    city: formData.get('city'),
-                    country: formData.get('country'),
-                    postcode: formData.get('postcode'),
-                    address_notes: formData.get('address_notes') || undefined
-                };
-
-                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/add-address`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwt}`
-                    },
-                    body: JSON.stringify(address)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    return fail(response.status, {
-                        error: errorData.detail || 'Failed to add address',
-                        ...address
-                    });
+            } else { // Handle address addition
+                try {
+                    const address = {
+                        address_line_1: formData.get('address_line1'),
+                        address_line_2: formData.get('address_line2') || undefined,
+                        city: formData.get('city'),
+                        country: formData.get('country'),
+                        postcode: formData.get('postcode'),
+                        address_notes: formData.get('address_notes') || undefined
+                    };
+                    
+                    const data = await addAddress(address, jwt);
+                    return { success: data.success, message: data.message, address: data.address };
+                } catch (error) {
+                    return fail(400, { error: error instanceof Error ? error.message : String(error) });
                 }
-
-                const data: AddAddressResponse = await response.json();
-                return {
-                    success: data.success,
-                    message: data.message,
-                    address: data.address
-                };
             }
         } catch (error) {
             console.error('Error handling address:', error);

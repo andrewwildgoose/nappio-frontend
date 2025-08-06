@@ -18,9 +18,12 @@
         };
     }
     
+    export let showSaveButton: boolean = true; // Whether to show the Save Address button
     export let form: AddressFormData | null = null;
     export let address: any = null; // Address to update, if any
     let isSubmitting = false;
+
+    const validPostcodes = ['SW12', 'SW9', 'SW2'];
 
     // Pre-populate form with address data if provided
     $: if (address) {
@@ -34,6 +37,8 @@
             address_notes: address.address_notes
         };
     }
+
+    let postcode: string = form?.postcode || '';
 
     function handleSubmit() {
         isSubmitting = true;
@@ -134,6 +139,11 @@
         </div>
 
         <div class="w-full sm:w-96 mb-6 px-0">
+            {#if 
+                postcode.length > 2
+                && !validPostcodes.some(pc => postcode.toUpperCase().startsWith(pc))}
+                <p class="text-red-500 mb-2">We don't currently operate in your postcode, our current areas are {validPostcodes.join(', ')}.</p>
+            {/if}
             <Label for="postcode" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Postcode
             </Label>
@@ -142,10 +152,10 @@
                 name="postcode"
                 type="text"
                 required
-                value={form?.postcode ?? ''}
+                bind:value={postcode}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
-                placeholder="SW1A 1AA"
+                placeholder="SW9 ... or SW12 ... or SW2 ..."
             />
         </div>
 
@@ -163,21 +173,22 @@
                 placeholder="Delivery instructions, gate codes, or other helpful notes..."
             />
         </div>
-
-        <div class="flex justify-center">
-            <Button
-                type="submit"
-                class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
-                size="lg"
-                disabled={isSubmitting}
-            >
-                {#if isSubmitting}
-                    <Spinner class="mr-3" /> Loading...
-                {:else}
-                    Save Address
-                {/if}
-            </Button>
-        </div>
+        {#if showSaveButton}
+            <div class="flex justify-center">
+                <Button
+                    type="submit"
+                    class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
+                    size="lg"
+                    disabled={isSubmitting}
+                >
+                    {#if isSubmitting}
+                        <Spinner class="mr-3" /> Loading...
+                    {:else}
+                        Save Address
+                    {/if}
+                </Button>
+            </div>
+        {/if}
     </form>
 
     {#if form?.error}

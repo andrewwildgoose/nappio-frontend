@@ -1,12 +1,14 @@
 <script>
     import { page } from "$app/state";
-    let user = page.data.user;
-    console.log("User in Navbar:", user);
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
+    let isSignedIn = $derived(() => page.data.user != null);
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-tertiary bg-transparent";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2";
     const ulClasses = "!bg-transparent text-text-colour flex flex-col p-4 mt-4 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 lg:text-center";
+
+    console.log("Navbar page data user:", isSignedIn());
+
 </script>
 
 <Navbar 
@@ -42,10 +44,10 @@
         <NavLi href="/">Home</NavLi>
         <NavLi href="/plans">Subscription plans</NavLi>
         <!-- <NavLi href="/register">Newsletter</NavLi> -->
-        {#if user === null}
-        <NavLi href="/signin">Sign in</NavLi>
-        {:else}
+        {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>
+        {:else}
+        <NavLi href="/signin">Sign in</NavLi>
         {/if}
     </NavUl>        
 </Navbar>

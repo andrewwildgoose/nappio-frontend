@@ -3,10 +3,71 @@
     import { Button } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
+    import type { PageData } from './$types';
+    import AddressForm from '$lib/components/AddressForm.svelte';
+
+    export let data: PageData;
 
     export let plans: Plan[] = [];
     export let error: string | null = null;
+
+    //variable for loading state
     let isLoading = false;
+
+    //variables for the details form
+    let showDetailsForm = false;
+    let selectedPlanId: string | null = null;
+    let phone = '';
+    let isSubmitting = false;
+
+    let addressFormData = {}; // Collect address fields here
+
+
+    // Called when user clicks Subscribe
+    function openDetailsForm(planId: string | null) {
+        if (!planId) {
+            console.error('No plan ID provided');
+            return;
+        } else {
+            selectedPlanId = planId;
+            showDetailsForm = true;
+        }
+    }
+
+    // Called when user clicks "Continue to Checkout"
+    function handleContinueToCheckout() {
+        // Create a form programmatically
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '?/subscribe';
+
+        // Add hidden inputs for address fields
+        for (const [key, value] of Object.entries(addressFormData)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value ?? '';
+            form.appendChild(input);
+        }
+
+        // Add phone and priceId
+        const phoneInput = document.createElement('input');
+        phoneInput.type = 'hidden';
+        phoneInput.name = 'phone';
+        phoneInput.value = phone;
+        form.appendChild(phoneInput);
+
+        const priceIdInput = document.createElement('input');
+        priceIdInput.type = 'hidden';
+        priceIdInput.name = 'priceId';
+        priceIdInput.value = selectedPlanId ?? '';
+        form.appendChild(priceIdInput);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
+
 
     function handleSubscribe() {
         isLoading = true;
@@ -61,29 +122,72 @@
                                 <td class="p-4 text-text-colour text-left">{plan.description}</td>
                                 <td class="p-4">{formatPrice(plan.price)}</td>
                                 <td class="p-4">
-                                    <form 
-                                    action="?/subscribe" 
-                                    method="POST" 
-                                    use:enhance={handleSubscribe}
-                                >
-                                    <input type="hidden" name="priceId" value={plan.stripe_price_id}>
                                     <Button
-                                        type="submit"
+                                        type="button"
                                         disabled={isLoading}
                                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                                        on:click={() => openDetailsForm(plan.stripe_price_id)}
                                     >
-                                        {#if isLoading}
-                                            Creating checkout...
-                                        {:else}
-                                            Subscribe
-                                        {/if}
+                                        Subscribe
                                     </Button>
-                                </form>
                                 </td>
                             </tr>
                         {/each}
+                        <!-- {#each plans as plan (plan.id)}
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-4 font-commissioner text-text-colour">{plan.name}</td>
+                                <td class="p-4 text-text-colour text-left">{plan.description}</td>
+                                <td class="p-4">{formatPrice(plan.price)}</td>
+                                <td class="p-4">
+                                    <form 
+                                        action="?/subscribe" 
+                                        method="POST" 
+                                        use:enhance={handleSubscribe}
+                                    >
+                                        <input type="hidden" name="priceId" value={plan.stripe_price_id}>
+                                        <Button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                                        >
+                                            {#if isLoading}
+                                                Creating checkout...
+                                            {:else}
+                                                Subscribe
+                                            {/if}
+                                        </Button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {/each} -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    {/if}
+    {#if showDetailsForm}
+        <div class="fixed inset-0 bg-neutral-500/50 flex flex-col items-center justify-center z-50">
+            <div class="bg-background! rounded-lg shadow-lg w-full max-w-md">
+                <div class="mt-4">
+                    <AddressForm bind:form={addressFormData} address={null} showSaveButton={false} />
+                </div>
+                <div class="flex gap-2 items-center justify-center">
+                    <Button 
+                        type="button"
+                        on:click={handleContinueToCheckout}
+                        disabled={isSubmitting}
+                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                    >
+                        {#if isSubmitting}Submitting...{:else}Continue to Checkout{/if}
+                    </Button>
+                    <Button 
+                        type="button"
+                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                        on:click={() => showDetailsForm = false}
+                    >
+                        Cancel
+                    </Button>
+                </div>                
             </div>
         </div>
     {/if}
