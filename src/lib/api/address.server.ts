@@ -1,6 +1,7 @@
 import { BACKEND_API_URL } from '$env/static/private';
 
 export async function addAddress(address: any, jwt: string | undefined) {
+    console.log('Adding address:', address, 'with JWT:', jwt);
     const response = await fetch(`${BACKEND_API_URL}/api/v1/user/add-address`, {
         method: 'POST',
         headers: {

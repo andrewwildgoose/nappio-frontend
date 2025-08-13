@@ -1,12 +1,11 @@
 <script lang="ts">
     import type { Plan } from '$lib/types/plans';
     import { Button } from 'flowbite-svelte';
-    import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
-    import type { PageData } from './$types';
+    // import type { PageData } from './$types';
     import AddressForm from '$lib/components/AddressForm.svelte';
 
-    export let data: PageData;
+    // export let data: PageData;
 
     export let plans: Plan[] = [];
     export let error: string | null = null;
@@ -17,7 +16,6 @@
     //variables for the details form
     let showDetailsForm = false;
     let selectedPlanId: string | null = null;
-    let phone = '';
     let isSubmitting = false;
 
     let addressFormData = {}; // Collect address fields here
@@ -34,39 +32,39 @@
         }
     }
 
-    // Called when user clicks "Continue to Checkout"
-    function handleContinueToCheckout() {
-        // Create a form programmatically
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '?/subscribe';
+    // // Called when user clicks "Continue to Checkout"
+    // function handleContinueToCheckout() {
+    //     // Create a form programmatically
+    //     const form = document.createElement('form');
+    //     form.method = 'POST';
+    //     form.action = '?/subscribe';
 
-        // Add hidden inputs for address fields
-        for (const [key, value] of Object.entries(addressFormData)) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = value ?? '';
-            form.appendChild(input);
-        }
+    //     // Add hidden inputs for address fields
+    //     for (const [key, value] of Object.entries(addressFormData)) {
+    //         const input = document.createElement('input');
+    //         input.type = 'hidden';
+    //         input.name = key;
+    //         input.value = value ?? '';
+    //         form.appendChild(input);
+    //     }
 
-        // Add phone and priceId
-        const phoneInput = document.createElement('input');
-        phoneInput.type = 'hidden';
-        phoneInput.name = 'phone';
-        phoneInput.value = phone;
-        form.appendChild(phoneInput);
+    //     // Add phone and priceId
+    //     const phoneInput = document.createElement('input');
+    //     phoneInput.type = 'hidden';
+    //     phoneInput.name = 'phone';
+    //     phoneInput.value = phone;
+    //     form.appendChild(phoneInput);
 
-        const priceIdInput = document.createElement('input');
-        priceIdInput.type = 'hidden';
-        priceIdInput.name = 'priceId';
-        priceIdInput.value = selectedPlanId ?? '';
-        form.appendChild(priceIdInput);
+    //     const priceIdInput = document.createElement('input');
+    //     priceIdInput.type = 'hidden';
+    //     priceIdInput.name = 'priceId';
+    //     priceIdInput.value = selectedPlanId ?? '';
+    //     form.appendChild(priceIdInput);
 
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-    }
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //     document.body.removeChild(form);
+    // }
 
 
     function handleSubscribe() {
@@ -130,6 +128,14 @@
                                     >
                                         Subscribe
                                     </Button>
+                                    <!-- <Button
+                                        type="button"
+                                        disabled={isLoading}
+                                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                                        on:click={handleSubscribe}
+                                    >
+                                        Subscribe
+                                    </Button> -->
                                 </td>
                             </tr>
                         {/each}
@@ -169,12 +175,23 @@
         <div class="fixed inset-0 bg-neutral-500/50 flex flex-col items-center justify-center z-50">
             <div class="bg-background! rounded-lg shadow-lg w-full max-w-md">
                 <div class="mt-4">
-                    <AddressForm bind:form={addressFormData} address={null} showSaveButton={false} />
+                    <AddressForm 
+                        action='?/handleAddress' 
+                        formSubmitButtonText={"Continue to Checkout"}
+                        priceId={selectedPlanId}
+                        useEnhance={true}
+                        onSubmit={async (result) => {
+                            console.log(result);
+                            if (result.type === 'success' && result.data.checkout_url) {
+                                window.location.href = result.data.checkout_url;
+                            }
+                        }}
+                    />
                 </div>
                 <div class="flex gap-2 items-center justify-center">
                     <Button 
                         type="button"
-                        on:click={handleContinueToCheckout}
+                        on:click={handleSubscribe}
                         disabled={isSubmitting}
                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
                     >

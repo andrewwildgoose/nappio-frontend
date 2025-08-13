@@ -1,81 +1,59 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import { Button, Label, Input, Textarea, Alert, Spinner } from 'flowbite-svelte';
-
-    interface AddressFormData {
-        error?: string;
-        message?: string;
-        address_line_1?: string;
-        address_line_2?: string;
-        city?: string;
-        country?: string;
-        postcode?: string;
-        address_notes?: string;
-        success?: boolean;
-        data?: {
-            success: boolean;
-            message?: string;
-        };
-    }
+    import type { AddressFormData } from '$lib/types/address';
     
-    export let showSaveButton: boolean = true; // Whether to show the Save Address button
-    export let form: AddressFormData | null = null;
-    export let address: any = null; // Address to update, if any
-    let isSubmitting = false;
+    let { 
+        action,
+        showSaveButton = true,
+        formSubmitButtonText = 'Save Address',
+        priceId = null, // Plan ID for context
+        initialAddress = null, // Address to pre-populate
+        onSubmit = undefined,
+        useEnhance = false
+    } = $props();
+
+    // let form: AddressFormData;
+
+    let isSubmitting = $state(false);
 
     const validPostcodes = ['SW12', 'SW9', 'SW2'];
-
-    // Pre-populate form with address data if provided
-    $: if (address) {
-        form = {
-            ...form,
-            address_line_1: address.address_line_1,
-            address_line_2: address.address_line_2,
-            city: address.city,
-            country: address.country,
-            postcode: address.postcode,
-            address_notes: address.address_notes
-        };
-    }
-
-    let postcode: string = form?.postcode || '';
 
     function handleSubmit() {
         isSubmitting = true;
         return async ({ result }) => {
-            try {
-                if (result.type === 'redirect') {
-                    return; // Let SvelteKit handle the redirect
-                }
-                
-                if (result.type === 'success' && result.data?.success) {
-                    if (result.data.message) {
-                        form = result.data;
-                    } else {
-                        window.location.reload(); // Reload to show updated address
-                    }
-                } else if (result.type === 'failure') {
-                    form = {
-                        error: result.data?.error || 'Failed to add address',
-                        ...result.data
-                    };
-                }
-            } finally {
-                isSubmitting = false;
+            if (onSubmit) {
+                await onSubmit(result);
             }
+            isSubmitting = false;
         };
     }
+
+    // Pre-populate form with address data if provided
+    let form: AddressFormData = $state({
+        error: '',
+        message: '',
+        address_line_1: initialAddress?.address_line_1 ?? '',
+        address_line_2: initialAddress?.address_line_2 ?? '',
+        city: initialAddress?.city ?? '',
+        country: initialAddress?.country ?? '',
+        postcode: initialAddress?.postcode ?? '',
+        address_notes: initialAddress?.address_notes ?? '',
+        priceId: priceId
+    });
+
 </script>
 
 <div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8">
     <form 
-        method="POST" 
-        action="?/address" 
-        class="space-y-4" 
-        use:enhance={handleSubmit}
+        class="space-y-4"
+        method="POST"
+        action="{action}"
+        use:enhance={useEnhance ? handleSubmit : undefined}
     >
         <div class="w-full sm:w-96 mb-6 px-0">
-            <input type="hidden" name="action" value={address?.id ? 'delete' : 'add'} />
+            <input type="hidden" name="action" value={initialAddress?.id ? 'delete' : 'add'} />
+            <input type="hidden" name="priceId" value={priceId ?? ''} />
             <Label for="address-line1" class="block mb-2 font-commissioner text-xl text-text-colour!">
                 Address Line 1
             </Label>
@@ -84,7 +62,7 @@
                 name="address_line1"
                 type="text"
                 required
-                value={form?.address_line_1 ?? ''}
+                bind:value={form.address_line_1}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="123 Example Street"
@@ -99,7 +77,7 @@
                 id="address-line2"
                 name="address_line2"
                 type="text"
-                value={form?.address_line_2 ?? ''}
+                bind:value={form.address_line_2}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="Apartment, suite, etc."
@@ -115,7 +93,7 @@
                 name="city"
                 type="text"
                 required
-                value={form?.city ?? ''}
+                bind:value={form.city}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="London"
@@ -131,7 +109,7 @@
                 name="country"
                 type="text"
                 required
-                value={form?.country ?? ''}
+                bind:value={form.country}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="United Kingdom"
@@ -140,8 +118,8 @@
 
         <div class="w-full sm:w-96 mb-6 px-0">
             {#if 
-                postcode.length > 2
-                && !validPostcodes.some(pc => postcode.toUpperCase().startsWith(pc))}
+                form.postcode.length > 2
+                && !validPostcodes.some(pc => (form.postcode).toUpperCase().startsWith(pc))}
                 <p class="text-red-500 mb-2">We don't currently operate in your postcode, our current areas are {validPostcodes.join(', ')}.</p>
             {/if}
             <Label for="postcode" class="block mb-2 font-commissioner text-xl text-text-colour!">
@@ -151,8 +129,8 @@
                 id="postcode"
                 name="postcode"
                 type="text"
+                bind:value={form.postcode}
                 required
-                bind:value={postcode}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="SW9 ... or SW12 ... or SW2 ..."
@@ -167,7 +145,7 @@
                 id="address-notes"
                 name="address_notes"
                 rows={4}
-                value={form?.address_notes ?? ''}
+                bind:value={form.address_notes}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="Delivery instructions, gate codes, or other helpful notes..."
@@ -184,7 +162,7 @@
                     {#if isSubmitting}
                         <Spinner class="mr-3" /> Loading...
                     {:else}
-                        Save Address
+                        {formSubmitButtonText}
                     {/if}
                 </Button>
             </div>

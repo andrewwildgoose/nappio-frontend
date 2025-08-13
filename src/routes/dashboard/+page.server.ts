@@ -2,7 +2,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 import { supabase } from '$lib/server/supabaseClient';
-import { addAddress, assignAddress } from '$lib/api/address';
+import { addAddress, assignAddress } from '$lib/api/address.server';
 
 interface SubscriptionDetailsResponse {
     id: string;
@@ -144,75 +144,79 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 };
 
 export const actions: Actions = {
-    address: async ({ request, locals }) => {
+
+    submitAddress: async ({ request }) => {
+
+        const { data: { session } } = await supabase.auth.getSession();
+        const jwt = session?.access_token;
+
         const formData = await request.formData();
-        const action = formData.get('action');
-        
+        const address = {
+            error: '',
+            message: '',
+            address_line_1: formData.get('address_line1') as string,
+            address_line_2: formData.get('address_line2') as string,
+            city: formData.get('city') as string,
+            country: formData.get('country') as string,
+            postcode: formData.get('postcode') as string,
+            address_notes: formData.get('address_notes') as string
+        };
+        console.log('Address submitted in server:', address);
+
         try {
-            const session = await supabase.auth.getSession();
-            const jwt = session.data.session?.access_token;
-
-            if (action === 'assign') {
-                const addressId = String(formData.get('address_id'));
-                const subscriptionId = String(formData.get('subscription_id'));
-                
-                console.log('Starting address assignment:', {
-                    addressId,
-                    subscriptionId,
-                    action
-                });
-                
-            try {
-                const data = await assignAddress(addressId, subscriptionId, jwt);
-                return { success: true, message: data.message };
-            } catch (error) {
-                return fail(400, { error: error instanceof Error ? error.message : String(error) });
-            }
-
-            } else if (action === 'delete') {
-                const addressId = formData.get('id');
-                const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${jwt}`
-                    }
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    return fail(response.status, {
-                        error: errorData.detail || 'Failed to delete address'
-                    });
-                }
-
-                const data: DeleteAddressResponse = await response.json();
-                return {
-                    success: true,
-                    message: data.message
-                };
-            } else { // Handle address addition
-                try {
-                    const address = {
-                        address_line_1: formData.get('address_line1'),
-                        address_line_2: formData.get('address_line2') || undefined,
-                        city: formData.get('city'),
-                        country: formData.get('country'),
-                        postcode: formData.get('postcode'),
-                        address_notes: formData.get('address_notes') || undefined
-                    };
-                    
-                    const data = await addAddress(address, jwt);
-                    return { success: data.success, message: data.message, address: data.address };
-                } catch (error) {
-                    return fail(400, { error: error instanceof Error ? error.message : String(error) });
-                }
-            }
+            const data = await addAddress(address, jwt);
+            return { success: data.success, message: data.message, address: data.address };
         } catch (error) {
-            console.error('Error handling address:', error);
-            return fail(500, {
-                error: 'Failed to process address request',
-                action
+            return fail(400, { error: error instanceof Error ? error.message : String(error) });
+        }
+
+    },
+    assignAddress: async ({ request, locals }) => {
+        const formData = await request.formData();
+        
+        const session = await supabase.auth.getSession();
+        const jwt = session.data.session?.access_token;
+
+        const addressId = String(formData.get('address_id'));
+        const subscriptionId = String(formData.get('subscription_id'));
+        
+        console.log('Starting address assignment:', {
+            addressId,
+            subscriptionId,
+        });
+            
+        try {
+            const data = await assignAddress(addressId, subscriptionId, jwt);
+            return { success: true, message: data.message };
+        } catch (error) {
+            return fail(400, { error: error instanceof Error ? error.message : String(error) });
+        }
+    },
+    addressDelete: async ({ request, locals }) => {
+        const formData = await request.formData();
+
+        const session = await supabase.auth.getSession();
+        const jwt = session.data.session?.access_token;
+        
+        const addressId = formData.get('id');
+        const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            return fail(response.status, {
+                error: errorData.detail || 'Failed to delete address'
             });
         }
-    }
-};
+
+        const data: DeleteAddressResponse = await response.json();
+        return {
+            success: true,
+            message: data.message
+        };
+    },
+} satisfies Actions;

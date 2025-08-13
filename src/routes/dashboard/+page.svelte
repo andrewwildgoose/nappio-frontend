@@ -5,14 +5,11 @@
     import { goto } from '$app/navigation';
     import { handleSignOut } from '$lib/stores/auth';
     import AddressForm from '$lib/components/AddressForm.svelte';
+    // import { addAddress, assignAddress } from '$lib/api/address.server';
 
     export let data: PageData;
     let showAddressForm = false;
     let selectedAddress: typeof data.addresses[0] | null = null;
-
-    // Add state for address selection modal
-    let showAddressSelector = false;
-    let selectedSubscription: typeof data.subscriptions[0] | null = null;
 
     // State for address selection
     let selectingAddressFor: typeof data.subscriptions[0] | null = null;
@@ -21,7 +18,7 @@
         // Create and submit form programmatically
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '?/address';
+        form.action = '?/addressDelete';
 
         const actionInput = document.createElement('input');
         actionInput.type = 'hidden';
@@ -66,16 +63,11 @@
         }).format(amount);
     }
 
-    function handleAddressSelect(address: typeof data.addresses[0] | null) {
-        selectedAddress = address;
-        showAddressForm = true;
-    }
-
     function handleAddressAssign(subscription: typeof data.subscriptions[0], address: typeof data.addresses[0]) {
         // Create and submit form programmatically
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '?/address';
+        form.action = '?/assignAddress';
 
         const actionInput = document.createElement('input');
         actionInput.type = 'hidden';
@@ -132,7 +124,7 @@
                         </div>
                         {#if showAddressForm}
                             <div class="mt-4">
-                                <AddressForm form={data.form} address={selectedAddress} />
+                                <AddressForm  action="?/submitAddress" initialAddress={selectedAddress} />
                             </div>
                         {/if}
                         {#if data.addresses && data.addresses.length > 0}
