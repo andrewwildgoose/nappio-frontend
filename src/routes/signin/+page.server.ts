@@ -1,14 +1,14 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabaseClient';
+// import { supabase } from '$lib/server/supabaseClient';
 import type { Actions, PageServerLoad } from './$types';
-import { requireUnauth } from '$lib/server/auth-helper';
+import { handleServerSignIn, handleServerSignOut, requireUnauth } from '$lib/server/auth-helper';
 
 export const load: PageServerLoad = async (event) => {
     await requireUnauth(event);
 };
 
 export const actions = {
-    auth: async ({ request, locals: { supabase }, url }) => {
+    auth: async ({ request, cookies, locals: { supabase }, url }) => {
         const data = await request.formData();
         const type = data.get('type') as 'signin' | 'signup' | 'signout';
 
@@ -17,24 +17,17 @@ export const actions = {
         try {
             switch (type) {
                 case 'signout': {
-                    console.log('[Server] Processing signout');
-                    const { error } = await supabase.auth.signOut();
-                    
-                    if (error) {
-                        console.error('[Server] Signout error:', error);
-                        return fail(500, { error: error.message });
-                    }
-
-                    console.log('[Server] Signout successful');
-                    return { success: true, signedOut: true };
+                    return await handleServerSignOut(cookies);
                 }
 
                 case 'signup':
                     return handleSignup({ data, url });
 
-                case 'signin':
-                    return handleSignin({ data });
-
+                case 'signin': {
+                    const email = data.get('email')?.toString();
+                    const password = data.get('password')?.toString();
+                    return await handleServerSignIn({ email, password, cookies });
+                }
                 default:
                     return fail(400, { error: 'Invalid action type' });
                 }
@@ -87,28 +80,44 @@ async function handleSignup({ data, url }: { data: FormData; url: URL }) {
     };
 }
 
-async function handleSignin({ data }: { data: FormData }) {
-    const email = data.get('email')?.toString();
-    const password = data.get('password')?.toString();
+// async function handleSignin({ data, cookies }: { data: FormData; cookies: Cookies }) {
+//     const email = data.get('email')?.toString();
+//     const password = data.get('password')?.toString();
 
-    if (!email || !password) {
-        return fail(400, { error: 'Missing email or password' });
-    }
+//     if (!email || !password) {
+//         return fail(400, { error: 'Missing email or password' });
+//     }
 
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    });
+//     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+//         email,
+//         password
+//     });
 
-    if (authError) {
-        return fail(400, {
-            error: authError.message,
-            email
-        });
-    }
+//     if (authError) {
+//         return fail(400, {
+//             error: authError.message,
+//             email
+//         });
+//     }
 
-    return {
-        success: true,
-        email
-    };
-}
+//     // Set auth cookies after successful authentication
+//     const { access_token, refresh_token } = authData.session;
+//     cookies.set('sb-access-token', access_token, {
+//         path: '/',
+//         maxAge: 60 * 60 * 24 * 7, // 7 days
+//         sameSite: 'lax',
+//         // secure: process.env.NODE_ENV === 'production'
+//     });
+
+//     cookies.set('sb-refresh-token', refresh_token, {
+//         path: '/',
+//         maxAge: 60 * 60 * 24 * 7,
+//         sameSite: 'lax',
+//         // secure: process.env.NODE_ENV === 'production'
+//     });
+
+//     return {
+//         success: true,
+//         message: 'Successfully signed in'
+//     };
+// }

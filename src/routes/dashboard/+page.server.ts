@@ -49,7 +49,13 @@ interface DeleteAddressResponse {
 }
 
 export const load: PageServerLoad = async ({ locals, fetch }) => {
+    // First validate session exists
     if (!locals.session) {
+        throw redirect(303, '/signin');
+    }
+
+    const jwt = locals.session.access_token;
+    if (!jwt) {
         throw redirect(303, '/signin');
     }
 
@@ -63,10 +69,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     };
 
     try {
-        const session = await supabase.auth.getSession();
-        const jwt = session.data.session?.access_token;
-
-        // Fetch both subscriptions and addresses in parallel
+        // Use the token from locals consistently
         const [subscriptionsResponse, addressesResponse] = await Promise.all([
             fetch(`${BACKEND_API_URL}/api/v1/user/user-subscriptions`, {
                 headers: {
@@ -145,10 +148,13 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 
 export const actions: Actions = {
 
-    submitAddress: async ({ request }) => {
+    submitAddress: async ({ request, locals }) => {
 
-        const { data: { session } } = await supabase.auth.getSession();
-        const jwt = session?.access_token;
+        if (!locals.session?.access_token) {
+            return fail(401, { error: 'Unauthorized' });
+        }
+
+        const jwt = locals.session.access_token;
 
         const formData = await request.formData();
         const address = {
@@ -172,10 +178,12 @@ export const actions: Actions = {
 
     },
     assignAddress: async ({ request, locals }) => {
+        if (!locals.session?.access_token) {
+            return fail(401, { error: 'Unauthorized' });
+        }
+
+        const jwt = locals.session.access_token;
         const formData = await request.formData();
-        
-        const session = await supabase.auth.getSession();
-        const jwt = session.data.session?.access_token;
 
         const addressId = String(formData.get('address_id'));
         const subscriptionId = String(formData.get('subscription_id'));
@@ -193,10 +201,12 @@ export const actions: Actions = {
         }
     },
     addressDelete: async ({ request, locals }) => {
-        const formData = await request.formData();
+        if (!locals.session?.access_token) {
+            return fail(401, { error: 'Unauthorized' });
+        }
 
-        const session = await supabase.auth.getSession();
-        const jwt = session.data.session?.access_token;
+        const jwt = locals.session.access_token;
+        const formData = await request.formData();
         
         const addressId = formData.get('id');
         const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {

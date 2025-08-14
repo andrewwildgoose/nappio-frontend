@@ -32,6 +32,7 @@
                 if (result.type === 'success' && result.data?.success) {
                     if (result.data.message) {
                         form = result.data;
+                        window.location.href = '/dashboard';
                     } else {
                         window.location.href = '/dashboard';
                     }

@@ -3,7 +3,7 @@
     import { Button } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
-    import { handleSignOut } from '$lib/stores/auth';
+    import SignOutForm from '$lib/components/SignOutForm.svelte';
     import AddressForm from '$lib/components/AddressForm.svelte';
     // import { addAddress, assignAddress } from '$lib/api/address.server';
 
@@ -37,18 +37,18 @@
         document.body.removeChild(form);
     }
 
-    async function handleSignoutSubmit() {
-        return async () => {
-            console.log('Client: Starting signout process');
-            try {
-                await handleSignOut();
-                console.log('Client: Signout successful, redirecting');
-                await goto('/signin');
-            } catch (error) {
-                console.error('Client: Signout error:', error);
-            }
-        };
-    }
+    // async function handleSignoutSubmit() {
+    //     return async () => {
+    //         console.log('Client: Starting signout process');
+    //         try {
+    //             await handleSignOut();
+    //             console.log('Client: Signout successful, redirecting');
+    //             await goto('/signin');
+    //         } catch (error) {
+    //             console.error('Client: Signout error:', error);
+    //         }
+    //     };
+    // }
 
     // Helper function to format date
     function formatDate(dateString: string) {
@@ -248,19 +248,7 @@
             </div>
 
             <div class="flex justify-end">
-                <form 
-                    action="/signin?/auth" 
-                    method="POST" 
-                    use:enhance={handleSignoutSubmit}
-                >
-                    <input type="hidden" name="type" value="signout">
-                    <Button 
-                        type="submit"
-                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-xl rounded-none transition-colors duration-200"
-                    >
-                        Sign Out
-                    </Button>
-                </form>
+                <SignOutForm />
             </div>
         </div>
     </div>
