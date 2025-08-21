@@ -6,7 +6,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-    <div class="h-full w-full">
+    <div class="h-full w-full min-h-screen">
         <div class="flex flex-col items-center justify-center m-5 text-xl text-text-colour font-commissioner">
             <Plans plans={data.plans} error={data.error} user={data.user} />
         </div>

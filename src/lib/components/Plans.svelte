@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { page } from "$app/state";
     import type { Plan } from '$lib/types/plans';
     import { Button } from 'flowbite-svelte';
     import { goto } from '$app/navigation';
     // import type { PageData } from './$types';
     import AddressForm from '$lib/components/AddressForm.svelte';
+    
+    $: isSignedIn = page.data.user != null;
 
     // export let data: PageData;
 
@@ -18,71 +21,22 @@
     let selectedPlanId: string | null = null;
     let isSubmitting = false;
 
-    let addressFormData = {}; // Collect address fields here
-
 
     // Called when user clicks Subscribe
     function openDetailsForm(planId: string | null) {
-        if (!planId) {
-            console.error('No plan ID provided');
-            return;
+        if (!isSignedIn) {
+            console.error('User is not signed in');
+            goto('/signin');
         } else {
-            selectedPlanId = planId;
-            showDetailsForm = true;
-        }
-    }
-
-    // // Called when user clicks "Continue to Checkout"
-    // function handleContinueToCheckout() {
-    //     // Create a form programmatically
-    //     const form = document.createElement('form');
-    //     form.method = 'POST';
-    //     form.action = '?/subscribe';
-
-    //     // Add hidden inputs for address fields
-    //     for (const [key, value] of Object.entries(addressFormData)) {
-    //         const input = document.createElement('input');
-    //         input.type = 'hidden';
-    //         input.name = key;
-    //         input.value = value ?? '';
-    //         form.appendChild(input);
-    //     }
-
-    //     // Add phone and priceId
-    //     const phoneInput = document.createElement('input');
-    //     phoneInput.type = 'hidden';
-    //     phoneInput.name = 'phone';
-    //     phoneInput.value = phone;
-    //     form.appendChild(phoneInput);
-
-    //     const priceIdInput = document.createElement('input');
-    //     priceIdInput.type = 'hidden';
-    //     priceIdInput.name = 'priceId';
-    //     priceIdInput.value = selectedPlanId ?? '';
-    //     form.appendChild(priceIdInput);
-
-    //     document.body.appendChild(form);
-    //     form.submit();
-    //     document.body.removeChild(form);
-    // }
-
-
-    function handleSubscribe() {
-        isLoading = true;
-        return async ({ result }) => {
-            try {
-                if (result.type === 'success' && result.data.checkout_url) {
-                    window.location.href = result.data.checkout_url;
-                } else if (result.type === 'failure') {
-                    error = result.data?.error || 'Failed to create checkout session';
-                } else if (result.type === 'redirect') {
-                    await goto(result.location);
-                }
-            } finally {
-                isLoading = false;
-            }
+            if (!planId) {
+                console.error('No plan ID provided');
+                return;
+            } else {
+                selectedPlanId = planId;
+                showDetailsForm = true;
+            };          
         };
-    }
+    };
 
     function formatPrice(price: number): string {
         return `£${(price / 100).toFixed(2)}`;
@@ -106,7 +60,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-gray-100">
+                        <tr class="bg-primary">
                             <th class="p-4 text-left font-commissioner">Plan Name</th>
                             <th class="p-4 text-left font-commissioner">Description</th>
                             <th class="p-4 text-left font-commissioner">Price</th>
@@ -115,7 +69,7 @@
                     </thead>
                     <tbody>
                         {#each plans as plan (plan.id)}
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr class="border-b hover:bg-secondary/50">
                                 <td class="p-4 font-commissioner text-text-colour">{plan.name}</td>
                                 <td class="p-4 text-text-colour text-left">{plan.description}</td>
                                 <td class="p-4">{formatPrice(plan.price)}</td>
@@ -126,61 +80,53 @@
                                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
                                         on:click={() => openDetailsForm(plan.stripe_price_id)}
                                     >
-                                        Subscribe
+                                        Choose Plan
                                     </Button>
-                                    <!-- <Button
-                                        type="button"
-                                        disabled={isLoading}
-                                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
-                                        on:click={handleSubscribe}
-                                    >
-                                        Subscribe
-                                    </Button> -->
                                 </td>
                             </tr>
                         {/each}
-                        <!-- {#each plans as plan (plan.id)}
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-4 font-commissioner text-text-colour">{plan.name}</td>
-                                <td class="p-4 text-text-colour text-left">{plan.description}</td>
-                                <td class="p-4">{formatPrice(plan.price)}</td>
-                                <td class="p-4">
-                                    <form 
-                                        action="?/subscribe" 
-                                        method="POST" 
-                                        use:enhance={handleSubscribe}
-                                    >
-                                        <input type="hidden" name="priceId" value={plan.stripe_price_id}>
-                                        <Button
-                                            type="submit"
-                                            disabled={isLoading}
-                                            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
-                                        >
-                                            {#if isLoading}
-                                                Creating checkout...
-                                            {:else}
-                                                Subscribe
-                                            {/if}
-                                        </Button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {/each} -->
                     </tbody>
                 </table>
             </div>
         </div>
     {/if}
     {#if showDetailsForm}
-        <div class="fixed inset-0 bg-neutral-500/50 flex flex-col items-center justify-center z-50">
-            <div class="bg-background! rounded-lg shadow-lg w-full max-w-md">
-                <div class="mt-4">
+        <div 
+            class="fixed inset-0 bg-neutral-500/50 flex flex-col items-center justify-center z-50"
+            on:click={() => showDetailsForm = false}
+            on:keydown={(e) => e.key === 'Escape' && (showDetailsForm = false)}
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+        >
+            <div 
+                class="bg-background! shadow-lg w-full max-w-md flex flex-col overflow-y-auto"
+                on:click|stopPropagation={() => {}}
+                on:keydown|stopPropagation={() => {}}
+                role="dialog"
+                tabindex="0"
+            >
+                <div class="p-2 md:pr-8 md:pl-8 mt-4 flex flex-col items-center justify-center">
+                    <h3 class="pb-2 font-ranchers text-2xl text-black">We're excited to get you started on your 
+                        <span>
+                            <img 
+                                src="/images/logos/Nappio-Colour-Text-NoTag.png" 
+                                alt="Nappio"
+                                class="h-6 mb-2 inline-block"
+                            />
+                        </span> 
+                    journey!</h3>
+
+                    <p>Before we proceed, please provide your address details for where you want the deliveries and pick ups to be made.</p>
+                </div>
+                
+                <div class="flex">
+                    
                     <AddressForm 
                         action='?/handleAddress' 
                         formSubmitButtonText={"Continue to Checkout"}
                         priceId={selectedPlanId}
-                        useEnhance={true}
-                        onSubmit={async (result) => {
+                        onSubmit={async (result: { type: string; data: { checkout_url?: string } }) => {
                             console.log(result);
                             if (result.type === 'success' && result.data.checkout_url) {
                                 window.location.href = result.data.checkout_url;
@@ -188,15 +134,7 @@
                         }}
                     />
                 </div>
-                <div class="flex gap-2 items-center justify-center">
-                    <Button 
-                        type="button"
-                        on:click={handleSubscribe}
-                        disabled={isSubmitting}
-                        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
-                    >
-                        {#if isSubmitting}Submitting...{:else}Continue to Checkout{/if}
-                    </Button>
+                <div class="flex gap-2 items-center justify-center mb-4">
                     <Button 
                         type="button"
                         class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"

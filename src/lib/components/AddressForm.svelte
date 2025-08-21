@@ -51,10 +51,10 @@
         action="{action}"
         use:enhance={useEnhance ? handleSubmit : undefined}
     >
-        <div class="w-full sm:w-96 mb-6 px-0">
+        <div class="w-full sm:w-96 mb-4 px-0">
             <input type="hidden" name="action" value={initialAddress?.id ? 'delete' : 'add'} />
             <input type="hidden" name="priceId" value={priceId ?? ''} />
-            <Label for="address-line1" class="block mb-2 font-commissioner text-xl text-text-colour!">
+            <Label for="address-line1" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 Address Line 1
             </Label>
             <Input
@@ -69,8 +69,8 @@
             />
         </div>
 
-        <div class="w-full sm:w-96 mb-6 px-0">
-            <Label for="address-line2" class="block mb-2 font-commissioner text-xl text-text-colour!">
+        <div class="w-full sm:w-96 mb-4 px-0">
+            <Label for="address-line2" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 Address Line 2 (Optional)
             </Label>
             <Input
@@ -84,8 +84,8 @@
             />
         </div>
 
-        <div class="w-full sm:w-96 mb-6 px-0">
-            <Label for="city" class="block mb-2 font-commissioner text-xl text-text-colour!">
+        <div class="w-full sm:w-96 mb-4 px-0">
+            <Label for="city" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 City
             </Label>
             <Input
@@ -100,8 +100,8 @@
             />
         </div>
 
-        <div class="w-full sm:w-96 mb-6 px-0">
-            <Label for="county" class="block mb-2 font-commissioner text-xl text-text-colour!">
+        <div class="w-full sm:w-96 mb-4 px-0">
+            <Label for="county" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 Country
             </Label>
             <Input
@@ -116,13 +116,13 @@
             />
         </div>
 
-        <div class="w-full sm:w-96 mb-6 px-0">
+        <div class="w-full sm:w-96 mb-4 px-0">
             {#if 
                 form.postcode.length > 2
                 && !validPostcodes.some(pc => (form.postcode).toUpperCase().startsWith(pc))}
                 <p class="text-red-500 mb-2">We don't currently operate in your postcode, our current areas are {validPostcodes.join(', ')}.</p>
             {/if}
-            <Label for="postcode" class="block mb-2 font-commissioner text-xl text-text-colour!">
+            <Label for="postcode" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 Postcode
             </Label>
             <Input
@@ -137,8 +137,8 @@
             />
         </div>
 
-        <div class="w-full sm:w-96 mb-6 px-0">
-            <Label for="address-notes" class="block mb-2 font-commissioner text-xl text-text-colour!">
+        <div class="w-full sm:w-96 mb-4 px-0">
+            <Label for="address-notes" class="block mb-1 font-commissioner text-xl text-text-colour!">
                 Address Notes (Optional)
             </Label>
             <Textarea

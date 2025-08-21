@@ -2,7 +2,9 @@
     import {Button} from 'flowbite-svelte';
 </script>
 
+<!-- <div class="p-5 flex flex-col items-center justify-center text-center min-h-max w-full max-h-screen"> -->
 <div class="p-5 flex flex-col items-center justify-center text-center">
+
     <h2 class="m-5 text-4xl text-text-colour font-ranchers">How does it work?</h2>
     <div class="m-5 p-5 bg-primary max-w-2xl">
         <h3 class="text-2xl text-text-colour font-ranchers">We Provide the Nappies</h3>

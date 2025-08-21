@@ -7,7 +7,7 @@
 
 </script>
 
-<div class="flex flex-col w-full h-dvh">
+<div class="flex flex-col w-full">
     <HompageInfo />
     <How />
     <div class="flex flex-col w-full items-center justify-center">
