@@ -42,8 +42,9 @@
         {nonActiveClass}
         divClass="w-full lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
         <NavLi href="/">Home</NavLi>
+        <NavLi href="/about">About</NavLi>
         <NavLi href="/plans">Subscription plans</NavLi>
-        <!-- <NavLi href="/register">Newsletter</NavLi> -->
+        <NavLi href="/newsletter">Newsletter</NavLi>
         {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>
         {:else}

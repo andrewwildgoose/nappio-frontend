@@ -23,7 +23,7 @@
     }
 </script>
 
-<div class="flex flex-col items-center justify-center md:m-5 w-full sm:max-w-screen-sm">
+<div class="flex flex-col justify-center bg-background/50 p-5 shadow-sm w-full sm:max-w-screen-sm">
     <form 
         method="POST" 
         action="?/subscribe" 

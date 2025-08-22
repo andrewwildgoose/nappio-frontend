@@ -9,9 +9,12 @@
         </a>
         <!-- <FooterBrand href="/" src="/images/logos/Nappio-v3-Clear.png" alt="Nappio Logo" class="h-20" /> -->
         <FooterLinkGroup class="mb-6 flex flex-wrap items-center text-md text-text-colour sm:mb-0 dark:text-text-colour">
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">About</FooterLink>
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink>
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Contact</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/about">About</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/plans">Subscription Plans</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/newsletter">Newsletter</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/signin">Sign In</FooterLink>
+        <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Contact</FooterLink> -->
         </FooterLinkGroup>
     </div>
     <hr class="my-6 border-text-colour sm:mx-auto lg:my-8 dark:border-text-colour" />

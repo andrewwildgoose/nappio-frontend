@@ -50,7 +50,7 @@
     }
 </script>
 
-<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8">
+<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8 bg-background/50 p-5 shadow-sm">
     <div class="w-full flex justify-center mb-6">
         <Button
             color="light"

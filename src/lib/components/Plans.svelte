@@ -49,15 +49,15 @@
             Error: {error}
         </div>
     {:else if plans.length === 0}
-        <div class="col-span-full text-center text-text-colour">
+        <div class="col-span-full font-ranchers text-center text-text-colour text-4xl">
             No subscription plans are currently available.
         </div>
     {:else}
         <div class="col-span-full text-center text-text-colour mb-8">
-            <div class="text-center text-text-colour mb-8">
+            <div class="text-center font-ranchers text-text-colour text-4xl mb-8">
                 Choose a subscription plan that suits you best.
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto shadow-sm">
                 <table class="w-full">
                     <thead>
                         <tr class="bg-primary">

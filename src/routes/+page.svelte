@@ -10,10 +10,10 @@
 <div class="flex flex-col w-full">
     <HompageInfo />
     <How />
-    <div class="flex flex-col w-full items-center justify-center">
+    <!-- <div class="flex flex-col w-full items-center justify-center">
         <div class="flex flex-col items-center justify-center bg-accent2 mb-5 p-3 text-xl w-full border-b-1 border-t-1 border-solid border-text-colour">
             <p>Sign up to be the first to know about any updates to our service.</p>
         </div>
         <EmailForm {form} />                
-    </div>
+    </div> -->
 </div>
