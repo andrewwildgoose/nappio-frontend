@@ -5,7 +5,7 @@
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-tertiary bg-transparent";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2";
-    const ulClasses = "!bg-transparent text-text-colour flex flex-col p-4 mt-4 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 lg:text-center";
+    const ulClasses = "!bg-transparent text-2xl text-text-colour flex flex-col p-4 mt-4 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 lg:text-center";
 
     console.log("Navbar page data user:", isSignedIn());
 
@@ -25,25 +25,25 @@
                 class="h-auto w-34 object-contain">
         </span>
     </NavBrand>
-    <span class="self-center whitespace-nowrap flex flex-1 items-center gap-1 justify-center">
+    <span class="self-center whitespace-nowrap flex items-center gap-1 justify-center">
         <img 
             src="/images/logos/Nappio-v2-baby-yellow-cropped.png" 
             alt="Nappio baby logo" 
-            class="h-auto w-38 object-contain relative top-2 lg:top-3">
+            class="h-auto w-38 object-contain relative top-2 top-3 z-10">
         
     </span>
     <NavHamburger 
-        class="text-text-colour flex flex-1 justify-end lg:hidden rounded-none m-0 p-0"
-        menuClass="focus:outline-none hover:bg-transparent focus:text-tertiary" />
+        class="text-text-colour flex flex-1 justify-end lg:hidden rounded-none m-0 p-0 hover:bg-transparent!"
+        menuClass="focus:outline-none hover:bg-transparent! focus:text-tertiary" />
     <NavUl 
         ulClass={ulClasses} 
         {activeUrl} 
         {activeClass} 
         {nonActiveClass}
-        divClass="w-full lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
+        divClass="w-full text-center border-t-1 lg:border-none lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/about">About</NavLi>
-        <NavLi href="/plans">Subscription plans</NavLi>
+        <NavLi href="/plans">Plans</NavLi>
         <NavLi href="/newsletter">Newsletter</NavLi>
         {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>
