@@ -133,7 +133,7 @@
                 required
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
-                placeholder="SW9 ... or SW12 ... or SW2 ..."
+                placeholder="We currently serve SW2, SW4, SW8 and SW9"
             />
         </div>
 

@@ -7,8 +7,6 @@
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2";
     const ulClasses = "!bg-transparent text-2xl text-text-colour flex flex-col p-4 mt-4 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 lg:text-center";
 
-    console.log("Navbar page data user:", isSignedIn());
-
 </script>
 
 <Navbar 
@@ -43,7 +41,7 @@
         divClass="w-full text-center border-t-1 lg:border-none lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/about">About</NavLi>
-        <NavLi href="/plans">Plans</NavLi>
+        <NavLi href="/subscribe">Subscribe</NavLi>
         <NavLi href="/newsletter">Newsletter</NavLi>
         {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>

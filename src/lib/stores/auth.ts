@@ -24,6 +24,7 @@ supabase.auth.onAuthStateChange((event, session) => {
             postcode: session.user.user_metadata?.postcode,
             email_verified: session.user.email_confirmed_at ? true : false
         });
+        console.log('User data in auth store:', session.user);
     } else {
         user.set(null);
     }

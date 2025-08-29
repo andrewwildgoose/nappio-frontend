@@ -1,5 +1,8 @@
 <script>
+    import { page } from "$app/state";
     import { Footer, FooterCopyright, FooterLinkGroup, FooterBrand, FooterLink } from "flowbite-svelte";
+
+    let isSignedIn = $derived(() => page.data.user != null);
 </script>
 
 <Footer footerType="logo" class="mt-6 rounded-none bg-primary border-t-text-colour dark:border-t-text-colour border-solid border-t-1">
@@ -10,9 +13,13 @@
         <!-- <FooterBrand href="/" src="/images/logos/Nappio-v3-Clear.png" alt="Nappio Logo" class="h-20" /> -->
         <FooterLinkGroup class="mb-6 flex flex-wrap items-center text-md text-text-colour sm:mb-0 dark:text-text-colour">
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/about">About</FooterLink>
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/plans">Subscription Plans</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/subscribe">Subscribe</FooterLink>
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/newsletter">Newsletter</FooterLink>
+        {#if isSignedIn()}
+            <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/dashboard">Dashboard</FooterLink>
+        {:else}
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/signin">Sign In</FooterLink>
+        {/if}
         <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink>
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Contact</FooterLink> -->
         </FooterLinkGroup>

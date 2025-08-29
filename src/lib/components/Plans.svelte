@@ -57,7 +57,28 @@
             <div class="text-center font-ranchers text-text-colour text-4xl mb-8">
                 Choose a subscription plan that suits you best.
             </div>
-            <div class="overflow-x-auto shadow-sm">
+            
+            <!-- Mobile view (cards) -->
+            <div class="md:hidden space-y-4">
+                {#each plans as plan (plan.id)}
+                    <div class="bg-white shadow-sm border-b p-4">
+                        <h3 class="font-commissioner text-text-colour text-xl mb-2">{plan.name}</h3>
+                        <p class="text-text-colour mb-2">{plan.description}</p>
+                        <p class="text-lg font-bold mb-3">{formatPrice(plan.price)}</p>
+                        <Button
+                            type="button"
+                            disabled={isLoading}
+                            class="w-full bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner rounded-none transition-colors duration-200"
+                            on:click={() => openDetailsForm(plan.stripe_price_id)}
+                        >
+                            Choose Plan
+                        </Button>
+                    </div>
+                {/each}
+            </div>
+
+            <!-- Desktop view (table) -->
+            <div class="hidden md:block overflow-x-auto shadow-sm">
                 <table class="w-full">
                     <thead>
                         <tr class="bg-primary">

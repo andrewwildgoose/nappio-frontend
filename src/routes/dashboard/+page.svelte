@@ -253,10 +253,10 @@
                             <div class="text-center py-4">
                                 <p class="text-gray-600 mb-4">You don't have any active subscriptions.</p>
                                 <Button 
-                                    href="/plans"
+                                    href="/subscribe"
                                     class="bg-primary! hover:bg-accent! text-text-colour! hover:text-primary! font-commissioner text-l rounded-none transition-colors duration-200"
                                 >
-                                    View Available Plans
+                                    Start a subscription
                                 </Button>
                             </div>
                         {/if}
