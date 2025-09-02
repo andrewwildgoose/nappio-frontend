@@ -1,10 +1,12 @@
 <script lang="ts">
     import { page } from "$app/state";
     import { goto } from '$app/navigation';
+    import { enhance, applyAction } from '$app/forms';
+    import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
     import { Button, Input, Label, Alert, Spinner } from 'flowbite-svelte';
     import SubscriptionAddress from './SubscriptionAddress.svelte';
     import type { AddressFormData } from '$lib/types/address';
-    
+
     // Auth check
     let isSignedIn = $derived(() => page.data.user != null);
 
@@ -43,41 +45,40 @@
         { title: 'Delivery Address', component: 'AddressStep' }
     ];
 
-    async function handleSubmit() {
+    const handleEnhanceSubmit: SubmitFunction = ({ formElement, formData, action, cancel }) => {
+        // Validate before submission
+        if (!canProceed[currentStep]) {
+            cancel();
+            error = 'Please complete all required fields';
+            return;
+        }
+
         isSubmitting = true;
         error = null;
 
-        const formData = new FormData();
-        formData.append('babyBirthdate', babyBirthdate);
-        formData.append('babyWeight', babyWeight.toString());
-        formData.append('wantNappyWraps', wantNappyWraps.toString());
-        formData.append('address', JSON.stringify(address));
-
-        try {
-            const response = await fetch('?/createSubscription', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error);
+        return async ({ result }) => {
+            try {
+                if (result.type === 'success' && result.data) {
+                    const { checkout_url } = result.data;
+                    if (checkout_url) {
+                        window.location.href = checkout_url;
+                        return;
+                    }
+                } else if (result.type === 'error') {
+                    error = result.error.message;
+                } else if (result.type === 'failure') {
+                    error = result.data?.error || 'Subscription creation failed';
+                }
+                
+                // Apply the action result to update the form state
+                await applyAction(result);
+            } catch (e) {
+                error = e instanceof Error ? e.message : 'An unexpected error occurred';
+            } finally {
+                isSubmitting = false;
             }
-
-            console.log('Subscription creation result:', result);
-
-            if (result.data?.checkout_url) {
-                window.location.href = result.data.checkout_url;
-            } else if (result.checkout_url) {
-                window.location.href = result.checkout_url;
-            }
-        } catch (e) {
-            error = e instanceof Error ? e.message : 'An error occurred';
-        } finally {
-            isSubmitting = false;
-        }
-    }
+        };
+    };
 
     function nextStep() {
         if (currentStep < steps.length - 1 && canProceed[currentStep]) {
@@ -92,7 +93,15 @@
     }
 </script>
 
-<div class="max-w-2xl mx-auto p-4">
+<form
+    method="POST"
+    action="?/createSubscription"
+    use:enhance={handleEnhanceSubmit}
+    class="max-w-2xl mx-auto p-4">
+    <input type="hidden" name="babyBirthdate" value={babyBirthdate}>
+    <input type="hidden" name="babyWeight" value={babyWeight}>
+    <input type="hidden" name="wantNappyWraps" value={wantNappyWraps}>
+    <input type="hidden" name="address" value={JSON.stringify(address)}>
     <!-- Progress indicator -->
     <div class="mb-8">
         <div class="flex justify-between">
@@ -213,7 +222,7 @@
 
         {#if currentStep === steps.length - 1}
             <Button
-                on:click={handleSubmit}
+                type="submit"
                 disabled={isSubmitting || !canProceed[currentStep]}
                 class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none"
             >
@@ -249,4 +258,4 @@
             {error}
         </Alert>
     {/if}
-</div>
+</form>

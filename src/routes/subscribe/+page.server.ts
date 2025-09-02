@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import { supabase } from '$lib/server/supabaseClient';
 import type { Actions } from './$types';
 import type { AddressFormData } from '$lib/types/address';
@@ -21,12 +21,8 @@ export const actions = {
             cancelUrl: cancelUrl
         };
 
-        console.log('Creating subscription with data:', JSON.stringify(data));
-
         try {
-
             const session = await supabase.auth.getSession();
-
             const jwt = session.data.session?.access_token;
 
             const response = await fetch(`${BACKEND_API_URL}/api/v1/create-subscription`, {
@@ -39,16 +35,26 @@ export const actions = {
             });
 
             const responseData = await response.json();
-
             console.log('Subscription creation response:', responseData);
 
             if (!response.ok) {
-                throw error(400, responseData.error || 'Subscription creation failed');
+                return fail(400, { 
+                    error: responseData.error || 'Subscription creation failed' 
+                });
             }
 
+            const { checkout_url, session_id } = responseData;
+            console.log('Received checkout URL:', checkout_url);
+            console.log('Received session ID:', session_id);
+            
+            if (!checkout_url) {
+                return fail(500, { error: 'No checkout URL received' });
+            }
+
+            // Return the checkout data directly
             return {
-                success: true,
-                checkout_url: responseData.checkout_url
+                checkout_url,
+                session_id
             };
         } catch (e) {
             throw error(500, 'Failed to create subscription');

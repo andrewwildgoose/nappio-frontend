@@ -2,7 +2,7 @@
     //import type { PageData } from './$types';
     import SubscriptionFlow from '$lib/components/SubscriptionFlow.svelte';
 
-    export let data: any;
+    export const data: any = {};
 </script>
 
 <div class="flex flex-col items-center justify-center">
