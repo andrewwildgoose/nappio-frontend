@@ -5,7 +5,7 @@
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-tertiary bg-transparent";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2";
-    const ulClasses = "!bg-transparent text-2xl text-text-colour flex flex-col p-4 mt-4 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 lg:text-center";
+    const ulClasses = "!bg-transparent text-2xl text-text-colour flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center";
 
 </script>
 
@@ -31,14 +31,14 @@
         
     </span>
     <NavHamburger 
-        class="text-text-colour flex flex-1 justify-end lg:hidden rounded-none m-0 p-0 hover:bg-transparent!"
+        class="text-text-colour flex flex-1 justify-end md:hidden rounded-none m-0 p-0 hover:bg-transparent! z-20"
         menuClass="focus:outline-none hover:bg-transparent! focus:text-tertiary" />
     <NavUl 
         ulClass={ulClasses} 
         {activeUrl} 
         {activeClass} 
         {nonActiveClass}
-        divClass="w-full text-center border-t-1 lg:border-none lg:block lg:w-auto lg:justify-end lg:flex lg:flex-1">
+        divClass="w-full text-center border-t-1 md:border-none md:block md:w-auto md:justify-end md:flex md:flex-1">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/about">About</NavLi>
         <NavLi href="/subscribe">Subscribe</NavLi>

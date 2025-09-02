@@ -5,7 +5,7 @@
     export let address: AddressFormData;
 </script>
 
-<div class="w-full max-w-md mx-auto">
+<div class="w-full max-w-md mx-auto flex justify-center">
     <AddressFields 
         bind:address
         mode="subscription"

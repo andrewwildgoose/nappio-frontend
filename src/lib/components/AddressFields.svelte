@@ -102,13 +102,16 @@
 
     <div class="w-full sm:w-96 mb-4 px-0">
         {#if address.postcode && !isValidPostcode}
-            <p class="text-red-500 mb-2">
-                {#if mode === 'subscription' || mode === 'order'}
-                    We don't currently operate in your postcode. Our current areas are {validPostcodes.join(', ')}.
-                {:else}
-                    Note: This address is outside our delivery area ({validPostcodes.join(', ')}).
-                {/if}
-            </p>
+            <div class="bg-primary p-3 border-2 border-accent shadow-md mt-2">
+                <p class="text-sm font-medium mb-2">
+                    {#if mode === 'subscription' || mode === 'order'}
+                        <i class="fa-solid fa-location-dot mr-2" style="color: #7cc4a7;"></i>
+                        Our service is currently available in: <span class="font-ranchers">{validPostcodes.join(', ')}</span>
+                    {:else}
+                        Note: This address is outside our delivery area ({validPostcodes.join(', ')}).
+                    {/if}
+                </p>            
+            </div>
         {/if}
         <Label for="postcode" class="block mb-1 font-commissioner text-xl text-text-colour!">
             Postcode

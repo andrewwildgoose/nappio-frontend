@@ -175,7 +175,7 @@
                     aria-expanded={isSubscriptionsExpanded}
                 >
                     <strong class="text-xl font-commissioner mb-2">Your Subscriptions</strong>
-                    <i class={isAddressesExpanded ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
+                    <i class={isSubscriptionsExpanded ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
                 </button>
                 {#if isSubscriptionsExpanded}
                     <div transition:slide={{ duration: 500, easing: cubicInOut }}>
@@ -185,9 +185,21 @@
                                     <div class="border rounded-lg p-4 bg-background">
                                         <div class="flex justify-between">
                                             <div class="w-full">
-                                                <p><strong>Plan:</strong> {subscription.plan_name}</p>
-                                                <p><strong>Status:</strong> {subscription.status}</p>
-                                                <p><strong>Cost:</strong> {formatCurrency(subscription.monthly_cost)}</p>
+                                                <!-- Subscription Items -->
+                                                {#if subscription.items && subscription.items.length > 0}
+                                                    <div class="mt-3 p-2 bg-tertiary/10 rounded">
+                                                        <p class="font-commissioner mb-2"><strong>Included Items:</strong></p>
+                                                        <ul class="space-y-1">
+                                                            {#each subscription.items as item}
+                                                                <li class="flex justify-between text-sm">
+                                                                    <span>{item.name}</span>
+                                                                    <span>{formatCurrency(item.price)}</span>
+                                                                </li>
+                                                            {/each}
+                                                        </ul>
+                                                    </div>
+                                                {/if}
+
                                                 {#if subscription.address}
                                                     <div class="mt-2">
                                                         <p><strong>Delivery Address:</strong></p>

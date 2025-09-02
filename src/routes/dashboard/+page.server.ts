@@ -6,14 +6,18 @@ import { addAddress, assignAddress } from '$lib/api/address.server';
 
 interface SubscriptionDetailsResponse {
     id: string;
-    plan_name: string;
     status: string;
-    monthly_cost: number;
     start_date: string;
     end_date?: string;
+    subscription_id: string;
     next_payment_date?: string;
     address_id?: string;  // Add this field
     address?: UserAddress;  // Add this field for the matched address
+    items: Array<{
+        name: string;
+        price: number;
+        currency: string;
+    }>;
 }
 
 interface AddressResponse {
