@@ -224,7 +224,7 @@
                             </p>
                             <Button
                                 on:click={goToSignIn}
-                                class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none"
+                                class="bg-tertiary! hover:bg-accent! text-text-colour! rounded-none"
                             >
                                 Sign in or Register
                             </Button>
@@ -334,7 +334,7 @@
         <Button
             on:click={previousStep}
             disabled={currentStep === 0}
-            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none shadow-md hover:shadow-lg transition-shadow"
+            class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
         >
             Previous
         </Button>
@@ -344,7 +344,7 @@
                 <Button
                     type="submit"
                     disabled={isSubmitting || !canProceed[currentStep]}
-                    class={`${!canProceed[currentStep] ? 'opacity-50 cursor-not-allowed' : ''} bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none shadow-md hover:shadow-lg transition-shadow`}
+                    class={`${!canProceed[currentStep] ? 'opacity-50 cursor-not-allowed' : ''} bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow`}
                 >
                     {#if isSubmitting}
                         <Spinner class="mr-2" />
@@ -358,7 +358,7 @@
             {#if !isSignedIn()}
                 <Button
                     on:click={goToSignIn}
-                    class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none shadow-md hover:shadow-lg transition-shadow"
+                    class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
                 >
                     Sign in to Continue
                 </Button>
@@ -366,7 +366,7 @@
                 <Button
                     on:click={nextStep}
                     disabled={!canProceed[currentStep]}
-                    class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! rounded-none shadow-md hover:shadow-lg transition-shadow"
+                    class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
                 >
                     Next
                 </Button>

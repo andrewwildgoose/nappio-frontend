@@ -89,7 +89,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-top min-h-screen p-4">
-    <div class="border p-8 rounded-lg shadow-lg max-w-2xl bg-background w-full">
+    <div class="border p-8 shadow-lg max-w-2xl bg-background w-full">
         <h1 class="text-3xl font-ranchers mb-6">Welcome, {data.user.first_name}!</h1>
         <div class="space-y-4">
             <div class="border-b pb-4">
@@ -104,8 +104,8 @@
                     <button
                         type="button"
                         class="flex justify-between items-center w-full"
-                        on:click={() => isAddressesExpanded = !isAddressesExpanded}
-                        on:keydown={(e) => e.key === 'Enter' && (isAddressesExpanded = !isAddressesExpanded)}
+                        onclick={() => isAddressesExpanded = !isAddressesExpanded}
+                        onkeydown={(e) => e.key === 'Enter' && (isAddressesExpanded = !isAddressesExpanded)}
                         aria-expanded={isAddressesExpanded}
                     >
                         <strong class="text-xl font-commissioner mb-2">Addresses</strong>
@@ -116,8 +116,8 @@
                             <div class="flex justify-end mt-4">
                                 <Button
                                     color="light"
-                                    class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-l rounded-none transition-colors duration-200"
-                                    on:click={() => {
+                                    class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-l rounded-none transition-colors duration-200 border-none"
+                                    onclick={() => {
                                         selectedAddress = null;
                                         showAddressForm = !showAddressForm;
                                     }}
@@ -133,7 +133,7 @@
                             {#if data.addresses && data.addresses.length > 0}
                                 <div class="space-y-4 mt-2">
                                     {#each data.addresses as address}
-                                        <div class="border rounded-lg p-4 bg-background">
+                                        <div class="border shadow-sm p-4 bg-background">
                                             <div class="flex justify-between">
                                                 <div>
                                                     <p>{address.address_line_1}</p>
@@ -149,8 +149,8 @@
                                                 </div>
                                                 <Button
                                                     color="light"
-                                                    class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200 h-fit"
-                                                    on:click={() => handleAddressDelete(address)}
+                                                    class="bg-accent! hover:bg-tertiary! text-text-colour! font-commissioner text-l rounded-none transition-colors duration-200 h-fit border-none"
+                                                    onclick={() => handleAddressDelete(address)}
                                                 >
                                                     Delete
                                                 </Button>
@@ -170,8 +170,8 @@
                 <button
                     type="button"
                     class="flex justify-between items-center w-full"
-                    on:click={() => isSubscriptionsExpanded = !isSubscriptionsExpanded}
-                    on:keydown={(e) => e.key === 'Enter' && (isSubscriptionsExpanded = !isSubscriptionsExpanded)}
+                    onclick={() => isSubscriptionsExpanded = !isSubscriptionsExpanded}
+                    onkeydown={(e) => e.key === 'Enter' && (isSubscriptionsExpanded = !isSubscriptionsExpanded)}
                     aria-expanded={isSubscriptionsExpanded}
                 >
                     <strong class="text-xl font-commissioner mb-2">Your Subscriptions</strong>
@@ -182,12 +182,14 @@
                         {#if data.subscriptions && data.subscriptions.length > 0}
                             <div class="space-y-4">
                                 {#each data.subscriptions as subscription}
-                                    <div class="border rounded-lg p-4 bg-background">
+                                    <div class="border p-4 shadow-sm bg-background">
                                         <div class="flex justify-between">
                                             <div class="w-full">
+                                                <p class="font-commissioner mb-2"><strong>Status:</strong> {subscription.status}</p>
                                                 <!-- Subscription Items -->
                                                 {#if subscription.items && subscription.items.length > 0}
                                                     <div class="mt-3 p-2 bg-tertiary/10 rounded">
+                                                        
                                                         <p class="font-commissioner mb-2"><strong>Included Items:</strong></p>
                                                         <ul class="space-y-1">
                                                             {#each subscription.items as item}
@@ -211,8 +213,8 @@
                                                         <p>{subscription.address.postcode}</p>
                                                         <Button
                                                             color="light"
-                                                            class="mt-2 bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-l rounded-none transition-colors duration-200"
-                                                            on:click={() => selectingAddressFor = subscription}
+                                                            class="mt-2 bg-tertiary! hover:bg-accent! text-text-colour! font-commissioner text-l rounded-none transition-colors duration-200 border-none"
+                                                            onclick={() => selectingAddressFor = subscription}
                                                         >
                                                             Change Address
                                                         </Button>
@@ -223,7 +225,7 @@
                                                         <Button
                                                             color="light"
                                                             class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200"
-                                                            on:click={() => selectingAddressFor = subscription}
+                                                            onclick={() => selectingAddressFor = subscription}
                                                         >
                                                             Select Address
                                                         </Button>
@@ -237,7 +239,7 @@
                                                             {#each data.addresses as address}
                                                                 <button
                                                                     class="w-full p-2 text-left border rounded hover:bg-accent hover:text-text-colour transition-colors duration-200"
-                                                                    on:click={() => handleAddressAssign(subscription, address)}
+                                                                    onclick={() => handleAddressAssign(subscription, address)}
                                                                 >
                                                                     <p class="font-bold">{address.address_line_1}</p>
                                                                     {#if address.address_line_2}
@@ -250,7 +252,7 @@
                                                         <Button
                                                             color="light"
                                                             class="mt-2 w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-commissioner text-l rounded-none"
-                                                            on:click={() => selectingAddressFor = null}
+                                                            onclick={() => selectingAddressFor = null}
                                                         >
                                                             Cancel
                                                         </Button>
@@ -266,7 +268,7 @@
                                 <p class="text-gray-600 mb-4">You don't have any active subscriptions.</p>
                                 <Button 
                                     href="/subscribe"
-                                    class="bg-primary! hover:bg-accent! text-text-colour! hover:text-primary! font-commissioner text-l rounded-none transition-colors duration-200"
+                                    class="bg-primary! hover:bg-tertiary! text-text-colour! font-commissioner text-l rounded-none transition-colors duration-200"
                                 >
                                     Start a subscription
                                 </Button>
@@ -276,8 +278,20 @@
                 {/if}
             </div>
 
-            <div class="flex justify-end">
-                <SignOutForm />
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex-1 text-center md:text-left text-sm pb-4 md:pb-0">
+                    <p>If you have any questions about our service, your subscription or billing please contact us on <a 
+                        href="mailto:info@nappio.co.uk" 
+                        class="text-accent!"
+                        onclick={(e) => {
+                            e.preventDefault();
+                            window.open('mailto:info@nappio.co.uk', '_blank');
+                        }}
+                    >info@nappio.co.uk</a></p>
+                </div>
+                <div class="flex-none">
+                    <SignOutForm />
+                </div>
             </div>
         </div>
     </div>

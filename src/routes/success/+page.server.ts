@@ -2,8 +2,8 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 
-interface SubscriptionResponse {
-    plan_name: string;
+interface PaymentResponse {
+    amount_total: number;
     customer_email: string;
 }
 
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
     // Handle Stripe subscription success
     if (sessionId) {
         try {
-            const response = await fetch(`${BACKEND_API_URL}/api/v1/subscription-details`, {
+            const response = await fetch(`${BACKEND_API_URL}/api/v1/payment-completed-details`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${jwt}`,
@@ -38,24 +38,30 @@ export const load: PageServerLoad = async ({ url, locals }) => {
             });
 
             if (!response.ok) {
-                console.error('Subscription details error:', response.status);
+                console.error('payment details error:', response.status);
                 return { 
                     type: 'error' as const, 
-                    message: 'Failed to fetch subscription details' 
+                    message: 'Failed to fetch payment details' 
                 };
             }
 
-            const data = await response.json() as SubscriptionResponse;
+            const data = await response.json() as PaymentResponse;
+
+            const amount_total = new Intl.NumberFormat('en-GB', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }).format(data.amount_total / 100);
+
             return {
-                type: 'subscription' as const,
-                planName: data.plan_name,
+                type: 'payment' as const,
+                amountTotal: amount_total,
                 customerEmail: data.customer_email
             };
         } catch (error) {
-            console.error('Error fetching subscription details:', error);
+            console.error('Error fetching payment details:', error);
             return { 
                 type: 'error' as const, 
-                message: 'Failed to fetch subscription details' 
+                message: 'Failed to fetch payment details' 
             };
         }
     }

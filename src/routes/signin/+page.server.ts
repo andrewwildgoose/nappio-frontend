@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-// import { supabase } from '$lib/server/supabaseClient';
+import { supabase } from '$lib/server/supabaseClient';
 import type { Actions, PageServerLoad } from './$types';
 import { handleServerSignIn, handleServerSignOut, requireUnauth } from '$lib/server/auth-helper';
 
@@ -79,45 +79,3 @@ async function handleSignup({ data, url }: { data: FormData; url: URL }) {
         email
     };
 }
-
-// async function handleSignin({ data, cookies }: { data: FormData; cookies: Cookies }) {
-//     const email = data.get('email')?.toString();
-//     const password = data.get('password')?.toString();
-
-//     if (!email || !password) {
-//         return fail(400, { error: 'Missing email or password' });
-//     }
-
-//     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-//         email,
-//         password
-//     });
-
-//     if (authError) {
-//         return fail(400, {
-//             error: authError.message,
-//             email
-//         });
-//     }
-
-//     // Set auth cookies after successful authentication
-//     const { access_token, refresh_token } = authData.session;
-//     cookies.set('sb-access-token', access_token, {
-//         path: '/',
-//         maxAge: 60 * 60 * 24 * 7, // 7 days
-//         sameSite: 'lax',
-//         // secure: process.env.NODE_ENV === 'production'
-//     });
-
-//     cookies.set('sb-refresh-token', refresh_token, {
-//         path: '/',
-//         maxAge: 60 * 60 * 24 * 7,
-//         sameSite: 'lax',
-//         // secure: process.env.NODE_ENV === 'production'
-//     });
-
-//     return {
-//         success: true,
-//         message: 'Successfully signed in'
-//     };
-// }

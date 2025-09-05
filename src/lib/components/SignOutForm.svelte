@@ -21,7 +21,7 @@
     <input type="hidden" name="type" value="signout">
     <Button 
         type="submit"
-        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-xl rounded-none transition-colors duration-200"
+        class="bg-tertiary! hover:bg-accent! text-text-colour font-ranchers text-xl rounded-none transition-colors duration-200 border-none"
     >
         Sign Out
     </Button>

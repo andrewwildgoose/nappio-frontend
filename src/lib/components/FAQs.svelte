@@ -14,7 +14,7 @@
 </script>
 
 <div class="p-5 flex flex-col items-center justify-center text-center">
-    <div class="p-5 max-w-2xl text-left bg-accent2 shadow-sm mb-5">                        
+    <div class="p-5 max-w-2xl text-left text-xl bg-accent2 shadow-sm mb-5">                        
         <p>
             <span>
                 <img 

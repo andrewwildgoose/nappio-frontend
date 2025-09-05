@@ -3,13 +3,17 @@
 </script>
 
 <!-- <div class="p-5 flex flex-col items-center justify-center text-center min-h-max w-full max-h-screen"> -->
+<div class="pt-20 flex items-center justify-center text-center">
+    <h2 class="m-5 text-5xl text-text-colour font-ranchers">How does it work . . . ?</h2>
+</div>
 <div class="p-5 flex flex-col items-center justify-center text-center">
 
-    <h2 class="m-5 text-4xl text-text-colour font-ranchers">How does it work?</h2>
+
+    
     <div class="m-5 p-5 bg-primary max-w-2xl shadow-sm">
         <h3 class="text-2xl text-text-colour font-ranchers">We Provide the Nappies</h3>
         <p>
-            You'll be able to choose which ones suit your baby best. We'll give you enough for the whole week.
+            We will provide you with advice and support as your baby grows to cloth nappy like a pro. We'll give you enough for the whole week.
         </p>
     </div>
 
@@ -36,7 +40,7 @@
 
 
     <Button 
-        class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl border-1 border-solid border-text-colour rounded-none transition-colors duration-200 mt-5" 
+        class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl border-none rounded-none transition-colors duration-200 mt-5 p-8" 
         size="lg"
         href="/subscribe"
     >

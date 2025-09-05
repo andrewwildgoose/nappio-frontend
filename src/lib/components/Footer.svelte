@@ -15,13 +15,22 @@
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/about">About</FooterLink>
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/subscribe">Subscribe</FooterLink>
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/newsletter">Newsletter</FooterLink>
+        <li>
+            <a 
+                class="hover:text-tertiary font-commissioner font-bold mr-4 hover:underline md:mr-6" 
+                href="mailto:info@nappio.co.uk" 
+                onclick={(e) => {
+                    e.preventDefault();
+                    window.open('mailto:info@nappio.co.uk', '_blank');
+                }}
+            >Contact</a>
+        </li>
         {#if isSignedIn()}
             <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/dashboard">Dashboard</FooterLink>
         {:else}
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/signin">Sign In</FooterLink>
         {/if}
-        <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink>
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Contact</FooterLink> -->
+        <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink> -->
         </FooterLinkGroup>
     </div>
     <hr class="my-6 border-text-colour sm:mx-auto lg:my-8 dark:border-text-colour" />

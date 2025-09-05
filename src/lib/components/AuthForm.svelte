@@ -54,14 +54,14 @@
     <div class="w-full flex justify-center mb-6">
         <Button
             color="light"
-            class="w-32 {!isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none focus:ring-0"
+            class="w-32 {!isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4"
             on:click={() => isSignUp = false}
         >
             Sign In
         </Button>
         <Button
             color="light"
-            class="w-32 {isSignUp ? 'bg-tertiary! text-accent! text-xl' : 'bg-accent! text-tertiary! text-l'} rounded-none focus:ring-0 border-l-0"
+            class="w-32 {isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4"
             on:click={() => isSignUp = true}
         >
             Sign Up
@@ -160,7 +160,7 @@
         <div class="flex justify-center">
             <Button
                 type="submit"
-                class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl border-1 border-solid border-text-colour rounded-none transition-colors duration-200" 
+                class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl border-none rounded-none transition-colors duration-200" 
                 size="lg"
                 disabled={isSubmitting}
             >
@@ -174,37 +174,25 @@
     </form>
 
     {#if form?.error}
-        <Alert color="red" class="flex justify-center mb-4">
+        <Alert color="red" rounded={false} class="flex justify-center mb-4 bg-primary!">
             {form.error}
         </Alert>
         {#if form?.invalidCredentials}
             <div class="flex flex-col items-center space-y-2 text-sm">
-                <p>Would you like to:</p>
-                <div class="flex space-x-4">
-                    <Button
-                        color="light"
-                        size="sm"
-                        on:click={() => {
-                            isSignUp = true;
-                            form = { email: form?.email };
-                        }}
-                    >
-                        Create an account
-                    </Button>
-                    <Button
-                        color="light"
-                        size="sm"
-                        href="/reset-password"
-                    >
-                        Reset password
-                    </Button>
-                </div>
+                <p>If you're unable to log in to your account please contact us on <a 
+                    href="mailto:info@nappio.co.uk" 
+                    class="text-accent!"
+                    onclick={(e) => {
+                        e.preventDefault();
+                        window.open('mailto:info@nappio.co.uk', '_blank');
+                    }}
+                >info@nappio.co.uk</a></p>
             </div>
         {/if}
     {/if}
     
     {#if form?.message}
-        <Alert color="green" class="flex justify-center mb-4">
+        <Alert color="green" rounded={false} class="flex justify-center mb-4 bg-tertiary!">
             {form.message}
         </Alert>
     {/if}

@@ -3,17 +3,17 @@
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
     export let data: {
-        type: 'subscription' | 'newsletter' | 'error';
-        planName?: string;
+        type: 'payment' | 'newsletter' | 'error';
+        amountTotal?: number;
         customerEmail?: string;
         email?: string;
         message?: string;
     }
 
     const messages = {
-        subscription: {
-            title: 'Subscription Successful!',
-            content: `Thank you for subscribing to our ${data.planName} plan. A confirmation email has been sent to ${data.customerEmail}.`
+        payment: {
+            title: 'Payment Successful!',
+            content: `Thank you for your payment of £${data.amountTotal}. A confirmation email has been sent to ${data.customerEmail}.`
         },
         newsletter: {
             title: 'Newsletter Signup Successful!',
@@ -29,13 +29,13 @@
 </script>
 
 <div class="min-h-screen w-full flex items-center justify-center p-8">
-    <div class="max-w-4xl mx-auto bg-green-100 text-green-800 font-commissioner p-8 shadow-lg text-center">
+    <div class="max-w-4xl mx-auto bg-tertiary text-text-colour font-commissioner p-8 shadow-lg text-center">
         <h1 class="text-4xl font-ranchers mb-6">{currentMessage.title}</h1>
         <p class="text-xl text-center max-w-2xl mx-auto mb-8">{currentMessage.content}</p>
         <div class="mt-8">
             <Button 
                 href={data.type === 'subscription' ? '/dashboard' : '/'}             
-                class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
+                class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl rounded-none transition-colors duration-200" 
                 size="lg"
             >
                 {data.type === 'subscription' ? 'Go to Dashboard' : 'Go to Homepage'} 

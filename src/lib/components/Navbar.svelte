@@ -3,9 +3,9 @@
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
     let isSignedIn = $derived(() => page.data.user != null);
     let activeUrl = $derived(page.url.pathname);
-    let activeClass = "text-tertiary bg-transparent";
-    let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2";
-    const ulClasses = "!bg-transparent text-2xl text-text-colour flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center";
+    let activeClass = "text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour";
+    let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2 p-1";
+    const ulClasses = "!bg-transparent text-2xl text-text-colour rounded-none flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center";
 
 </script>
 
