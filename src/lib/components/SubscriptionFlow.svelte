@@ -2,12 +2,10 @@
     import { page } from "$app/state";
     import { goto } from '$app/navigation';
     import { enhance, applyAction } from '$app/forms';
-    import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
+    import type { SubmitFunction } from '@sveltejs/kit';
     import { Button, Input, Label, Alert, Spinner, P } from 'flowbite-svelte';
     import SubscriptionAddress from './SubscriptionAddress.svelte';
     import type { AddressFormData } from '$lib/types/address';
-    import { fly } from 'svelte/transition';
-    import { cubicInOut } from 'svelte/easing';
 
     // Auth check
     let isSignedIn = $derived(() => page.data.user != null);
@@ -18,8 +16,14 @@
     
     // Flow state management
     let currentStep = $state(0);
+    let previousStepValue = $state(0);
     let isSubmitting = $state(false);
     let error = $state<string | null>(null);
+
+    // Track direction for animation
+    $effect(() => {
+        previousStepValue = currentStep;
+    });
 
     // Form data
     let babyBirthdate = $state('');
@@ -53,10 +57,10 @@
     }
 
     const steps = [
-        { title: 'Welcome to Nappio', component: 'InfoStep' },
-        { title: 'About Your Baby', component: 'BabyDetailsStep' },
-        { title: 'Additional Items', component: 'NappyWrapStep' },
-        { title: 'Delivery Address', component: 'AddressStep' }
+        { title: '1. Welcome to Nappio', component: 'InfoStep' },
+        { title: '2. About Your Baby', component: 'BabyDetailsStep' },
+        { title: '3. Additional Items', component: 'NappyWrapStep' },
+        { title: '4. Delivery Address', component: 'AddressStep' }
     ];
 
     const handleEnhanceSubmit: SubmitFunction = ({ formElement, formData, action, cancel }) => {
@@ -121,8 +125,8 @@
         <!-- Step titles - visible on md screens -->
         <div class="hidden md:flex justify-between w-full mb-2">
             {#each steps as step, index}
-                <div class="flex-1 text-center">
-                    <span class={`text-sm font-ranchers ${index <= currentStep ? 'text-tertiary' : 'text-primary'}`}>
+                <div class="w-full text-center">
+                    <span class={`text-md font-commissioner font-bold p-2 ${index === currentStep ? 'text-text-colour' : 'text-stone-500'}`}>
                         {step.title}
                     </span>
                 </div>
@@ -131,25 +135,10 @@
         
         <!-- Progress bar -->
         <div class="relative w-full h-2 bg-primary overflow-hidden">
-            {#key currentStep}
-                <div 
-                    class="absolute left-0 top-0 h-full bg-tertiary"
-                    style="width: {(currentStep / (steps.length - 1)) * 100}%"
-                    transition:fly={{duration: 500, easing: cubicInOut}}
-                ></div>
-            {/key}
-            <div class="absolute top-1/2 -translate-y-1/2 left-0 w-full flex justify-between">
-                {#each steps as step, index}
-                    <div 
-                        class={`w-4 h-4 rounded-full transition-all duration-300
-                            ${index <= currentStep ? 'bg-tertiary scale-100' : 'bg-primary scale-75'}`}
-                    >
-                        {#if index <= currentStep}
-                            <div class="w-full h-full rounded-full bg-accent opacity-50 animate-ping"></div>
-                        {/if}
-                    </div>
-                {/each}
-            </div>
+            <div 
+                class="absolute left-0 top-0 h-full bg-tertiary transition-all duration-500 ease-in-out"
+                style="width: {((currentStep + 1) / steps.length) * 100}%"
+            ></div>
         </div>
     </div>
 
@@ -162,31 +151,31 @@
             <div class="text-center text-text-colour">
                 <h2 class="text-4xl font-ranchers mb-4">Welcome to Nappio!</h2>
                 <p class="mb-4">We're excited to get you started with our nappy service.</p>
-                <div class="p-2">
-                    <p class="font-ranchers text-2xl">Our subscription includes</p>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
-                            <div class="bg-tertiary p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div class="p-6 bg-primary border-1 border-text-colour">
+                    <p class="font-commissioner text-2xl">Our subscription includes</p>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
+                            <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                                 <div class="flex flex-col items-center text-center">
                                     <i class="fa-solid fa-baby text-3xl mb-4" style="color: #262625;"></i>
                                     <p class="font-medium">Weekly delivery of clean nappies</p>
                                 </div>
                             </div>
 
-                            <div class="bg-tertiary p-6 shadow-md hover:shadow-lg transition-shadow">
+                            <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                                 <div class="flex flex-col items-center text-center">
                                     <i class="fa-solid fa-bicycle text-3xl mb-4" style="color: #262625;"></i>
                                     <p class="font-medium">Collection of used nappies</p>
                                 </div>
                             </div>
 
-                            <div class="bg-tertiary p-6 shadow-md hover:shadow-lg transition-shadow">
+                            <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                                 <div class="flex flex-col items-center text-center">
                                     <i class="fa-solid fa-soap text-3xl mb-4" style="color: #262625;"></i>
                                     <p class="font-medium">Professional cleaning service</p>
                                 </div>
                             </div>
 
-                            <div class="bg-tertiary p-6 shadow-md hover:shadow-lg transition-shadow">
+                            <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                                 <div class="flex flex-col items-center text-center">
                                     <i class="fa-solid fa-leaf text-3xl mb-4" style="color: #262625;"></i>
                                     <p class="font-medium">Environmentally friendly solution</p>
@@ -196,17 +185,17 @@
 
 
                 </div>
-                <div class="p-2">
-                    <p class="font-ranchers text-2xl">Pricing Details</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                        <div class="bg-secondary p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div class="p-6 bg-accent2 border-1 border-t-0 border-text-colour">
+                    <p class="font-commissioner text-2xl">Pricing Details</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
+                        <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                             <div class="flex flex-col items-center text-center">
                                 <p>
                                     To get started, there's a one-off setup cost of <strong>£50</strong>, which covers everything you need to get started.
                                 </p>
                             </div>
                         </div>
-                        <div class="bg-secondary p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                             <div class="flex flex-col items-center text-center">
                                 <p>
                                     After that, it's just <strong>£20 per week</strong>, paid on our collection/delivery day (Tuesday) — less than the cost of a night out!
@@ -218,7 +207,7 @@
                 </div>
                 {#if !isSignedIn()}
                     <div class="p-8">
-                        <div class="mt-4 p-6 bg-primary border-2 border-accent shadow-md hover:shadow-lg transition-shadow">
+                        <div class="mt-4 p-6 bg-primary border-2 border-accent shadow-md">
                             <p class=" mb-2">
                                 You'll need to set up your account with us before starting your subscription.
                             </p>
@@ -237,30 +226,30 @@
         {:else if currentStep === 1}
             <!-- Baby Details Step -->
             <div class="space-y-4 items-center text-center">
-                <h2 class="text-2xl font-ranchers mb-4">Tell us about your baby</h2>
+                <h2 class="text-4xl font-ranchers mb-4">Tell us about your baby</h2>
                 <p class="mb-4">We use this information to make sure your baby gets the most appropriate size of nappies and to help identify when they outgrow them.</p>
 
-                <div class="flex flex-col items-center justify-center gap-2">
-                    <Label class="font-ranchers text-xl text-text-colour" for="birthdate">Baby's Birth Date</Label>
+                <div class="h-48 flex flex-col md:flex-row items-center justify-center gap-2 bg-primary border-1 border-text-colour mb-0">
+                    <Label class="pt-12 md:pt-0 md:pl-6 flex-1 font-commissioner text-bottom text-left text-xl text-text-colour" for="birthdate">Baby's Birth Date</Label>
                     <Input
                         type="date"
                         id="birthdate"
                         bind:value={babyBirthdate}
                         required
-                        class="bg-secondary! border-solid border-2 border-accent! rounded-none max-w-xs text-center mx-auto text-text-colour"
+                        class="pl-6 flex-1 h-full bg-secondary! rounded-none max-w-xs text-left text-2xl border-none mx-auto text-text-colour"
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-center gap-2">
-                    <Label class="font-ranchers text-xl text-text-colour" for="weight">Approximate Weight (kg)</Label>
+                <div class="h-48 flex flex-col md:flex-row items-center justify-center gap-2 bg-accent2 border-1 border-text-colour border-t-0">
+                    <Label class="pt-12 md:pt-0 md:pl-6 flex-1 font-commissioner text-bottom text-left text-xl text-text-colour" for="weight">Approximate Weight (kg)</Label>
                     <Input
                         type="number"
                         id="weight"
                         bind:value={babyWeight}
-                        min="0"
+                        min="0.1"
                         step="0.1"
                         required
-                        class="bg-secondary! border-solid border-2 border-accent! rounded-none max-w-xs text-center mx-auto text-text-colour"
+                        class="pl-6 flex-1 h-full bg-secondary! rounded-none max-w-xs text-left text-2xl border-none mx-auto text-text-colour [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                     />
                 </div>
             </div>
@@ -268,51 +257,59 @@
         {:else if currentStep === 2}
             <!-- Nappy Wraps Step -->
             <div class="space-y-8 items-center text-center">
-                <h2 class="text-3xl font-ranchers mb-4">Would you like to rent nappy wraps?</h2>
+                <h2 class="text-4xl font-ranchers mb-4">Would you like to rent nappy wraps?</h2>
                 <p class="mb-4 max-w-2xl mx-auto">Nappy wraps are the waterproof outer layer that keep your baby's clothes dry. We can include them in your subscription for <strong>£2 per week</strong>.</p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="h-96 grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto border-1 border-text-colour">
                     <Button
-                        class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-4 border-accent' : 'bg-secondary hover:bg-tertiary/90'} shadow-md hover:shadow-lg transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
+                        class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-2 border-accent2' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2'} shadow-md hover:shadow-lg transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
                         on:click={() => wantNappyWraps = true}
                     >
-                        <div class="w-full aspect-square overflow-hidden mb-4 rounded-md">
+                        <div class="h-64 w-full overflow-hidden mb-4">
                             <img 
                                 src="/images/Nappy stock image 2 - Edited Cropped.JPG"
                                 alt="Nappy wraps with stars pattern"
-                                class="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                class="w-full h-full object-cover"
                             />
                         </div>
-                        <span class={`text-xl font-ranchers ${wantNappyWraps ? 'text-accent' : 'text-text-colour'}`}>
-                            Yes, include wraps (+£2/week)
+                        <span class={`font-commissioner text-text-colour ${wantNappyWraps ? 'text-xl' : 'text-xl'}`}>
+                            Yes, include wraps
                         </span>
+                        <p class="mt-2 text-sm text-text-colour">(+£2/week)</p>
                     </Button>
 
                     <Button
-                        class={`p-6 ${!wantNappyWraps ? 'bg-tertiary border-4 border-accent' : 'bg-secondary hover:bg-tertiary/90'} shadow-md hover:shadow-lg transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center`}
+                        class={`p-6 ${!wantNappyWraps ? 'bg-tertiary border-2 border-accent2 shadow-sm' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2 shadow-lg'} hover:shadow-xl transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
                         on:click={() => wantNappyWraps = false}
                     >
-                        <div class="relative w-full aspect-square overflow-hidden mb-4 rounded-md">
+                        <div class="h-64 relative w-full overflow-hidden mb-4">
                             <img 
                                 src="/images/Nappy stock image 2 - Edited Cropped.JPG"
                                 alt="Nappy wraps with stars pattern"
-                                class="w-full h-full object-cover transition-transform group-hover:scale-105 grayscale opacity-50"
+                                class="w-full h-full object-cover grayscale opacity-50"
                             />
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <i class="fa-solid fa-ban fa-4x" style="color: #f7b6af;"></i>
                             </div>
                         </div>
-                        <span class={`text-xl font-ranchers ${!wantNappyWraps ? 'text-accent' : 'text-text-colour'}`}>
+
+                        <span class={`font-commissioner text-text-colour ${!wantNappyWraps ? 'text-xl' : 'text-xl'}`}>
                             No, thanks
                         </span>
-                        <p class="mt-2 text-sm">I'll provide my own wraps</p>
+                        <p class="mt-2 text-sm text-text-colour">I'll provide my own wraps</p>                            
+
                     </Button>
                 </div>
             </div>
 
         {:else if currentStep === 3}
             <!-- Address Step -->
+            <div class="space-y-8 items-center text-center">
+                <h2 class="text-4xl font-ranchers mb-4">Where will we be delivering to?</h2>
+                <p class="mb-4 max-w-2xl mx-auto">Let us know your main delivery address, this is where we'll hold your introductory session and your subsequent collections and deliveries.<br>You can also add notes about your delivery preferences.</p>
+            </div>
             <SubscriptionAddress bind:address />
+            
         {/if}
     </div>
 

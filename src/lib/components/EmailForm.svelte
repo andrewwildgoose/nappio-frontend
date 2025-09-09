@@ -23,63 +23,66 @@
     }
 </script>
 
-<div class="flex flex-col justify-center bg-background/50 p-5 shadow-sm w-full sm:max-w-screen-sm">
+<div class="flex flex-col justify-center p-5 w-full sm:max-w-screen-sm">
     <form 
         method="POST" 
         action="?/subscribe" 
         class="flex flex-col items-center justify-center md:w-full max-w-screen-sm"
         use:enhance={handleSubmit}
     >
-        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
-            <Label for="first_name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
-                Enter your first name
-            </Label>
-            <Input 
-                id="first_name-input"
-                name="first_name"
-                required
-                value={form?.first_name ?? ''}
-                class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
-                size="lg" 
-                placeholder="Type your first name here" 
-            />
-        </div>        
-        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
-            <Label for="email-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
-                Enter your email address
-            </Label>
-            <Input 
-                id="email-input"
-                name="email"
-                type="email"
-                required
-                value={form?.email ?? ''}
-                class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
-                size="lg" 
-                placeholder="register@your-interest.nappies" 
-            />
-        </div>
+        <div class="flex flex-col md:flex-row justify-center md:justify-center items-end">
+            <div class="w-full sm:w-96 mb-6 md:m-2 px-2 sm:px-0">
+                <Label for="first_name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
+                    First name
+                </Label>
+                <Input 
+                    id="first_name-input"
+                    name="first_name"
+                    required
+                    value={form?.first_name ?? ''}
+                    class="bg-secondary! rounded-none" 
+                    size="lg" 
+                    placeholder="Type your first name here" 
+                />
+            </div>        
+            <div class="w-full sm:w-96 mb-6 md:m-2 px-2 sm:px-0">
+                <Label for="email-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
+                    Email address
+                </Label>
+                <Input 
+                    id="email-input"
+                    name="email"
+                    type="email"
+                    required
+                    value={form?.email ?? ''}
+                    class="bg-secondary! rounded-none" 
+                    size="lg" 
+                    placeholder="register@your-interest.nappies" 
+                />
+            </div>
 
-        <div class="w-full sm:w-96 mb-6 px-2 sm:px-0">
-            <Label for="postcode-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
-                Enter your postcode area (first 3-4 letters)
-            </Label>
-            <p class="text-sm pb-3">We ask for the first half of your postcode in order to determine where to expand to next.</p>
-            <Input 
-                id="postcode-input"
-                name="postcode"
-                required
-                maxlength=4
-                value={form?.postcode ?? ''}
-                class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
-                size="lg" 
-                placeholder="SW2" 
-            />
+            <div class="w-full sm:w-96 mb-6 md:m-2 px-2 sm:px-0">
+                <Label for="postcode-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
+                    Postcode area (first 3-4 letters)
+                </Label>
+                <p class="text-sm pb-3">We ask for the first half of your postcode in order to determine where to expand to next.</p>
+                <Input 
+                    id="postcode-input"
+                    name="postcode"
+                    required
+                    maxlength=4
+                    value={form?.postcode ?? ''}
+                    class="bg-secondary! rounded-none" 
+                    size="lg" 
+                    placeholder="SW2" 
+                />
+            </div>            
         </div>
+        
 
         <Button 
             type="submit" 
-            class="bg-tertiary! hover:bg-accent! text-text-colour font-commissioner text-3xl border-1 border-none rounded-none transition-colors duration-200" 
+            class="mt-4 bg-tertiary! hover:bg-accent! text-text-colour font-commissioner text-3xl border-1 border-none rounded-none transition-colors duration-200" 
             size="lg"
             disabled={isSubmitting}
         >

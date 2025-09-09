@@ -38,7 +38,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.service = !expandedStates.service)}
             aria-expanded={expandedStates.service}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">What is included in the service?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">What is included in the service?</h3>
             <i class={expandedStates.service ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.service}
@@ -61,7 +61,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.rinsing = !expandedStates.rinsing)}
             aria-expanded={expandedStates.rinsing}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">Do I need to rinse the nappies?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">Do I need to rinse the nappies?</h3>
             <i class={expandedStates.rinsing ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.rinsing}
@@ -80,7 +80,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.pickup = !expandedStates.pickup)}
             aria-expanded={expandedStates.pickup}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">How do we organise pick-up and drop-off?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">How do we organise pick-up and drop-off?</h3>
             <i class={expandedStates.pickup ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.pickup}
@@ -103,7 +103,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.cleaning = !expandedStates.cleaning)}
             aria-expanded={expandedStates.cleaning}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">How do you clean the nappies?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">How do you clean the nappies?</h3>
             <i class={expandedStates.cleaning ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.cleaning}
@@ -122,7 +122,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.areas = !expandedStates.areas)}
             aria-expanded={expandedStates.areas}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">Which areas do you cover?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">Which areas do you cover?</h3>
             <i class={expandedStates.areas ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.areas}
@@ -143,7 +143,7 @@
             on:keydown={(e) => e.key === 'Enter' && (expandedStates.cost = !expandedStates.cost)}
             aria-expanded={expandedStates.cost}
         >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">How much does it cost?</h3>
+            <h3 class="mr-2 text-2xl text-text-colour font-commissioner text-left">How much does it cost?</h3>
             <i class={expandedStates.cost ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
         </button>
         {#if expandedStates.cost}
