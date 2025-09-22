@@ -1,9 +1,9 @@
 <script>
     import { page } from "$app/state";
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
-    let isSignedIn = $derived(() => page.data.user != null);
+    // let isSignedIn = $derived(() => page.data.user != null);
     let activeUrl = $derived(page.url.pathname);
-    let activeClass = "text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour";
+    let activeClass = "text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour bg-accent2";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2 p-1";
     const ulClasses = "!bg-transparent text-2xl text-text-colour rounded-none flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center";
 
@@ -41,13 +41,13 @@
         divClass="w-full text-center border-t-1 md:border-none md:block md:w-auto md:justify-end md:flex md:flex-1">
         <NavLi href="/">Home</NavLi>
         <NavLi href="/about">About</NavLi>
-        <NavLi href="/subscribe">Subscribe</NavLi>
+        <!-- <NavLi href="/subscribe">Subscribe</NavLi> -->
         <NavLi href="/newsletter">Newsletter</NavLi>
-        {#if isSignedIn()}
+        <!-- {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>
         {:else}
         <NavLi href="/signin">Sign in</NavLi>
-        {/if}
+        {/if} -->
     </NavUl>        
 </Navbar>
 

@@ -23,11 +23,11 @@
     }
 </script>
 
-<div class="flex flex-col justify-center p-5 w-full sm:max-w-screen-sm">
+<div class="flex flex-col justify-center p-5 w-full items-center">
     <form 
         method="POST" 
         action="?/subscribe" 
-        class="flex flex-col items-center justify-center md:w-full max-w-screen-sm"
+        class="flex flex-col items-center justify-center md:w-full "
         use:enhance={handleSubmit}
     >
         <div class="flex flex-col md:flex-row justify-center md:justify-center items-end">
@@ -40,7 +40,7 @@
                     name="first_name"
                     required
                     value={form?.first_name ?? ''}
-                    class="bg-secondary! rounded-none" 
+                    class="bg-secondary! rounded-none shadow-sm border-none" 
                     size="lg" 
                     placeholder="Type your first name here" 
                 />
@@ -55,7 +55,7 @@
                     type="email"
                     required
                     value={form?.email ?? ''}
-                    class="bg-secondary! rounded-none" 
+                    class="bg-secondary! rounded-none shadow-sm border-none" 
                     size="lg" 
                     placeholder="register@your-interest.nappies" 
                 />
@@ -72,7 +72,7 @@
                     required
                     maxlength=4
                     value={form?.postcode ?? ''}
-                    class="bg-secondary! rounded-none" 
+                    class="bg-secondary! rounded-none shadow-sm border-none" 
                     size="lg" 
                     placeholder="SW2" 
                 />
@@ -82,15 +82,15 @@
 
         <Button 
             type="submit" 
-            class="mt-4 bg-tertiary! hover:bg-accent! text-text-colour font-commissioner text-3xl border-1 border-none rounded-none transition-colors duration-200" 
+            class="mt-4 bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner text-3xl border-1 border-none rounded-none transition-colors duration-200 shadow-sm items-end" 
             size="lg"
             disabled={isSubmitting}
         >
         {#if isSubmitting}
-            <Spinner class="mr-3 w-4 h-4 fill-accent! hover:fill-tertiary!" color="custom" /> Submitting...
+            <Spinner class="mr-3 w-8 h-8 fill-accent! hover:fill-tertiary!" color="custom" /> Submitting...
 
         {:else}
-            Submit <ArrowRightOutline class="w-5 h-5 ms-2" />
+            Submit <ArrowRightOutline class="w-8 h-8 ms-2" />
     {/if}
     </Button>
     </form>

@@ -20,10 +20,10 @@ export const actions = {
 
             const result = await response.json();
             
-            console.log('result', result);
+            console.log('Newsletter subscribe action result: ', result);
 
             if (!response.ok) {
-                console.log('response', response);
+                console.log('Newsletter subscribe action response: ', response);
                 return fail(400, {
                     error: result.detail,
                     first_name,
@@ -37,7 +37,7 @@ export const actions = {
                 ...result
             };
         } catch (error) {
-            console.log('error', error);
+            console.log('Newsletter subscribe action error: ', error);
             return fail(500, {
                 error: 'Server error occurred',
                 first_name,

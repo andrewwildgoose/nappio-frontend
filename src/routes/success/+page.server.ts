@@ -8,16 +8,6 @@ interface PaymentResponse {
 }
 
 export const load: PageServerLoad = async ({ url, locals }) => {
-    // First validate session exists
-    if (!locals.session) {
-        throw redirect(303, '/signin');
-    }
-
-    const jwt = locals.session.access_token;
-    if (!jwt) {
-        throw redirect(303, '/signin');
-    }
-
     // Log incoming parameters for debugging
     console.log('Full URL:', url.href);
     console.log('Query Parameters:', Object.fromEntries(url.searchParams));
@@ -28,6 +18,15 @@ export const load: PageServerLoad = async ({ url, locals }) => {
     // Handle Stripe subscription success
     if (sessionId) {
         try {
+            // First validate session exists
+            if (!locals.session) {
+                throw redirect(303, '/signin');
+            }
+
+            const jwt = locals.session.access_token;
+            if (!jwt) {
+                throw redirect(303, '/signin');
+            }            
             const response = await fetch(`${BACKEND_API_URL}/api/v1/payment-completed-details`, {
                 method: 'POST',
                 headers: {

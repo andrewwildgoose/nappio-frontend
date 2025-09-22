@@ -34,11 +34,11 @@
         <p class="text-xl text-center max-w-2xl mx-auto mb-8">{currentMessage.content}</p>
         <div class="mt-8">
             <Button 
-                href={data.type === 'subscription' ? '/dashboard' : '/'}             
-                class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl rounded-none transition-colors duration-200" 
+                href='/'
+                class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
                 size="lg"
             >
-                {data.type === 'subscription' ? 'Go to Dashboard' : 'Go to Homepage'} 
+                Go to Homepage
                 <ArrowRightOutline class="w-5 h-5 ms-2" />
             </Button>        
         </div>
