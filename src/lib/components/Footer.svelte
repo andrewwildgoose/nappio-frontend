@@ -5,7 +5,7 @@
     let isSignedIn = $derived(() => page.data.user != null);
 </script>
 
-<Footer footerType="logo" class="mt-6 rounded-none bg-primary border-t-text-colour dark:border-t-text-colour border-solid border-t-1">
+<Footer footerType="logo" class="mt-6 rounded-none bg-tertiary border-t-text-colour dark:border-t-text-colour border-solid border-t-1">
     <div class="sm:flex sm:items-center sm:justify-between">
         <a href="/" aria-label="Go to Nappio homepage">
             <div class="bg-[url(/images/logos/Nappio-v3-Clear.png)] h-20 md:h-50 w-30 md:w-100 bg-contain bg-no-repeat bg-center mb-10"></div>

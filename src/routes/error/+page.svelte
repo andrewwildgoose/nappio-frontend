@@ -19,7 +19,7 @@
                 class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
                 size="lg"
             >
-                Go to Homepage <ArrowRightOutline class="w-5 h-5 ms-2" />
+                Go to Homepage <ArrowRightOutline class="w-8 h-8 ms-2" />
             </Button>        
         </div>       
     </div>

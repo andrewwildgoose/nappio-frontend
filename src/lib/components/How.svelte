@@ -40,9 +40,9 @@
 
 
     <Button 
-        class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl border-none rounded-none transition-colors duration-200 mt-5 p-8" 
+        class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers text-3xl border-none rounded-none transition-colors duration-200 mt-5 p-8 shadow-sm" 
         size="lg"
-        href="/subscribe"
+        href="/newsletter"
     >
         Get Started
     </Button>

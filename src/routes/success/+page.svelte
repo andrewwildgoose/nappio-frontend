@@ -32,14 +32,14 @@
     <div class="max-w-4xl mx-auto bg-tertiary text-text-colour font-commissioner p-8 shadow-lg text-center">
         <h1 class="text-4xl font-ranchers mb-6">{currentMessage.title}</h1>
         <p class="text-xl text-center max-w-2xl mx-auto mb-8">{currentMessage.content}</p>
-        <div class="mt-8">
+        <div class="mt-8 items-end">
             <Button 
                 href='/'
-                class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
+                class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200 items-end" 
                 size="lg"
             >
                 Go to Homepage
-                <ArrowRightOutline class="w-5 h-5 ms-2" />
+                <ArrowRightOutline class="w-8 h-8 ms-2" />
             </Button>        
         </div>
     </div>

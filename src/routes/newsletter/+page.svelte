@@ -27,7 +27,7 @@
             </div>
         </div>    
             
-        <div class="justify-end flex flex-col max-w-2xl text-left shadow-sm flex-1 border-l-1 border-text-colour">      
+        <div class="justify-end flex flex-col text-left shadow-sm flex-1 border-l-1 border-text-colour">      
             <img 
                 src="/images/Nappio_CG_DSC00930.JPG" 
                 alt="Happy baby in a cloth nappy" 
