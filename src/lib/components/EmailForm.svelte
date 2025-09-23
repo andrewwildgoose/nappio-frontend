@@ -30,7 +30,7 @@
         class="flex flex-col items-center justify-center md:w-full "
         use:enhance={handleSubmit}
     >
-        <div class="flex flex-col md:flex-row justify-center md:justify-center items-end">
+        <div class="flex flex-col lg:flex-row w-full justify-center items-center lg:items-end">
             <div class="w-full sm:w-96 mb-6 md:m-2 px-2 sm:px-0">
                 <Label for="first_name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     First name

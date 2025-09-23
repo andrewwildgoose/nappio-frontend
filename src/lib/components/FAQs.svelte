@@ -43,9 +43,9 @@
         </button>
         {#if expandedStates.service}
             <div transition:slide={{ duration: 300, easing: cubicInOut }} class="text-left bg-background/50 p-4">
-                <p>We make cloth nappies easy. Each week, Nappio drops off a fresh bundle of clean cloth nappies and picks up the used ones from your doorstep. Fore newborns, we will start you off with 40, for older babies, 35. But every baby is different, and we'll adjust the quantity so you always have just the right amount.</p>
+                <p>We make cloth nappies easy. Each week, Nappio drops off a fresh bundle of clean cloth nappies and picks up the used ones from your doorstep. For newborns, we will start you off with 40, for older babies, 35. But every baby is different, and we'll adjust the quantity so you always have just the right amount.</p>
                 <br>
-                <p>We provide the nappies,laundry bag, and a nappy bin. All you need are a few wraps to go over the cloth nappies. Each wrap will last you a few nappy changes (but usually need changing for a number 2!) and you keep hold of these - they can just be popped in a normal wash at home.</p>
+                <p>We provide the nappies, laundry bag, and a nappy bin. All you need are a few wraps to go over the cloth nappies. Each wrap will last you a few nappy changes (but usually need changing for a number 2!) and you keep hold of these - they can just be popped in a normal wash at home.</p>
                 <br>
                 <p>You can rent wraps from us for a little extra cost each month or buy them from our website.</p>
             </div>
@@ -148,9 +148,9 @@
         </button>
         {#if expandedStates.cost}
             <div transition:slide={{ duration: 300, easing: cubicInOut }} class="text-left bg-background/50 p-4">
-                <p>Our basic charge is £20 per week. This includes professionally cleaned nappies every week, the storage bag and a nappy bin.</p>
+                <p>To get you started, there's a one-off sign up cost of £40. This covers the cost of setting you up a Nappio account, getting all your equipment ready for you to use and an at-home visit to teach you how to use the nappies.</p>
                 <br>
-                <p>We charge a one-time registration fee of £40. As a small business, this helps us provide you with the best service and top-quality equipment to kickstart your journey with us.</p>
+                <p>After that, prices start at £20 a week, paid on collection/delivery day (Tuesday). Less than the cost of a night out! (Which let's face it, may not be on the agenda so much these days anyway…)</p>
                 <br>
                 <p>For an extra fee of £2.00 per week, you can rent wraps from us (or purchase them directly from our website).</p>
             </div>

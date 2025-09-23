@@ -4,26 +4,27 @@
 
 </script>
 
-<div class="flex flex-col justify-center m-8">
+<div class="flex flex-col justify-center m-8 items-center">
     <div class="my-6 text-4xl sm:text-5xl text-center">
         <h2 class="text-text-colour font-ranchers">SUBSCRIBE TO OUR NEWSLETTER</h2>
     </div>
     <div class="min-h-max my-3 text-base text-center sm:text-xl text-text-colour font-commissioner">
         <p>Sign up here for Nappio updates, news and offers.</p>
-    </div>        
+        
+    </div>
+    <div class="flex p-5 max-w-2xl justify-center text-center text-xl bg-accent2 shadow-sm mb-5 mt-5">
+        <p>We don't currently have space for new customers but we will very soon - sign up to the newsletter and be the first to know!</p>
+    </div>       
 </div>
 <div class="flex flex-col items-center justify-center m-6 shadow-sm">
 
-    <div class="flex flex-col md:flex-row w-full m-6 mb-0 md:m-0 justify-center shadow-sm border-1 border-text-colour">
+    <div class="flex flex-col md:flex-row w-full mb-0 md:m-0 justify-center shadow-sm border-1 border-text-colour">
         <div class="bg-accent p-6 justify-center flex flex-col flex-1"> 
             <div class="p-2">
                 <h2 class="text-text-colour font-ranchers text-4xl sm:text-5xl my-6">By subscribing</h2>
                 <p class="text-l md:text-justify text-text-colour font-commissioner mb-3">
                     you'll be the first to know when we expand our service to reach new South London postcodes and launch special promotions. We'll also provide extra support and tips for using cloth nappies. 
                 </p>
-                <!-- <p class="text-l md:text-justify text-text-colour font-commissioner">
-                    Join Nappio's community of parents and caregivers and help us on our mission to bring organic cotton cloth nappies to South London babies, one bottom at a time.
-                </p> -->
             </div>
         </div>    
             
