@@ -8,17 +8,19 @@
     const email = decodeURIComponent(page.url.searchParams.get('email') || ''); // Extract the email if needed
 </script>
 
-<div class="flex flex-col items-center justify-center h-screen bg-red-100 text-red-800 font-commissioner p-5">
-    <h1 class="text-3xl font-bold mb-4">Subscription Failed</h1>
-    <p>{email}</p>
-    <p class="text-lg">{errorMessage}</p>
-    <div class="m-5">
-        <Button 
-            href="/"             
-            class="bg-tertiary! hover:bg-accent! text-accent! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
-            size="lg"
-        >
-            Go to Homepage <ArrowRightOutline class="w-5 h-5 ms-2" />
-        </Button>        
+<div class="flex flex-col items-center justify-center h-screen p-5">
+    <div class="flex flex-col items-center justify-center text-center p-8 bg-accent text-text-colour font-commissioner">
+        <h1 class="text-3xl font-commissioner mb-4">Subscription Failed</h1>
+        <p>{email}</p>
+        <p class="text-lg">{errorMessage}</p>
+        <div class="mt-8">
+            <Button 
+                href="/"             
+                class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200" 
+                size="lg"
+            >
+                Go to Homepage <ArrowRightOutline class="w-8 h-8 ms-2" />
+            </Button>        
+        </div>       
     </div>
 </div>

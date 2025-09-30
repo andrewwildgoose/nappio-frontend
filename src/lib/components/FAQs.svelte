@@ -43,9 +43,9 @@
         </button>
         {#if expandedStates.service}
             <div transition:slide={{ duration: 300, easing: cubicInOut }} class="text-left bg-background/50 p-4">
-                <p>We make cloth nappies easy. Each week, Nappio drops off a fresh bundle of clean cloth nappies and picks up the used ones from your doorstep. Fore newborns, we will start you off with 40, for older babies, 35. But every baby is different, and we'll adjust the quantity so you always have just the right amount.</p>
+                <p>We make cloth nappies easy. Each week, Nappio drops off a fresh bundle of clean cloth nappies and picks up the used ones from your doorstep. For newborns, we will start you off with 40, for older babies, 35. But every baby is different, and we'll adjust the quantity so you always have just the right amount.</p>
                 <br>
-                <p>We provide the nappies,laundry bag, and a nappy bin. All you need are a few wraps to go over the cloth nappies. Each wrap will last you a few nappy changes (but usually need changing for a number 2!) and you keep hold of these - they can just be popped in a normal wash at home.</p>
+                <p>We provide the nappies, laundry bag, and a nappy bin. All you need are a few wraps to go over the cloth nappies. Each wrap will last you a few nappy changes (but usually need changing for a number 2!) and you keep hold of these - they can just be popped in a normal wash at home.</p>
                 <br>
                 <p>You can rent wraps from us for a little extra cost each month or buy them from our website.</p>
             </div>
@@ -148,31 +148,12 @@
         </button>
         {#if expandedStates.cost}
             <div transition:slide={{ duration: 300, easing: cubicInOut }} class="text-left bg-background/50 p-4">
-                <p>Our basic charge is £20 per week. This includes professionally cleaned nappies every week, the storage bag and a nappy bin.</p>
+                <p>To get you started, there's a one-off sign up cost of £40. This covers the cost of setting you up a Nappio account, getting all your equipment ready for you to use and an at-home visit to teach you how to use the nappies.</p>
                 <br>
-                <p>We charge a one-time registration fee of £40. As a small business, this helps us provide you with the best service and top-quality equipment to kickstart your journey with us.</p>
+                <p>After that, prices start at £20 a week, paid on collection/delivery day (Tuesday). Less than the cost of a night out! (Which let's face it, may not be on the agenda so much these days anyway…)</p>
                 <br>
                 <p>For an extra fee of £2.00 per week, you can rent wraps from us (or purchase them directly from our website).</p>
             </div>
         {/if}
     </div>
-
-    <!-- About Section -->
-    <!-- <div class="max-w-2xl w-full">
-        <button
-            type="button"
-            class="p-5 flex justify-between items-center w-full bg-secondary hover:bg-tertiary"
-            on:click={() => expandedStates.about = !expandedStates.about}
-            on:keydown={(e) => e.key === 'Enter' && (expandedStates.about = !expandedStates.about)}
-            aria-expanded={expandedStates.about}
-        >
-            <h3 class="mr-2 text-2xl text-text-colour font-ranchers text-left">Who is Nappio?</h3>
-            <i class={expandedStates.about ? "fa-solid fa-minus fa-lg" : "fa-solid fa-plus fa-lg"} style="color: #262625;"></i>
-        </button>
-        {#if expandedStates.about}
-            <div transition:slide={{ duration: 300, easing: cubicInOut }} class="text-left bg-background/50 p-4">
-                <p>Nappio is a small, local service run by parents in South London who know first-hand how intense parenting can be, and how many nappies you get through. We don't just run the service, we use it for our own babies! We're here to make cloth nappies easy, accessible, and genuinely sustainable for busy families like yours.</p>
-            </div>
-        {/if}
-    </div> -->
 </div>
