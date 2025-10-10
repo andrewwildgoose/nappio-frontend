@@ -9,7 +9,7 @@
     });
 </script>
 
-<div class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-start min-h-dvh">
     <div class="h-full w-full p-10 items-center justify-center">
         <AuthForm />
     </div>

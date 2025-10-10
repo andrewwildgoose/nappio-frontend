@@ -52,6 +52,13 @@ export const load: PageServerLoad = async ({ url, locals }) => {
                 maximumFractionDigits: 2 
             }).format(data.amount_total / 100);
 
+            if (amount_total === '0.00') {
+                return { 
+                    type: 'payment_intent' as const, 
+                    customerEmail: data.customer_email
+                };
+            }
+
             return {
                 type: 'payment' as const,
                 amountTotal: amount_total,

@@ -1,13 +1,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { page } from '$app/stores';
+    import { page } from '$app/state';
     
     let loading = true;
     let error = '';
     let subscriptionId = '';
 
     onMount(() => {
-        subscriptionId = $page.url.searchParams.get('subscription_id') || '';
+        subscriptionId = page.url.searchParams.get('subscription_id') || '';
+        console.log('Subscription ID:', subscriptionId);
         
         // If we reach this point, it means the server-side redirect didn't work
         // We can implement a client-side fallback here if needed
@@ -70,7 +71,7 @@
                             Try Again
                         </button>
                         <a 
-                            href="/plans" 
+                            href="/subscribe" 
                             class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                         >
                             Back to Plans

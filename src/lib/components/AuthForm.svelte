@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Button, Input, Alert, Label, Spinner } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
+    import { slide } from 'svelte/transition';
 
     interface FormData {
         error?: string;
@@ -30,12 +31,9 @@
                 }
                 
                 if (result.type === 'success' && result.data?.success) {
-                    if (result.data.message) {
-                        form = result.data;
-                        window.location.href = '/dashboard';
-                    } else {
-                        window.location.href = '/dashboard';
-                    }
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirectUrl = urlParams.get('redirect') || '/dashboard';
+                    window.location.href = redirectUrl;
                 } else if (result.type === 'failure') {
                     form = {
                         error: result.data?.error || 'An error occurred',
@@ -50,18 +48,18 @@
     }
 </script>
 
-<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8 bg-background/50 p-5 shadow-sm">
+<div class="flex flex-col space-y-4 w-full max-w-md mx-auto p-2 md:p-8 bg-background/50 p-5 shadow-sm transition-all duration-300 ease-in-out">
     <div class="w-full flex justify-center mb-6">
         <Button
             color="light"
-            class="w-32 {!isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4"
+            class="w-32 {!isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} hover:text-xl text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4 transition-text duration-100"
             on:click={() => isSignUp = false}
         >
             Sign In
         </Button>
         <Button
             color="light"
-            class="w-32 {isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4"
+            class="w-32 {isSignUp ? 'bg-tertiary! text-xl' : 'bg-accent! text-l'} hover:text-xl text-text-colour font-ranchers rounded-none focus:ring-0 border-none p-4 transition-text duration-100"
             on:click={() => isSignUp = true}
         >
             Sign Up
@@ -75,7 +73,7 @@
         use:enhance={handleSubmit}
     >
         {#if isSignUp}
-            <div class="w-full sm:w-96 mb-6 px-0">
+            <div class="w-full sm:w-96 mb-6 px-0" transition:slide={{ duration: 300 }}>
                 <Label for="first-name-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     First Name
                 </Label>
@@ -91,7 +89,7 @@
                 />
             </div>
 
-            <div class="w-full sm:w-96 mb-6 px-0">
+            <div class="w-full sm:w-96 mb-6 px-0" transition:slide={{ duration: 300 }}>
                 <Label for="surname-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     Surname
                 </Label>
@@ -107,7 +105,7 @@
                 />
             </div>
 
-            <div class="w-full sm:w-96 mb-6 px-0">
+            <div class="w-full sm:w-96 mb-6 px-0" transition:slide={{ duration: 300 }}>
                 <Label for="postcode-input" class="block mb-2 font-commissioner text-xl text-text-colour!">
                     Postcode
                 </Label>
@@ -160,7 +158,7 @@
         <div class="flex justify-center">
             <Button
                 type="submit"
-                class="bg-tertiary! hover:bg-accent! text-text-colour! font-ranchers text-3xl border-none rounded-none transition-colors duration-200" 
+                class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers text-3xl border-none rounded-none transition-colors duration-200" 
                 size="lg"
                 disabled={isSubmitting}
             >
@@ -174,7 +172,7 @@
     </form>
 
     {#if form?.error}
-        <Alert color="red" rounded={false} class="flex justify-center mb-4 bg-primary!">
+        <Alert color="dark" rounded={false} class="flex justify-center mb-4 bg-primary!">
             {form.error}
         </Alert>
         {#if form?.invalidCredentials}
@@ -192,7 +190,7 @@
     {/if}
     
     {#if form?.message}
-        <Alert color="green" rounded={false} class="flex justify-center mb-4 bg-tertiary!">
+        <Alert color="dark" rounded={false} class="flex justify-center mb-4 bg-tertiary!">
             {form.message}
         </Alert>
     {/if}

@@ -53,7 +53,7 @@
 
     // Function to handle auth redirect
     function goToSignIn() {
-        goto('/signin?redirect=/subscription');
+        goto('/signin?redirect=/subscribe');
     }
 
     const steps = [
@@ -262,7 +262,7 @@
 
                 <div class="h-96 grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto border-1 border-text-colour">
                     <Button
-                        class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-2 border-accent2' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2'} shadow-md hover:shadow-lg transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
+                        class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-6 border-accent2' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2'} shadow-md hover:shadow-lg transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
                         on:click={() => wantNappyWraps = true}
                     >
                         <div class="h-64 w-full overflow-hidden mb-4">
@@ -279,7 +279,7 @@
                     </Button>
 
                     <Button
-                        class={`p-6 ${!wantNappyWraps ? 'bg-tertiary border-2 border-accent2 shadow-sm' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2 shadow-lg'} hover:shadow-xl transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
+                        class={`p-6 ${!wantNappyWraps ? 'bg-tertiary border-6 border-accent2 shadow-sm' : 'bg-primary border-2 border-primary hover:bg-accent2 hover:border-accent2 shadow-lg'} hover:shadow-xl transition-all rounded-none min-h-[300px] flex flex-col items-center justify-center gap-4`}
                         on:click={() => wantNappyWraps = false}
                     >
                         <div class="h-64 relative w-full overflow-hidden mb-4">

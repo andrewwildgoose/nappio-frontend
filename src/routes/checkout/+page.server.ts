@@ -1,8 +1,10 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect, fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
-import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
+    console.log('Checkout page load function called, URL:', url.toString());
+    // Extract subscription_id from query parameters
     const subscriptionId = url.searchParams.get('subscription_id');
 
     if (!subscriptionId) {
@@ -10,38 +12,49 @@ export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
     }
 
     // Get the user session for authentication
-    const session = await supabase.auth.getSession();
-    const jwt = session.data.session?.access_token;
+    console.log('Fetching user session for authentication');
 
-    if (!jwt) {
-        throw error(401, 'Unauthorized - Please sign in to continue');
+    // If user is not signed in, redirect to signin with return URL
+    if (!locals.session || !locals.session.access_token) {
+        const returnUrl = `/checkout?subscription_id=${subscriptionId}`;
+        throw redirect(303, `/signin?redirect=${encodeURIComponent(returnUrl)}`);
     }
 
+    const jwt = locals.session.access_token;
+
+    let checkoutData;
+    
     try {
         // Call your backend API to create checkout session for the subscription
-        const response = await fetch(`${BACKEND_API_URL}/api/v1/create-checkout-from-subscription`, {
+        const requestUrl = `${BACKEND_API_URL}/api/v1/create-checkout-from-subscription`;
+        const requestBody = { id: subscriptionId };
+        const requestHeaders = {
+            'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json'
+        };
+        
+        console.log('Making checkout request:', {
+            url: requestUrl,
+            headers: requestHeaders,
+            body: requestBody
+        });
+        
+        const response = await fetch(requestUrl, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${jwt}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ subscriptionId })
+            headers: requestHeaders,
+            body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();
+
+        console.log('Checkout creation response:', data);
 
         if (!response.ok) {
             console.error('Checkout creation error:', data);
             throw error(response.status, data.error || 'Failed to create checkout session');
         }
 
-        // If we have a checkout URL, redirect immediately
-        if (data.checkout_url) {
-            throw redirect(302, data.checkout_url);
-        }
-
-        // If no checkout URL, throw an error
-        throw error(500, 'No checkout URL received from server');
+        checkoutData = data;
         
     } catch (err) {
         console.error('Error creating checkout session:', err);
@@ -54,4 +67,13 @@ export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
         // Otherwise, throw a generic error
         throw error(500, 'Failed to process checkout request');
     }
+
+    // Handle redirect outside try-catch
+    if (checkoutData.checkout_url) {
+        console.log('Redirecting to checkout URL:', checkoutData.checkout_url);
+        throw redirect(302, checkoutData.checkout_url);
+    }
+
+    // If no checkout URL, throw an error
+    throw error(500, 'No checkout URL received from server');
 };

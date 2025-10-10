@@ -3,7 +3,7 @@
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
     export let data: {
-        type: 'payment' | 'newsletter' | 'error';
+        type: 'payment_intent' | 'payment' | 'newsletter' | 'error';
         amountTotal?: number;
         customerEmail?: string;
         email?: string;
@@ -11,6 +11,10 @@
     }
 
     const messages = {
+        payment_intent: {
+            title: 'Subscription Setup Successful!',
+            content: `Thanks for setting up your subscription! A confirmation email has been sent to ${data.customerEmail}.`
+        },
         payment: {
             title: 'Payment Successful!',
             content: `Thank you for your payment of £${data.amountTotal}. A confirmation email has been sent to ${data.customerEmail}.`
