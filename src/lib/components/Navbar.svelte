@@ -42,7 +42,7 @@
         <NavLi href="/">Home</NavLi>
         <NavLi href="/about">About</NavLi>
         <!-- <NavLi href="/subscribe">Subscribe</NavLi> -->
-        <NavLi href="/newsletter">Newsletter</NavLi>
+        <NavLi href="/newsletter">Sign up</NavLi>
         <!-- {#if isSignedIn()}
         <NavLi href="/dashboard">Dashboard</NavLi>
         {:else}

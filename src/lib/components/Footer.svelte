@@ -14,7 +14,7 @@
         <FooterLinkGroup class="mb-6 flex flex-wrap items-center text-md text-text-colour sm:mb-0 dark:text-text-colour">
         <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/about">About</FooterLink>
         <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/subscribe">Subscribe</FooterLink> -->
-        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/newsletter">Newsletter</FooterLink>
+        <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/newsletter">Sign up</FooterLink>
         <li>
             <a 
                 class="hover:text-tertiary font-commissioner font-bold mr-4 hover:underline md:mr-6" 

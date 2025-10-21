@@ -13,7 +13,7 @@
         
     </div>
     <div class="flex p-5 max-w-2xl justify-center text-center text-xl bg-accent2 shadow-sm mb-5 mt-5">
-        <p>We don't currently have space for new customers but we will very soon - sign up to the newsletter and be the first to know!</p>
+        <p>We are currently taking on new customers! Subscribe to our newsletter and we will reach out to you directly over email to discuss.</p>
     </div>       
 </div>
 <div class="flex flex-col items-center justify-center m-6 shadow-sm">
