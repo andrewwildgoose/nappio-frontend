@@ -90,7 +90,7 @@
             <Spinner class="mr-3 w-8 h-8 fill-accent! hover:fill-tertiary!" color="custom" /> Submitting...
 
         {:else}
-            Submit <ArrowRightOutline class="w-8 h-8 ms-2" />
+            Sign up <ArrowRightOutline class="w-8 h-8 ms-2" />
     {/if}
     </Button>
     </form>
