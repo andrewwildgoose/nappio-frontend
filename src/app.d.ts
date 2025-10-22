@@ -8,15 +8,17 @@ declare global {
 		// interface Error {}
 
 		interface Locals {
-			user: User | null;
-			session: Session | null;
+			user: User | null
+			session: Session | null
 			supabase: SupabaseClient
+			safeGetSession: () => Promise<{ session: Session | null; user: User | null }>
 		}
         interface PageData {
-            plans?: Plan[];
-            error?: string | null;
-			subscriptions?: SubscriptionDetailsResponse[];
-			addresses?: AddressResponse[];
+            plans?: Plan[]
+            error?: string | null
+			subscriptions?: SubscriptionDetailsResponse[]
+			addresses?: AddressResponse[]
+			session: Session | null
         }
 		// interface PageState {}
 		// interface Platform {}

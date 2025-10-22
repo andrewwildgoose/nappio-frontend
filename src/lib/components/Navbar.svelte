@@ -1,7 +1,8 @@
 <script>
     import { page } from "$app/state";
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
-    let isSignedIn = $derived(() => page.data.user != null);
+    let isSignedIn = $derived(page.data.user != null);
+    console.log('[Navbar] isSignedIn:', page.data.user);
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour bg-accent2";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2 p-1";
@@ -43,7 +44,7 @@
         <NavLi href="/about">About</NavLi>
         <NavLi href="/subscribe">Subscribe</NavLi>
         <NavLi href="/newsletter">Newsletter</NavLi>
-        {#if isSignedIn()}
+        {#if isSignedIn}
         <NavLi href="/dashboard">Dashboard</NavLi>
         {:else}
         <NavLi href="/signin">Sign in</NavLi>

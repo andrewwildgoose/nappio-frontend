@@ -1,7 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
-import { supabase } from '$lib/server/supabaseClient';
 import { addAddress, assignAddress } from '$lib/api/address.server';
 
 interface SubscriptionDetailsResponse {

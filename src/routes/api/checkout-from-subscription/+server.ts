@@ -1,13 +1,13 @@
 import { json } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { RequestHandler } from './$types';
+import { error } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({ request, url, locals: { supabase } }) => {
-    const session = await supabase.auth.getSession();
-    const jwt = session.data.session?.access_token;
+export const POST: RequestHandler = async ({ request, url, locals }) => {
+    
 
-    if (!jwt) {
-        return json({ error: 'Unauthorized' }, { status: 401 });
+    if (!locals.user) {
+        throw error(401, 'Unauthorized');
     }
 
     try {
@@ -25,6 +25,9 @@ export const POST: RequestHandler = async ({ request, url, locals: { supabase } 
         if (!subscriptionId) {
             return json({ error: 'Subscription ID is required' }, { status: 400 });
         }
+        
+        const { session } = await locals.safeGetSession();
+        const jwt = session?.access_token;
 
         // Call your backend to create checkout session from subscription
         const response = await fetch(`${BACKEND_API_URL}/api/v1/create-checkout-from-subscription`, {

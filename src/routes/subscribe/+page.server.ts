@@ -1,5 +1,4 @@
 import { error, fail } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabaseClient';
 import type { Actions } from './$types';
 import type { AddressFormData } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
@@ -22,8 +21,12 @@ export const actions = {
         };
 
         try {
-            const session = await supabase.auth.getSession();
-            const jwt = session.data.session?.access_token;
+            const { session } = await locals.safeGetSession();
+            const jwt = session?.access_token;
+
+            if (!jwt) {
+                throw error(401, 'No valid session');
+            }
 
             const response = await fetch(`${BACKEND_API_URL}/api/v1/start-subscription`, {
                 method: 'POST',

@@ -2,6 +2,7 @@
     import { Button, Input, Alert, Label, Spinner } from 'flowbite-svelte';
     import { enhance } from '$app/forms';
     import { slide } from 'svelte/transition';
+    import { goto } from '$app/navigation';
 
     interface FormData {
         error?: string;
@@ -24,23 +25,41 @@
 
     function handleSubmit() {
         isSubmitting = true;
-        return async ({ result }) => {
+        return async ({ result, update }) => {
+            console.log('[Client] Form submission result:', result.type, result);
+            
             try {
+                // Let SvelteKit handle redirects automatically
                 if (result.type === 'redirect') {
-                    return; // Let SvelteKit handle the redirect
+                    console.log('[Client] Redirect detected, navigating to:', result.location);
+                    await goto(result.location);
+                    return;
                 }
                 
+                // Handle success for sign-in (dashboard redirect)
                 if (result.type === 'success' && result.data?.success) {
+                    console.log('[Client] Success detected, redirecting to dashboard');
                     const urlParams = new URLSearchParams(window.location.search);
                     const redirectUrl = urlParams.get('redirect') || '/dashboard';
-                    window.location.href = redirectUrl;
-                } else if (result.type === 'failure') {
+                    await goto(redirectUrl);
+                    return;
+                }
+                
+                // Handle failures
+                if (result.type === 'failure') {
+                    console.log('[Client] Failure detected:', result.data);
                     form = {
                         error: result.data?.error || 'An error occurred',
                         invalidCredentials: result.status === 400,
-                        email: result.data?.email
+                        email: result.data?.email,
+                        first_name: result.data?.first_name,
+                        surname: result.data?.surname,
+                        postcode: result.data?.postcode
                     };
                 }
+                
+                // Update the form for other cases
+                await update();
             } finally {
                 isSubmitting = false;
             }

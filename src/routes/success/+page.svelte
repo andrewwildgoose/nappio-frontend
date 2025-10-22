@@ -3,7 +3,7 @@
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
     export let data: {
-        type: 'payment_intent' | 'payment' | 'newsletter' | 'error';
+        type: 'payment_intent' | 'payment' | 'newsletter' | 'signup' | 'error';
         amountTotal?: number;
         customerEmail?: string;
         email?: string;
@@ -23,6 +23,10 @@
             title: 'Newsletter Signup Successful!',
             content: `Your email ${data.email} has been successfully added to our mailing list. Please check your email for verification.`
         },
+        signup: {
+            title: 'Account Created!',
+            content: `Check your email (${data.email}) for the confirmation link to verify your account.`
+        },
         error: {
             title: 'Something went wrong',
             content: data.message || 'An unexpected error occurred.'
@@ -30,6 +34,23 @@
     }
 
     const currentMessage = messages[data.type];
+
+    // Determine redirect URL and button text based on type
+    const getRedirectInfo = (type: typeof data.type) => {
+        switch (type) {
+            case 'payment':
+            case 'payment_intent':
+                return { url: '/dashboard', text: 'Go to Dashboard' };
+            case 'signup':
+                return { url: '/signin', text: 'Go to Sign In' };
+            case 'newsletter':
+            case 'error':
+            default:
+                return { url: '/', text: 'Go to Homepage' };
+        }
+    };
+
+    const redirectInfo = getRedirectInfo(data.type);
 </script>
 
 <div class="min-h-screen w-full flex items-center justify-center p-8">
@@ -38,10 +59,10 @@
         <p class="text-xl text-center max-w-2xl mx-auto mb-8">{currentMessage.content}</p>
         <div class="mt-8 items-end">
             <Button 
-                href={data.type === 'subscription' ? '/dashboard' : '/'}             
+                href={redirectInfo.url}             
                 class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-3xl rounded-none transition-colors duration-200 items-end"                 size="lg"
             >
-                {data.type === 'subscription' ? 'Go to Dashboard' : 'Go to Homepage'} 
+                {redirectInfo.text} 
                 <ArrowRightOutline class="w-8 h-8 ms-2" />
             </Button>        
         </div>

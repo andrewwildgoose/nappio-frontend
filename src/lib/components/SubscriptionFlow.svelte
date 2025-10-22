@@ -8,7 +8,7 @@
     import type { AddressFormData } from '$lib/types/address';
 
     // Auth check
-    let isSignedIn = $derived(() => page.data.user != null);
+    let isSignedIn = $derived(page.data.user != null);
 
     console.log('User data in Subscription Flow:', page.data.user != null);
 
@@ -45,10 +45,10 @@
 
     // Step validation
     let canProceed = $derived<Record<number, boolean>>({
-        0: isSignedIn(), // Info step always valid
-        1: isSignedIn() && Boolean(babyBirthdate) && babyWeight > 0,
-        2: isSignedIn(), // Nappy wraps selection always valid
-        3: isSignedIn() && Boolean(address.postcode) && isValidServiceArea(address.postcode) // Check if postcode is in service area
+        0: isSignedIn, // Info step always valid
+        1: isSignedIn && Boolean(babyBirthdate) && babyWeight > 0,
+        2: isSignedIn, // Nappy wraps selection always valid
+        3: isSignedIn && Boolean(address.postcode) && isValidServiceArea(address.postcode) // Check if postcode is in service area
     });
 
     // Function to handle auth redirect
@@ -191,7 +191,7 @@
                         <div class="bg-background p-6 shadow-sm border-1 border-text-colour">
                             <div class="flex flex-col items-center text-center">
                                 <p>
-                                    To get started, there's a one-off setup cost of <strong>£50</strong>, which covers everything you need to get started.
+                                    To get started, there's a one-off setup cost of <strong>£40</strong>, which covers everything you need to get started.
                                 </p>
                             </div>
                         </div>
@@ -205,18 +205,18 @@
                     </div>
 
                 </div>
-                {#if !isSignedIn()}
+                {#if !isSignedIn}
                     <div class="p-8">
                         <div class="mt-4 p-6 bg-primary border-2 border-accent shadow-md">
                             <p class=" mb-2">
                                 You'll need to set up your account with us before starting your subscription.
                             </p>
-                            <Button
+                            <!-- <Button
                                 on:click={goToSignIn}
-                                class="bg-tertiary! hover:bg-accent! text-text-colour! rounded-none"
+                                class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none"
                             >
                                 Sign in or Register
-                            </Button>
+                            </Button> -->
                         </div>                    
                     </div>
 
@@ -331,7 +331,7 @@
         <Button
             on:click={previousStep}
             disabled={currentStep === 0}
-            class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
+            class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary rounded-none shadow-md hover:shadow-lg transition-shadow"
         >
             Previous
         </Button>
@@ -341,7 +341,7 @@
                 <Button
                     type="submit"
                     disabled={isSubmitting || !canProceed[currentStep]}
-                    class={`${!canProceed[currentStep] ? 'opacity-50 cursor-not-allowed' : ''} bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow`}
+                    class={`${!canProceed[currentStep] ? 'opacity-50 cursor-not-allowed' : ''} bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary rounded-none shadow-md hover:shadow-lg transition-shadow`}
                 >
                     {#if isSubmitting}
                         <Spinner class="mr-2" />
@@ -352,10 +352,10 @@
                 </Button>
             </div>
         {:else}
-            {#if !isSignedIn()}
+            {#if !isSignedIn}
                 <Button
                     on:click={goToSignIn}
-                    class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
+                    class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none shadow-md hover:shadow-lg transition-shadow"
                 >
                     Sign in to Continue
                 </Button>
@@ -363,7 +363,7 @@
                 <Button
                     on:click={nextStep}
                     disabled={!canProceed[currentStep]}
-                    class="bg-tertiary! hover:bg-accent! text-text-colour rounded-none shadow-md hover:shadow-lg transition-shadow"
+                    class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary rounded-none shadow-md hover:shadow-lg transition-shadow"
                 >
                     Next
                 </Button>
