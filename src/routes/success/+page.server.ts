@@ -8,17 +8,18 @@ interface PaymentResponse {
 }
 
 export const load: PageServerLoad = async ({ url, locals }) => {
-    // First validate session exists
-    if (!locals.user) {
-        throw redirect(303, '/signin');
-    }
-
     // Log incoming parameters for debugging
     console.log('Full URL:', url.href);
     console.log('Query Parameters:', Object.fromEntries(url.searchParams));
 
     const sessionId = url.searchParams.get('session_id');
     const email = url.searchParams.get('email');
+    const type = url.searchParams.get('type');
+
+    // Only require authentication for payment-related success pages
+    if (sessionId && !locals.user) {
+        throw redirect(303, '/signin');
+    }
 
     // Handle Stripe subscription success
     if (sessionId) {
@@ -69,6 +70,14 @@ export const load: PageServerLoad = async ({ url, locals }) => {
                 message: 'Failed to fetch payment details' 
             };
         }
+    }
+
+    // Handle user signup success
+    else if (type === 'signup' && email) {
+        return {
+            type: 'signup' as const,
+            email
+        };
     }
 
     // Handle newsletter signup success
