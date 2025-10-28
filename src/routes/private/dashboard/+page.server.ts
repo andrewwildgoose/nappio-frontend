@@ -54,12 +54,12 @@ interface DeleteAddressResponse {
 export const load: PageServerLoad = async ({ locals, fetch }) => {
     // First validate session exists
     if (!locals.session) {
-        throw redirect(303, '/signin');
+        throw redirect(303, '/auth');
     }
 
     const jwt = locals.session.access_token;
     if (!jwt) {
-        throw redirect(303, '/signin');
+        throw redirect(303, '/auth');
     }
 
     const userData = {

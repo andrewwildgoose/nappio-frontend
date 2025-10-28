@@ -53,7 +53,7 @@
 
     // Function to handle auth redirect
     function goToSignIn() {
-        goto('/signin?redirect=/subscribe');
+        goto('/auth?redirect=/subscribe');
     }
 
     const steps = [

@@ -40,9 +40,9 @@
         switch (type) {
             case 'payment':
             case 'payment_intent':
-                return { url: '/dashboard', text: 'Go to Dashboard' };
+                return { url: '/private/dashboard', text: 'Go to Dashboard' };
             case 'signup':
-                return { url: '/signin', text: 'Go to Sign In' };
+                return { url: '/auth', text: 'Go to Sign In' };
             case 'newsletter':
             case 'error':
             default:

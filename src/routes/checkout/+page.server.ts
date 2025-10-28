@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
     // If user is not signed in, redirect to signin with return URL
     if (!locals.session || !locals.session.access_token) {
         const returnUrl = `/checkout?subscription_id=${subscriptionId}`;
-        throw redirect(303, `/signin?redirect=${encodeURIComponent(returnUrl)}`);
+        throw redirect(303, `/auth?redirect=${encodeURIComponent(returnUrl)}`);
     }
 
     const jwt = locals.session.access_token;

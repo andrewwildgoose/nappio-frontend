@@ -9,9 +9,9 @@ export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
         
         if (error) {
             console.error('Auth callback error:', error);
-            throw redirect(303, '/signin?error=auth_callback_failed');
+            throw redirect(303, '/auth?error=auth_callback_failed');
         }
     }
 
-    throw redirect(303, '/dashboard');
+    throw redirect(303, '/private/dashboard');
 };

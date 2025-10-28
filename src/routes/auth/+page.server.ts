@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from '../auth/$types';
 import { handleServerSignIn, handleServerSignOut, requireUnauth } from '$lib/server/auth-helper';
 
 export const load: PageServerLoad = async (event) => {

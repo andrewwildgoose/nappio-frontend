@@ -2,6 +2,7 @@
 // for information about these interfaces
 import { SupabaseClient, User, Session } from '@supabase/supabase-js';
 import type { Plan } from '$lib/types/plans';
+import type { Database } from './database.types.ts'
 
 declare global {
 	namespace App {
@@ -10,7 +11,7 @@ declare global {
 		interface Locals {
 			user: User | null
 			session: Session | null
-			supabase: SupabaseClient
+			supabase: SupabaseClient<Database>
 			safeGetSession: () => Promise<{ session: Session | null; user: User | null }>
 		}
         interface PageData {

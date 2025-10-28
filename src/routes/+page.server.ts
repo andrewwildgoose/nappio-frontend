@@ -35,6 +35,11 @@ interface BackendError {
     }>;
 }
 
+// export const load: PageServerLoad = async (event) => {
+//     console.log('Checking requireUnauth.');
+//     await requireUnauth(event);
+// };
+
 // Define actions for the page
 export const actions = {
     // Action to handle newsletter subscription

@@ -40,7 +40,7 @@
                 if (result.type === 'success' && result.data?.success) {
                     console.log('[Client] Success detected, redirecting to dashboard');
                     const urlParams = new URLSearchParams(window.location.search);
-                    const redirectUrl = urlParams.get('redirect') || '/dashboard';
+                    const redirectUrl = urlParams.get('redirect') || '/private/dashboard';
                     await goto(redirectUrl);
                     return;
                 }

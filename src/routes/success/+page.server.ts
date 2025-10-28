@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
     // Only require authentication for payment-related success pages
     if (sessionId && !locals.user) {
-        throw redirect(303, '/signin');
+        throw redirect(303, '/auth');
     }
 
     // Handle Stripe subscription success

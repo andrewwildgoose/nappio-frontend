@@ -36,7 +36,7 @@ const supabase: Handle = async ({ event, resolve }) => {
         data: { session },
         } = await event.locals.supabase.auth.getSession()
         if (!session) {
-        return { session: null, user: null }
+            return { session: null, user: null }
         }
 
         const {
@@ -44,10 +44,12 @@ const supabase: Handle = async ({ event, resolve }) => {
         error,
         } = await event.locals.supabase.auth.getUser()
         if (error) {
-        // JWT validation has failed
-        return { session: null, user: null }
+            // JWT validation has failed
+            return { session: null, user: null }
         }
 
+        console.log('[Hooks] Valid session found for user:', user)
+        console.log('[Hooks] Valid session found:', session)
         return { session, user }
     }
 
@@ -72,7 +74,7 @@ const supabase: Handle = async ({ event, resolve }) => {
     }
 
     if (event.locals.session && event.url.pathname === '/auth') {
-        redirect(303, '/private')
+        redirect(303, '/private/dashboard')
     }
 
     return resolve(event)

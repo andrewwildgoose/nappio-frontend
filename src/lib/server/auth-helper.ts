@@ -5,14 +5,14 @@ import type { Session } from '@supabase/supabase-js';
 export async function requireAuth(event: RequestEvent): Promise<Session> {
     const session = event.locals.session;
     if (!session) {
-        throw redirect(303, '/signin');
+        throw redirect(303, '/auth');
     }
     return session;
 }
 
 export async function requireUnauth(event: RequestEvent): Promise<void> {
     if (event.locals.session) {
-        throw redirect(303, '/dashboard');
+        throw redirect(303, '/private/dashboard');
     }
 }
 

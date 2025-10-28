@@ -26,9 +26,9 @@
             >Contact</a>
         </li>
         {#if isSignedIn}
-            <FooterLink aClass="hover:underline font-commissioner font-bold" href="/dashboard">Dashboard</FooterLink>
+            <FooterLink aClass="hover:underline font-commissioner font-bold" href="/private/dashboard">Dashboard</FooterLink>
         {:else}
-        <FooterLink aClass="hover:underline font-commissioner font-bold" href="/signin">Sign In</FooterLink>
+        <FooterLink aClass="hover:underline font-commissioner font-bold" href="/auth">Sign In</FooterLink>
         {/if}
         <!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink> -->
         </FooterLinkGroup>

@@ -1,20 +1,19 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
-    import { goto } from '$app/navigation';
     import { Button } from 'flowbite-svelte';
 
     function handleSignOut() {
         return async ({ result }) => {
             console.log(result);
             if (result.type === 'success') {
-                window.location.href = '/signin';
+                window.location.href = '/auth';
             }
         };
     }
 </script>
 
 <form 
-    action="/signin?/auth" 
+    action="/?/auth" 
     method="POST" 
     use:enhance={handleSignOut}
 >
