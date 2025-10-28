@@ -35,9 +35,6 @@ interface BackendError {
     }>;
 }
 
-export const load: PageServerLoad = async (event) => {
-    await requireUnauth(event);
-};
 // Define actions for the page
 export const actions = {
     // Action to handle newsletter subscription
