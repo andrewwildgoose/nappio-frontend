@@ -1,8 +1,7 @@
 import { error, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
-import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { getSessionFromCookies } from '$lib/server/supabase';
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	console.log('Checkout page load function called, URL:', url.toString());
@@ -16,21 +15,8 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 	// Get the user session for authentication
 	console.log('Fetching user session for authentication');
 
-	// Create Supabase client to get session
-	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			getAll: () => cookies.getAll(),
-			setAll: (cookiesToSet) => {
-				cookiesToSet.forEach(({ name, value, options }) => {
-					cookies.set(name, value, { ...options, path: '/' });
-				});
-			}
-		}
-	});
-
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
+	// Get session from cookies
+	const { session } = await getSessionFromCookies(cookies);
 
 	// If user is not signed in, redirect to signin with return URL
 	if (!session || !session.access_token) {

@@ -2,52 +2,18 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
-import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { getSessionFromCookies } from '$lib/server/supabase';
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	// Create Supabase client to get session
-	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			getAll: () => cookies.getAll(),
-			setAll: (cookiesToSet) => {
-				cookiesToSet.forEach(({ name, value, options }) => {
-					cookies.set(name, value, { ...options, path: '/' });
-				});
-			}
-		}
-	});
-
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
-	const {
-		data: { user }
-	} = await supabase.auth.getUser();
-
+	// Get session from cookies
+	const { user, session } = await getSessionFromCookies(cookies);
 	return { user, session };
 };
 
 export const actions = {
 	createSubscription: async ({ request, cookies }) => {
-		// Create Supabase client to get session
-		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-			cookies: {
-				getAll: () => cookies.getAll(),
-				setAll: (cookiesToSet) => {
-					cookiesToSet.forEach(({ name, value, options }) => {
-						cookies.set(name, value, { ...options, path: '/' });
-					});
-				}
-			}
-		});
-
-		const {
-			data: { session }
-		} = await supabase.auth.getSession();
-		const {
-			data: { user }
-		} = await supabase.auth.getUser();
+		// Get session from cookies
+		const { session, user } = await getSessionFromCookies(cookies);
 
 		if (!user) {
 			throw error(401, 'Unauthorized');

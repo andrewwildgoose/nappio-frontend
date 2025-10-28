@@ -1,8 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
-import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { getSessionFromCookies } from '$lib/server/supabase';
 
 interface PaymentResponse {
 	amount_total: number;
@@ -18,24 +17,8 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 	const email = url.searchParams.get('email');
 	const type = url.searchParams.get('type');
 
-	// Create Supabase client to get session
-	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			getAll: () => cookies.getAll(),
-			setAll: (cookiesToSet) => {
-				cookiesToSet.forEach(({ name, value, options }) => {
-					cookies.set(name, value, { ...options, path: '/' });
-				});
-			}
-		}
-	});
-
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
-	const {
-		data: { user }
-	} = await supabase.auth.getUser();
+	// Get session from cookies
+	const { session, user } = await getSessionFromCookies(cookies);
 
 	// Only require authentication for payment-related success pages
 	if (sessionId && !user) {

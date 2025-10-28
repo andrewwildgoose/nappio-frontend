@@ -2,8 +2,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 import { addAddress, assignAddress } from '$lib/api/address.server';
-import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { createSupabaseServerClient, getSessionFromCookies } from '$lib/server/supabase';
 
 interface SubscriptionDetailsResponse {
 	id: string;
@@ -48,24 +47,8 @@ interface DeleteAddressResponse {
 }
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	// Create Supabase client to get session
-	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			getAll: () => cookies.getAll(),
-			setAll: (cookiesToSet) => {
-				cookiesToSet.forEach(({ name, value, options }) => {
-					cookies.set(name, value, { ...options, path: '/' });
-				});
-			}
-		}
-	});
-
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
-	const {
-		data: { user }
-	} = await supabase.auth.getUser();
+	// Get session from cookies
+	const { session, user } = await getSessionFromCookies(cookies);
 
 	// First validate session exists
 	if (!session) {
@@ -175,21 +158,8 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 export const actions: Actions = {
 	submitAddress: async ({ request, cookies }) => {
-		// Create Supabase client to get session
-		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-			cookies: {
-				getAll: () => cookies.getAll(),
-				setAll: (cookiesToSet) => {
-					cookiesToSet.forEach(({ name, value, options }) => {
-						cookies.set(name, value, { ...options, path: '/' });
-					});
-				}
-			}
-		});
-
-		const {
-			data: { session }
-		} = await supabase.auth.getSession();
+		// Get session from cookies
+		const { session } = await getSessionFromCookies(cookies);
 
 		if (!session?.access_token) {
 			return fail(401, { error: 'Unauthorized' });
@@ -218,21 +188,8 @@ export const actions: Actions = {
 		}
 	},
 	assignAddress: async ({ request, cookies }) => {
-		// Create Supabase client to get session
-		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-			cookies: {
-				getAll: () => cookies.getAll(),
-				setAll: (cookiesToSet) => {
-					cookiesToSet.forEach(({ name, value, options }) => {
-						cookies.set(name, value, { ...options, path: '/' });
-					});
-				}
-			}
-		});
-
-		const {
-			data: { session }
-		} = await supabase.auth.getSession();
+		// Get session from cookies
+		const { session } = await getSessionFromCookies(cookies);
 
 		if (!session?.access_token) {
 			return fail(401, { error: 'Unauthorized' });
@@ -257,21 +214,8 @@ export const actions: Actions = {
 		}
 	},
 	addressDelete: async ({ request, cookies }) => {
-		// Create Supabase client to get session
-		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-			cookies: {
-				getAll: () => cookies.getAll(),
-				setAll: (cookiesToSet) => {
-					cookiesToSet.forEach(({ name, value, options }) => {
-						cookies.set(name, value, { ...options, path: '/' });
-					});
-				}
-			}
-		});
-
-		const {
-			data: { session }
-		} = await supabase.auth.getSession();
+		// Get session from cookies
+		const { session } = await getSessionFromCookies(cookies);
 
 		if (!session?.access_token) {
 			return fail(401, { error: 'Unauthorized' });
