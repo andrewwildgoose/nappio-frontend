@@ -2,242 +2,303 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 import { addAddress, assignAddress } from '$lib/api/address.server';
+import { createServerClient } from '@supabase/ssr';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 interface SubscriptionDetailsResponse {
-    id: string;
-    status: string;
-    start_date: string;
-    end_date?: string;
-    subscription_id: string;
-    next_payment_date?: string;
-    address_id?: string;  // Add this field
-    address?: UserAddress;  // Add this field for the matched address
-    items: Array<{
-        name: string;
-        price: number;
-        currency: string;
-    }>;
+	id: string;
+	status: string;
+	start_date: string;
+	end_date?: string;
+	subscription_id: string;
+	next_payment_date?: string;
+	address_id?: string; // Add this field
+	address?: UserAddress; // Add this field for the matched address
+	items: Array<{
+		name: string;
+		price: number;
+		currency: string;
+	}>;
 }
 
 interface AddressResponse {
-    address_line_1: string;
-    address_line_2?: string;
-    city: string;
-    country: string;
-    postcode: string;
-    address_notes?: string;
+	address_line_1: string;
+	address_line_2?: string;
+	city: string;
+	country: string;
+	postcode: string;
+	address_notes?: string;
 }
 
 interface UserAddress {
-    id: string;
-    user_id: string;
-    address_line_1: string;
-    address_line_2?: string;
-    city: string;
-    postcode: string;
-    country: string;
-    address_notes?: string;
-    created_at?: string;
-    updated_at?: string;
-}
-
-interface AddAddressResponse {
-    success: boolean;
-    message: string;
-    address?: UserAddress;
+	id: string;
+	user_id: string;
+	address_line_1: string;
+	address_line_2?: string;
+	city: string;
+	postcode: string;
+	country: string;
+	address_notes?: string;
+	created_at?: string;
+	updated_at?: string;
 }
 
 interface DeleteAddressResponse {
-    message: string;
+	message: string;
 }
 
-export const load: PageServerLoad = async ({ parent, fetch }) => {
-    // Get session from parent layout
-    const { session, user } = await parent();
-    
-    // First validate session exists
-    if (!session) {
-        throw redirect(303, '/auth');
-    }
+export const load: PageServerLoad = async ({ cookies }) => {
+	// Create Supabase client to get session
+	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+		cookies: {
+			getAll: () => cookies.getAll(),
+			setAll: (cookiesToSet) => {
+				cookiesToSet.forEach(({ name, value, options }) => {
+					cookies.set(name, value, { ...options, path: '/' });
+				});
+			}
+		}
+	});
 
-    const jwt = session.access_token;
-    if (!jwt) {
-        throw redirect(303, '/auth');
-    }
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
+	const {
+		data: { user }
+	} = await supabase.auth.getUser();
 
-    const userData = {
-        id: user?.id,
-        email: user?.email,
-        first_name: user?.user_metadata?.first_name,
-        surname: user?.user_metadata?.surname,
-        postcode: user?.user_metadata?.postcode,
-        email_verified: user?.email_confirmed_at ? true : false
-    };
+	// First validate session exists
+	if (!session) {
+		throw redirect(303, '/auth');
+	}
 
-    try {
-        // Use the token from session consistently
-        const [subscriptionsResponse, addressesResponse] = await Promise.all([
-            fetch(`${BACKEND_API_URL}/api/v1/user/user-subscriptions`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`
-                },
-            }),
-            fetch(`${BACKEND_API_URL}/api/v1/user/user-addresses`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`
-                },
-            })
-        ]);
+	const jwt = session.access_token;
+	if (!jwt) {
+		throw redirect(303, '/auth');
+	}
 
-        if (!subscriptionsResponse.ok || !addressesResponse.ok) {
-            console.error('HTTP error:', {
-                subscriptions: subscriptionsResponse.status,
-                addresses: addressesResponse.status
-            });
-            throw new Error(`HTTP error! status: ${subscriptionsResponse.status}, ${addressesResponse.status}`);
-        }
+	const userData = {
+		id: user?.id,
+		email: user?.email,
+		first_name: user?.user_metadata?.first_name,
+		surname: user?.user_metadata?.surname,
+		postcode: user?.user_metadata?.postcode,
+		email_verified: user?.email_confirmed_at ? true : false
+	};
 
-        const subscriptions: SubscriptionDetailsResponse[] = await subscriptionsResponse.json();
-        const addresses: UserAddress[] = await addressesResponse.json();
+	try {
+		// Use the token from session consistently
+		const [subscriptionsResponse, addressesResponse] = await Promise.all([
+			fetch(`${BACKEND_API_URL}/api/v1/user/user-subscriptions`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${jwt}`
+				}
+			}),
+			fetch(`${BACKEND_API_URL}/api/v1/user/user-addresses`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${jwt}`
+				}
+			})
+		]);
 
-        console.log('Raw subscriptions:', subscriptions);
-        console.log('Available addresses:', addresses);
+		if (!subscriptionsResponse.ok || !addressesResponse.ok) {
+			console.error('HTTP error:', {
+				subscriptions: subscriptionsResponse.status,
+				addresses: addressesResponse.status
+			});
+			throw new Error(
+				`HTTP error! status: ${subscriptionsResponse.status}, ${addressesResponse.status}`
+			);
+		}
 
-        // Match addresses to subscriptions
-        const subscriptionsWithAddresses = subscriptions.map(subscription => {
-            if (subscription.address_id) {
-                console.log(`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`);
-                const matchedAddress = addresses.find(addr => addr.id === subscription.address_id);
-                
-                if (matchedAddress) {
-                    console.log(`Found matching address for subscription ${subscription.id}:`, matchedAddress);
-                    return {
-                        ...subscription,
-                        address: matchedAddress
-                    };
-                } else {
-                    console.log(`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`);
-                    return {
-                        ...subscription,
-                        address: null
-                    };
-                }
-            }
-            
-            console.log(`Subscription ${subscription.id} has no address_id`);
-            return {
-                ...subscription,
-                address: null
-            };
-        });
+		const subscriptions: SubscriptionDetailsResponse[] = await subscriptionsResponse.json();
+		const addresses: UserAddress[] = await addressesResponse.json();
 
-        console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
+		console.log('Raw subscriptions:', subscriptions);
+		console.log('Available addresses:', addresses);
 
-        return {
-            user: {
-                ...userData,
-            },
-            subscriptions: subscriptionsWithAddresses,
-            addresses
-        };
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return {
-            user: userData,
-            subscriptions: [],
-            addresses: [],
-        };
-    }
+		// Match addresses to subscriptions
+		const subscriptionsWithAddresses = subscriptions.map((subscription) => {
+			if (subscription.address_id) {
+				console.log(
+					`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`
+				);
+				const matchedAddress = addresses.find((addr) => addr.id === subscription.address_id);
+
+				if (matchedAddress) {
+					console.log(
+						`Found matching address for subscription ${subscription.id}:`,
+						matchedAddress
+					);
+					return {
+						...subscription,
+						address: matchedAddress
+					};
+				} else {
+					console.log(
+						`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`
+					);
+					return {
+						...subscription,
+						address: null
+					};
+				}
+			}
+
+			console.log(`Subscription ${subscription.id} has no address_id`);
+			return {
+				...subscription,
+				address: null
+			};
+		});
+
+		console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
+
+		return {
+			user: {
+				...userData
+			},
+			subscriptions: subscriptionsWithAddresses,
+			addresses
+		};
+	} catch (error) {
+		console.error('Error fetching data:', error);
+		return {
+			user: userData,
+			subscriptions: [],
+			addresses: []
+		};
+	}
 };
 
 export const actions: Actions = {
+	submitAddress: async ({ request, cookies }) => {
+		// Create Supabase client to get session
+		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+			cookies: {
+				getAll: () => cookies.getAll(),
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
+			}
+		});
 
-    submitAddress: async ({ request, parent }) => {
-        const { session } = await parent();
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
 
-        if (!session?.access_token) {
-            return fail(401, { error: 'Unauthorized' });
-        }
+		if (!session?.access_token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
 
-        const jwt = session.access_token;
+		const jwt = session.access_token;
 
-        const formData = await request.formData();
-        const address = {
-            error: '',
-            message: '',
-            address_line_1: formData.get('address_line1') as string,
-            address_line_2: formData.get('address_line2') as string,
-            city: formData.get('city') as string,
-            country: formData.get('country') as string,
-            postcode: formData.get('postcode') as string,
-            address_notes: formData.get('address_notes') as string
-        };
-        console.log('Address submitted in server:', address);
+		const formData = await request.formData();
+		const address = {
+			error: '',
+			message: '',
+			address_line_1: formData.get('address_line1') as string,
+			address_line_2: formData.get('address_line2') as string,
+			city: formData.get('city') as string,
+			country: formData.get('country') as string,
+			postcode: formData.get('postcode') as string,
+			address_notes: formData.get('address_notes') as string
+		};
+		console.log('Address submitted in server:', address);
 
-        try {
-            const data = await addAddress(address, jwt);
-            return { success: data.success, message: data.message, address: data.address };
-        } catch (error) {
-            return fail(400, { error: error instanceof Error ? error.message : String(error) });
-        }
+		try {
+			const data = await addAddress(address, jwt);
+			return { success: data.success, message: data.message, address: data.address };
+		} catch (error) {
+			return fail(400, { error: error instanceof Error ? error.message : String(error) });
+		}
+	},
+	assignAddress: async ({ request, cookies }) => {
+		// Create Supabase client to get session
+		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+			cookies: {
+				getAll: () => cookies.getAll(),
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
+			}
+		});
 
-    },
-    assignAddress: async ({ request, parent }) => {
-        const { session } = await parent();
-        
-        if (!session?.access_token) {
-            return fail(401, { error: 'Unauthorized' });
-        }
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
 
-        const jwt = session.access_token;
-        const formData = await request.formData();
+		if (!session?.access_token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
 
-        const addressId = String(formData.get('address_id'));
-        const subscriptionId = String(formData.get('subscription_id'));
-        
-        console.log('Starting address assignment:', {
-            addressId,
-            subscriptionId,
-        });
-            
-        try {
-            const data = await assignAddress(addressId, subscriptionId, jwt);
-            return { success: true, message: data.message };
-        } catch (error) {
-            return fail(400, { error: error instanceof Error ? error.message : String(error) });
-        }
-    },
-    addressDelete: async ({ request, parent }) => {
-        const { session } = await parent();
-        
-        if (!session?.access_token) {
-            return fail(401, { error: 'Unauthorized' });
-        }
+		const jwt = session.access_token;
+		const formData = await request.formData();
 
-        const jwt = session.access_token;
-        const formData = await request.formData();
-        
-        const addressId = formData.get('id');
-        const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${jwt}`
-            }
-        });
+		const addressId = String(formData.get('address_id'));
+		const subscriptionId = String(formData.get('subscription_id'));
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            return fail(response.status, {
-                error: errorData.detail || 'Failed to delete address'
-            });
-        }
+		console.log('Starting address assignment:', {
+			addressId,
+			subscriptionId
+		});
 
-        const data: DeleteAddressResponse = await response.json();
-        return {
-            success: true,
-            message: data.message
-        };
-    },
+		try {
+			const data = await assignAddress(addressId, subscriptionId, jwt);
+			return { success: true, message: data.message };
+		} catch (error) {
+			return fail(400, { error: error instanceof Error ? error.message : String(error) });
+		}
+	},
+	addressDelete: async ({ request, cookies }) => {
+		// Create Supabase client to get session
+		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+			cookies: {
+				getAll: () => cookies.getAll(),
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
+			}
+		});
+
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
+
+		if (!session?.access_token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const jwt = session.access_token;
+		const formData = await request.formData();
+
+		const addressId = formData.get('id');
+		const response = await fetch(`${BACKEND_API_URL}/api/v1/user/delete-address/${addressId}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${jwt}`
+			}
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			return fail(response.status, {
+				error: errorData.detail || 'Failed to delete address'
+			});
+		}
+
+		const data: DeleteAddressResponse = await response.json();
+		return {
+			success: true,
+			message: data.message
+		};
+	}
 } satisfies Actions;

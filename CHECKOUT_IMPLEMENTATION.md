@@ -1,28 +1,34 @@
 # Nappio Email Checkout Flow Implementation
 
 ## Overview
+
 This implementation allows users to click a link in an email that will direct them to a checkout page, which automatically creates a Stripe checkout session and redirects them to complete payment.
 
 ## Files Created
 
 ### 1. Main Checkout Route
+
 - **`/src/routes/checkout/[subscriptionId]/+page.server.ts`** - Server-side load function that handles checkout creation and immediate redirect
 - **`/src/routes/checkout/[subscriptionId]/+page.svelte`** - Backup page component (rarely shown due to server redirect)
 
 ### 2. API Route (Alternative)
+
 - **`/src/routes/api/checkout-from-subscription/+server.ts`** - API endpoint for client-side checkout creation
 
 ### 3. Alternative Client-Side Implementation
+
 - **`/src/routes/checkout/[subscriptionId]/+page.server.alternative.ts`** - Simple server load (client-side approach)
 - **`/src/routes/checkout/[subscriptionId]/+page.alternative.svelte`** - Client-side checkout creation with progress UI
 
 ### 4. Testing & Documentation
+
 - **`/src/routes/test-checkout/+page.svelte`** - Test page to demonstrate the flow
 - **`email-template-example.html`** - Example email template
 
 ## How It Works
 
 ### Server-Side Redirect Approach (Recommended)
+
 1. User clicks email link: `https://yoursite.com/checkout?subscription_id=sub_123456`
 2. Server extracts `subscriptionId` from query parameters
 3. Server calls backend API: `POST /api/v1/create-checkout-from-subscription`
@@ -32,6 +38,7 @@ This implementation allows users to click a link in an email that will direct th
 **Advantages:** Fast, no loading screen, works without JavaScript
 
 ### Client-Side Approach (Alternative)
+
 1. User clicks email link: `https://yoursite.com/checkout?subscription_id=sub_123456`
 2. Page loads with "Building checkout..." message
 3. JavaScript calls frontend API: `POST /api/checkout-from-subscription`
@@ -46,10 +53,10 @@ Your backend needs to implement this endpoint:
 
 ```typescript
 POST /api/v1/create-checkout-from-subscription
-Headers: 
+Headers:
   - Authorization: Bearer {jwt_token}
   - Content-Type: application/json
-Body: 
+Body:
   {
     "subscriptionId": "sub_123456"
   }
@@ -63,11 +70,13 @@ Response:
 ## Email Integration
 
 ### Email Link Format
+
 ```
 https://yoursite.com/checkout?subscription_id={subscription_id}
 ```
 
 ### Example Email Template
+
 See `email-template-example.html` for a complete example.
 
 ## Testing
@@ -79,11 +88,13 @@ See `email-template-example.html` for a complete example.
 ## Configuration
 
 Make sure your environment variables are set:
+
 - `BACKEND_API_URL` - Your backend API base URL
 
 ## Error Handling
 
 The implementation includes comprehensive error handling:
+
 - Unauthorized users are redirected to sign in
 - Invalid subscription IDs return appropriate error messages
 - Network errors are caught and displayed to users
@@ -111,13 +122,14 @@ The implementation includes comprehensive error handling:
 // Backend: Create subscription and send email
 const subscription = await createSubscription(userDetails);
 const checkoutUrl = `https://nappio.com/checkout?subscription_id=${subscription.id}`;
-await sendEmail(user.email, 'checkout-template', { 
-  subscription_id: subscription.id,
-  checkout_url: checkoutUrl 
+await sendEmail(user.email, 'checkout-template', {
+	subscription_id: subscription.id,
+	checkout_url: checkoutUrl
 });
 ```
 
 ## File Structure
+
 ```
 src/routes/
 ├── checkout/

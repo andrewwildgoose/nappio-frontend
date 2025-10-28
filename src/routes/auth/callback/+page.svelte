@@ -1,29 +1,29 @@
 <script lang="ts">
-    import { Spinner } from 'flowbite-svelte';
-    import { onMount } from 'svelte';
-    import { supabase } from '$lib/client/supabaseClient';
-    import { goto } from '$app/navigation';
+	import { Spinner } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+	import { supabase } from '$lib/client/supabaseClient';
+	import { goto } from '$app/navigation';
 
-    onMount(async () => {
-        // Get the auth code from URL
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
+	onMount(async () => {
+		// Get the auth code from URL
+		const params = new URLSearchParams(window.location.search);
+		const code = params.get('code');
 
-        if (code) {
-            const { error } = await supabase.auth.exchangeCodeForSession(code);
-            
-            if (error) {
-                console.error('Auth callback error:', error);
-                await goto('/auth?error=auth_callback_failed');
-                return;
-            }
-        }
+		if (code) {
+			const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-        // Redirect to dashboard
-        await goto('/private/dashboard');
-    });
+			if (error) {
+				console.error('Auth callback error:', error);
+				await goto('/auth?error=auth_callback_failed');
+				return;
+			}
+		}
+
+		// Redirect to dashboard
+		await goto('/private/dashboard');
+	});
 </script>
 
-<div class="flex items-center justify-center min-h-screen">
-    <Spinner size="12" />
+<div class="flex min-h-screen items-center justify-center">
+	<Spinner size="12" />
 </div>

@@ -9,12 +9,12 @@ declare global {
 		interface Locals {
 			// Locals no longer needed for auth
 		}
-        interface PageData {
-            plans?: Plan[]
-            error?: string | null
-			subscriptions?: SubscriptionDetailsResponse[]
-			addresses?: AddressResponse[]
-        }
+		interface PageData {
+			plans?: Plan[];
+			error?: string | null;
+			subscriptions?: SubscriptionDetailsResponse[];
+			addresses?: AddressResponse[];
+		}
 		// interface PageState {}
 		// interface Platform {}
 	}

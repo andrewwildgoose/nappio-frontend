@@ -1,8 +1,8 @@
 <script>
-    import AuthGuard from '$lib/components/AuthGuard.svelte';
-    let { children } = $props();
+	import AuthGuard from '$lib/components/AuthGuard.svelte';
+	let { children } = $props();
 </script>
 
 <AuthGuard>
-    {@render children()}
+	{@render children()}
 </AuthGuard>

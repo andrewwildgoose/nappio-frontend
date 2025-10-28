@@ -8,75 +8,111 @@ The key is to include the subscription ID in the URL:
 https://yoursite.com/checkout/[subscriptionId]
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Your Nappio Subscription</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { max-width: 200px; height: auto; }
-        .content { background: #f8f9fa; padding: 30px; border-radius: 8px; }
-        .button { 
-            display: inline-block; 
-            background: #007bff; 
-            color: white; 
-            padding: 15px 30px; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <img src="https://yoursite.com/static/images/logos/Nappio-Colour-Text.png" alt="Nappio" class="logo">
-        </div>
-        
-        <div class="content">
-            <h1>Ready to Complete Your Nappio Subscription?</h1>
-            
-            <p>Hi [Customer Name],</p>
-            
-            <p>Your Nappio nappy subscription is ready to go! We've prepared everything based on your preferences:</p>
-            
-            <ul>
-                <li><strong>Baby's Age:</strong> [Baby Age]</li>
-                <li><strong>Delivery Address:</strong> [Address]</li>
-                <li><strong>Plan:</strong> [Plan Name]</li>
-                <li><strong>Monthly Cost:</strong> [Price]</li>
-            </ul>
-            
-            <p>Click the button below to complete your payment and start your subscription:</p>
-            
-            <!-- 
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Complete Your Nappio Subscription</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				line-height: 1.6;
+				color: #333;
+			}
+			.container {
+				max-width: 600px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 30px;
+			}
+			.logo {
+				max-width: 200px;
+				height: auto;
+			}
+			.content {
+				background: #f8f9fa;
+				padding: 30px;
+				border-radius: 8px;
+			}
+			.button {
+				display: inline-block;
+				background: #007bff;
+				color: white;
+				padding: 15px 30px;
+				text-decoration: none;
+				border-radius: 5px;
+				font-weight: bold;
+				margin: 20px 0;
+			}
+			.footer {
+				text-align: center;
+				margin-top: 30px;
+				color: #666;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<img
+					src="https://yoursite.com/static/images/logos/Nappio-Colour-Text.png"
+					alt="Nappio"
+					class="logo"
+				/>
+			</div>
+
+			<div class="content">
+				<h1>Ready to Complete Your Nappio Subscription?</h1>
+
+				<p>Hi [Customer Name],</p>
+
+				<p>
+					Your Nappio nappy subscription is ready to go! We've prepared everything based on your
+					preferences:
+				</p>
+
+				<ul>
+					<li><strong>Baby's Age:</strong> [Baby Age]</li>
+					<li><strong>Delivery Address:</strong> [Address]</li>
+					<li><strong>Plan:</strong> [Plan Name]</li>
+					<li><strong>Monthly Cost:</strong> [Price]</li>
+				</ul>
+
+				<p>Click the button below to complete your payment and start your subscription:</p>
+
+				<!-- 
             IMPORTANT: Replace {subscription_id} with the actual subscription ID from your database
             The URL format should be: https://yoursite.com/checkout?subscription_id={subscription_id}
             -->
-            <div style="text-align: center;">
-                <a href="https://yoursite.com/checkout?subscription_id={subscription_id}" class="button">
-                    Complete Payment & Start Subscription
-                </a>
-            </div>
-            
-            <p>This link is secure and personalized for your account. If you have any questions, please don't hesitate to contact our support team.</p>
-            
-            <p>Thanks for choosing Nappio!</p>
-            <p>The Nappio Team</p>
-        </div>
-        
-        <div class="footer">
-            <p>Nappio | Sustainable Nappy Solutions</p>
-            <p>If you no longer wish to receive these emails, <a href="[unsubscribe_link]">unsubscribe here</a></p>
-        </div>
-    </div>
-</body>
+				<div style="text-align: center">
+					<a href="https://yoursite.com/checkout?subscription_id={subscription_id}" class="button">
+						Complete Payment & Start Subscription
+					</a>
+				</div>
+
+				<p>
+					This link is secure and personalized for your account. If you have any questions, please
+					don't hesitate to contact our support team.
+				</p>
+
+				<p>Thanks for choosing Nappio!</p>
+				<p>The Nappio Team</p>
+			</div>
+
+			<div class="footer">
+				<p>Nappio | Sustainable Nappy Solutions</p>
+				<p>
+					If you no longer wish to receive these emails,
+					<a href="[unsubscribe_link]">unsubscribe here</a>
+				</p>
+			</div>
+		</div>
+	</body>
 </html>
 
 <!-- 

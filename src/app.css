@@ -13,91 +13,92 @@
 @plugin '@tailwindcss/typography'; */
 
 @theme {
-    /* 70s colours */
-    --color-dark-turquoise: #264653;
-    --color-teal: #2A9D8F;
-    --color-warm-mustard: #E9C46A;
-    --color-pale-orange: #F4A261;
-    --color-terracotta: #E76F51;
+	/* 70s colours */
+	--color-dark-turquoise: #264653;
+	--color-teal: #2a9d8f;
+	--color-warm-mustard: #e9c46a;
+	--color-pale-orange: #f4a261;
+	--color-terracotta: #e76f51;
 
-    /* Rosa colours 1 */
-    --color-uranian-blue: #B1D4FC;
-    --color-viridian: #4f8a6e;
-    --color-hunter-green: #31654C;
-    --color-selective-yellow: #FAB700;
-    --color-penn-blue: #161A56;
-    
-    /* muted colours 1 */
-    --color-soft-green: #A8D5BA;
-    --color-soft-blue: #B4E0F1;
-    --color-muted-mustard: #F7C873;
-    --color-terracotta2: #F2A1A1;
-    --color-off-white: #F7F5E7;
-    --color-dark-turquoise2: #1E656D;
+	/* Rosa colours 1 */
+	--color-uranian-blue: #b1d4fc;
+	--color-viridian: #4f8a6e;
+	--color-hunter-green: #31654c;
+	--color-selective-yellow: #fab700;
+	--color-penn-blue: #161a56;
 
-    --color-off-black: #333132;
+	/* muted colours 1 */
+	--color-soft-green: #a8d5ba;
+	--color-soft-blue: #b4e0f1;
+	--color-muted-mustard: #f7c873;
+	--color-terracotta2: #f2a1a1;
+	--color-off-white: #f7f5e7;
+	--color-dark-turquoise2: #1e656d;
 
-    /* toucan tango colours */
-    --color-toucan-tango-blue: #aedbd9;
-    --color-toucan-tango-green: #7cc4a7;
-    --color-toucan-tango-yellow: #ffe670;
-    --color-toucan-tango-orange: #f7b18a;
-    --color-toucan-tango-pink: #f7b6af;
-    --color-toucan-tango-off-white: #f4f3ed;
-    --color-toucan-tango-off-black: #262625;
+	--color-off-black: #333132;
 
-    /* Main palette */
-    --color-primary: var(--color-toucan-tango-orange);
-    --color-secondary: var(--color-toucan-tango-blue);
-    --color-tertiary: var(--color-toucan-tango-green);
-    --color-accent: var(--color-toucan-tango-pink);
-    --color-accent2: var(--color-toucan-tango-yellow);
-    --color-background: var(--color-toucan-tango-off-white);
+	/* toucan tango colours */
+	--color-toucan-tango-blue: #aedbd9;
+	--color-toucan-tango-green: #7cc4a7;
+	--color-toucan-tango-yellow: #ffe670;
+	--color-toucan-tango-orange: #f7b18a;
+	--color-toucan-tango-pink: #f7b6af;
+	--color-toucan-tango-off-white: #f4f3ed;
+	--color-toucan-tango-off-black: #262625;
 
-    --color-text-colour: var(--color-toucan-tango-off-black);
+	/* Main palette */
+	--color-primary: var(--color-toucan-tango-orange);
+	--color-secondary: var(--color-toucan-tango-blue);
+	--color-tertiary: var(--color-toucan-tango-green);
+	--color-accent: var(--color-toucan-tango-pink);
+	--color-accent2: var(--color-toucan-tango-yellow);
+	--color-background: var(--color-toucan-tango-off-white);
 
-    --font-ranchers: 'Ranchers', cursive;
-    --font-serif: var(--font-ranchers);
-    --font-commissioner: 'Commissioner', sans-serif;
-    --font-sans: var(--font-commissioner);
+	--color-text-colour: var(--color-toucan-tango-off-black);
 
+	--font-ranchers: 'Ranchers', cursive;
+	--font-serif: var(--font-ranchers);
+	--font-commissioner: 'Commissioner', sans-serif;
+	--font-sans: var(--font-commissioner);
 }
 
 body {
-    position: relative;
-    font-family: var(--font-sans);
-    color: var(--color-text-colour);
-    margin: 0 auto;
-    max-width: 100%;
-    box-sizing: border-box;
+	position: relative;
+	font-family: var(--font-sans);
+	color: var(--color-text-colour);
+	margin: 0 auto;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/images/Nappio-Background1.svg'), url('/images/Nappio-Background2.svg'), url('/images/Nappio-Background3.svg');
-    opacity: 0.8; /* Adjust this value to control image opacity */
-    z-index: -2;
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image:
+		url('/images/Nappio-Background1.svg'), url('/images/Nappio-Background2.svg'),
+		url('/images/Nappio-Background3.svg');
+	opacity: 0.8; /* Adjust this value to control image opacity */
+	z-index: -2;
 }
 
 body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-background);
-    opacity: 0.3; /* Adjust this value to control overlay opacity */
-    z-index: -1;
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: var(--color-background);
+	opacity: 0.3; /* Adjust this value to control overlay opacity */
+	z-index: -1;
 }
 
 @media (max-width: 640px) {
-    body {
-        padding: 0 1px;
-    }
+	body {
+		padding: 0 1px;
+	}
 }

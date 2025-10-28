@@ -1,67 +1,110 @@
 import { error, fail } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
+import { createServerClient } from '@supabase/ssr';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+
+export const load: PageServerLoad = async ({ cookies }) => {
+	// Create Supabase client to get session
+	const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+		cookies: {
+			getAll: () => cookies.getAll(),
+			setAll: (cookiesToSet) => {
+				cookiesToSet.forEach(({ name, value, options }) => {
+					cookies.set(name, value, { ...options, path: '/' });
+				});
+			}
+		}
+	});
+
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
+	const {
+		data: { user }
+	} = await supabase.auth.getUser();
+
+	return { user, session };
+};
 
 export const actions = {
-    createSubscription: async ({ request, parent }) => {
-        const { user, session } = await parent();
-        
-        if (!user) {
-            throw error(401, 'Unauthorized');
-        }
+	createSubscription: async ({ request, cookies }) => {
+		// Create Supabase client to get session
+		const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+			cookies: {
+				getAll: () => cookies.getAll(),
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
+			}
+		});
 
-        const cancelUrl = '/subscribe';
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
+		const {
+			data: { user }
+		} = await supabase.auth.getUser();
 
-        const formData = await request.formData();
-        const data = {
-            babyBirthdate: formData.get('babyBirthdate'),
-            babyWeight: Number(formData.get('babyWeight')),
-            wantNappyWraps: formData.get('wantNappyWraps') === 'true',
-            address: JSON.parse(formData.get('address') as string) as AddressFormData,
-            cancelUrl: cancelUrl
-        };
+		if (!user) {
+			throw error(401, 'Unauthorized');
+		}
 
-        try {
-            const jwt = session?.access_token;
+		const cancelUrl = '/subscribe';
 
-            if (!jwt) {
-                throw error(401, 'No valid session');
-            }
+		const formData = await request.formData();
+		const data = {
+			babyBirthdate: formData.get('babyBirthdate'),
+			babyWeight: Number(formData.get('babyWeight')),
+			wantNappyWraps: formData.get('wantNappyWraps') === 'true',
+			address: JSON.parse(formData.get('address') as string) as AddressFormData,
+			cancelUrl: cancelUrl
+		};
 
-            const response = await fetch(`${BACKEND_API_URL}/api/v1/start-subscription`, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`
-                },
-                body: JSON.stringify(data)
-            });
+		try {
+			const jwt = session?.access_token;
 
-            const responseData = await response.json();
-            console.log('Subscription creation response:', responseData);
+			if (!jwt) {
+				throw error(401, 'No valid session');
+			}
 
-            if (!response.ok) {
-                return fail(400, { 
-                    error: responseData.error || 'Subscription creation failed' 
-                });
-            }
+			const response = await fetch(`${BACKEND_API_URL}/api/v1/start-subscription`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${jwt}`
+				},
+				body: JSON.stringify(data)
+			});
 
-            const { checkout_url, session_id } = responseData;
-            console.log('Received checkout URL:', checkout_url);
-            console.log('Received session ID:', session_id);
-            
-            if (!checkout_url) {
-                return fail(500, { error: 'No checkout URL received' });
-            }
+			const responseData = await response.json();
+			console.log('Subscription creation response:', responseData);
 
-            // Return the checkout data directly
-            return {
-                checkout_url,
-                session_id
-            };
-        } catch (e) {
-            throw error(500, 'Failed to create subscription');
-        }
-    }
+			if (!response.ok) {
+				return fail(400, {
+					error: responseData.error || 'Subscription creation failed'
+				});
+			}
+
+			const { checkout_url, session_id } = responseData;
+			console.log('Received checkout URL:', checkout_url);
+			console.log('Received session ID:', session_id);
+
+			if (!checkout_url) {
+				return fail(500, { error: 'No checkout URL received' });
+			}
+
+			// Return the checkout data directly
+			return {
+				checkout_url,
+				session_id
+			};
+		} catch (err) {
+			console.error('Error creating subscription:', err);
+			throw error(500, 'Failed to create subscription');
+		}
+	}
 } satisfies Actions;
