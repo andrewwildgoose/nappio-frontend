@@ -50,7 +50,7 @@ export const actions = {
 
         try {
             // Send subscription data to the backend API
-            const response = await fetch(`${BACKEND_API_URL}/newsletter/subscribe`, {
+            const response = await fetch(`${BACKEND_API_URL}/api/v1/newsletter/subscribe`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
