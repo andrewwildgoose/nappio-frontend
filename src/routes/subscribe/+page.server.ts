@@ -4,8 +4,10 @@ import type { AddressFormData } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 
 export const actions = {
-    createSubscription: async ({ request, locals }) => {
-        if (!locals.user) {
+    createSubscription: async ({ request, parent }) => {
+        const { user, session } = await parent();
+        
+        if (!user) {
             throw error(401, 'Unauthorized');
         }
 
@@ -21,7 +23,6 @@ export const actions = {
         };
 
         try {
-            const { session } = await locals.safeGetSession();
             const jwt = session?.access_token;
 
             if (!jwt) {

@@ -1,69 +1,84 @@
 <script lang="ts">
     import { Button, Input, Alert, Label, Spinner } from 'flowbite-svelte';
-    import { enhance } from '$app/forms';
     import { slide } from 'svelte/transition';
     import { goto } from '$app/navigation';
+    import { supabase } from '$lib/client/supabaseClient';
 
-    interface FormData {
-        error?: string;
-        message?: string;
-        email?: string;
-        first_name?: string;
-        surname?: string;
-        postcode?: string;
-        success?: boolean;
-        data?: {
-            success: boolean;
-            message?: string;
-        };
-        invalidCredentials?: boolean;
-    }
-    
-    export let form: FormData | null = null;
     let isSubmitting = false;
     let isSignUp = false;
+    let error = '';
+    let message = '';
+    
+    // Form fields
+    let email = '';
+    let password = '';
+    let first_name = '';
+    let surname = '';
+    let postcode = '';
 
-    function handleSubmit() {
+    async function handleSignIn() {
         isSubmitting = true;
-        return async ({ result, update }) => {
-            console.log('[Client] Form submission result:', result.type, result);
-            
-            try {
-                // Let SvelteKit handle redirects automatically
-                if (result.type === 'redirect') {
-                    console.log('[Client] Redirect detected, navigating to:', result.location);
-                    await goto(result.location);
-                    return;
-                }
-                
-                // Handle success for sign-in (dashboard redirect)
-                if (result.type === 'success' && result.data?.success) {
-                    console.log('[Client] Success detected, redirecting to dashboard');
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const redirectUrl = urlParams.get('redirect') || '/private/dashboard';
-                    await goto(redirectUrl);
-                    return;
-                }
-                
-                // Handle failures
-                if (result.type === 'failure') {
-                    console.log('[Client] Failure detected:', result.data);
-                    form = {
-                        error: result.data?.error || 'An error occurred',
-                        invalidCredentials: result.status === 400,
-                        email: result.data?.email,
-                        first_name: result.data?.first_name,
-                        surname: result.data?.surname,
-                        postcode: result.data?.postcode
-                    };
-                }
-                
-                // Update the form for other cases
-                await update();
-            } finally {
-                isSubmitting = false;
+        error = '';
+        message = '';
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (signInError) {
+            error = signInError.message;
+            isSubmitting = false;
+            return;
+        }
+
+        // Redirect to dashboard on success
+        await goto('/private/dashboard');
+        isSubmitting = false;
+    }
+
+    async function handleSignUp() {
+        isSubmitting = true;
+        error = '';
+        message = '';
+
+        if (!email || !password || !first_name || !surname || !postcode) {
+            error = 'Missing required fields';
+            isSubmitting = false;
+            return;
+        }
+
+        const { error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    first_name,
+                    surname,
+                    postcode: postcode.toUpperCase()
+                },
+                emailRedirectTo: `${window.location.origin}/auth/callback`
             }
-        };
+        });
+
+        if (signUpError) {
+            error = signUpError.message;
+            isSubmitting = false;
+            return;
+        }
+
+        // Redirect to success page
+        await goto(`/success?type=signup&email=${encodeURIComponent(email)}`);
+        isSubmitting = false;
+    }
+
+    async function handleSubmit(event: Event) {
+        event.preventDefault();
+        if (isSignUp) {
+            await handleSignUp();
+        } else {
+            await handleSignIn();
+        }
     }
 </script>
 
@@ -86,10 +101,8 @@
     </div>
 
     <form 
-        method="POST" 
-        action="?/auth" 
+        onsubmit={handleSubmit}
         class="space-y-4" 
-        use:enhance={handleSubmit}
     >
         {#if isSignUp}
             <div class="w-full sm:w-96 mb-6 px-0" transition:slide={{ duration: 300 }}>
@@ -98,10 +111,9 @@
                 </Label>
                 <Input
                     id="first-name-input"
-                    name="first_name"
+                    bind:value={first_name}
                     type="text"
                     required
-                    value={form?.first_name ?? ''}
                     class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                     disabled={isSubmitting}
                     placeholder="John"
@@ -114,10 +126,9 @@
                 </Label>
                 <Input
                     id="surname-input"
-                    name="surname"
+                    bind:value={surname}
                     type="text"
                     required
-                    value={form?.surname ?? ''}
                     class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                     disabled={isSubmitting}
                     placeholder="Doe"
@@ -130,10 +141,9 @@
                 </Label>
                 <Input
                     id="postcode-input"
-                    name="postcode"
+                    bind:value={postcode}
                     type="text"
                     required
-                    value={form?.postcode ?? ''}
                     class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                     disabled={isSubmitting}
                     placeholder="SW1A 1AA"
@@ -147,10 +157,9 @@
             </Label>
             <Input
                 id="email-input"
-                name="email"
+                bind:value={email}
                 type="email"
                 required
-                value={form?.email ?? ''}
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none" 
                 disabled={isSubmitting}
                 placeholder="your.email@here.com"
@@ -163,7 +172,7 @@
             </Label>
             <Input
                 id="password-input"
-                name="password"
+                bind:value={password}
                 type="password"
                 required
                 class="bg-secondary! border-solid border-2 border-accent! rounded-none"
@@ -171,8 +180,6 @@
                 placeholder="••••••••"
             />
         </div>
-
-        <input type="hidden" name="type" value={isSignUp ? 'signup' : 'signin'} />
 
         <div class="flex justify-center">
             <Button
@@ -190,11 +197,11 @@
         </div>
     </form>
 
-    {#if form?.error}
+    {#if error}
         <Alert color="dark" rounded={false} class="flex justify-center mb-4 bg-primary!">
-            {form.error}
+            {error}
         </Alert>
-        {#if form?.invalidCredentials}
+        {#if error.includes('Invalid') || error.includes('credentials')}
             <div class="flex flex-col items-center space-y-2 text-sm">
                 <p>If you're unable to log in to your account please contact us on <a 
                     href="mailto:info@nappio.co.uk" 
@@ -208,9 +215,9 @@
         {/if}
     {/if}
     
-    {#if form?.message}
+    {#if message}
         <Alert color="dark" rounded={false} class="flex justify-center mb-4 bg-tertiary!">
-            {form.message}
+            {message}
         </Alert>
     {/if}
 </div>

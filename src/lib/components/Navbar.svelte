@@ -1,8 +1,9 @@
 <script>
     import { page } from "$app/state";
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
-    let isSignedIn = $derived(page.data.user || page.data.session  != null);
-    console.log('[Navbar] isSignedIn:', page.data.user);
+    import { user } from '$lib/stores/auth';
+    let isSignedIn = $derived($user != null);
+    console.log('[Navbar] isSignedIn:', $user);
     let activeUrl = $derived(page.url.pathname);
     let activeClass = "text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour bg-accent2";
     let nonActiveClass = "text-text-colour hover:bg-transparent hover:text-accent2 p-1";

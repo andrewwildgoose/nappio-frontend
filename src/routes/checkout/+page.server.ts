@@ -2,7 +2,7 @@ import { error, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 
-export const load: PageServerLoad = async ({ url, locals }) => {
+export const load: PageServerLoad = async ({ url, parent }) => {
     console.log('Checkout page load function called, URL:', url.toString());
     // Extract subscription_id from query parameters
     const subscriptionId = url.searchParams.get('subscription_id');
@@ -13,14 +13,15 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
     // Get the user session for authentication
     console.log('Fetching user session for authentication');
+    const { session } = await parent();
 
     // If user is not signed in, redirect to signin with return URL
-    if (!locals.session || !locals.session.access_token) {
+    if (!session || !session.access_token) {
         const returnUrl = `/checkout?subscription_id=${subscriptionId}`;
         throw redirect(303, `/auth?redirect=${encodeURIComponent(returnUrl)}`);
     }
 
-    const jwt = locals.session.access_token;
+    const jwt = session.access_token;
 
     let checkoutData;
     

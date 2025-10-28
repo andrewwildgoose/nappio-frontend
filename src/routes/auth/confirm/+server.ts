@@ -1,9 +1,23 @@
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { redirect } from '@sveltejs/kit'
+import { createServerClient } from '@supabase/ssr'
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
 import type { RequestHandler } from './$types'
 
-export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
+export const GET: RequestHandler = async ({ url, cookies }) => {
+    // Create a Supabase client for this request
+    const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+        cookies: {
+            getAll: () => cookies.getAll(),
+            setAll: (cookiesToSet) => {
+                cookiesToSet.forEach(({ name, value, options }) => {
+                    cookies.set(name, value, { ...options, path: '/' })
+                })
+            },
+        },
+    })
+
     const token_hash = url.searchParams.get('token_hash')
     const type = url.searchParams.get('type') as EmailOtpType | null
     const next = url.searchParams.get('next') ?? '/'

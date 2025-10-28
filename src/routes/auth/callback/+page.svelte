@@ -1,16 +1,26 @@
 <script lang="ts">
     import { Spinner } from 'flowbite-svelte';
     import { onMount } from 'svelte';
+    import { supabase } from '$lib/client/supabaseClient';
+    import { goto } from '$app/navigation';
 
-    onMount(() => {
-        // If there's a hash in the URL, remove it without reloading the page.
-        if (window.location.hash) {
-            history.replaceState(
-                null,
-                document.title,
-                window.location.pathname + window.location.search
-            );
+    onMount(async () => {
+        // Get the auth code from URL
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+
+        if (code) {
+            const { error } = await supabase.auth.exchangeCodeForSession(code);
+            
+            if (error) {
+                console.error('Auth callback error:', error);
+                await goto('/auth?error=auth_callback_failed');
+                return;
+            }
         }
+
+        // Redirect to dashboard
+        await goto('/private/dashboard');
     });
 </script>
 

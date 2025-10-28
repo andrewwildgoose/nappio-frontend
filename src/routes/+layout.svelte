@@ -2,21 +2,28 @@
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';	
-    import { invalidate } from '$app/navigation'  
 	import { onMount } from 'svelte'  
+	import { supabase } from '$lib/client/supabaseClient';
+	import { user, session, loading } from '$lib/stores/auth';
 	
-	let { data, children } = $props()  
-	let { session, supabase } = $derived(data)
+	let { children } = $props()  
 
     onMount(() => {
-        const { data } = supabase.auth.onAuthStateChange((event, _session) => {
-            console.log('[Layout] Auth event:', event);
-            // Invalidate on ANY auth change event
-            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-                console.log('[Layout] Invalidating supabase:auth');
-                invalidate('supabase:auth');
-            }
+        // Get initial session
+        supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+            session.set(initialSession);
+            user.set(initialSession?.user ?? null);
+            loading.set(false);
         });
+
+        // Listen for auth changes
+        const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+            console.log('[Layout] Auth state changed:', _event);
+            session.set(newSession);
+            user.set(newSession?.user ?? null);
+            loading.set(false);
+        });
+
         return () => data.subscription.unsubscribe();
     });
 </script>

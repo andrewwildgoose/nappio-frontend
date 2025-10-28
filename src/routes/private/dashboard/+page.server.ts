@@ -51,28 +51,31 @@ interface DeleteAddressResponse {
     message: string;
 }
 
-export const load: PageServerLoad = async ({ locals, fetch }) => {
+export const load: PageServerLoad = async ({ parent, fetch }) => {
+    // Get session from parent layout
+    const { session, user } = await parent();
+    
     // First validate session exists
-    if (!locals.session) {
+    if (!session) {
         throw redirect(303, '/auth');
     }
 
-    const jwt = locals.session.access_token;
+    const jwt = session.access_token;
     if (!jwt) {
         throw redirect(303, '/auth');
     }
 
     const userData = {
-        id: locals.user?.id,
-        email: locals.user?.email,
-        first_name: locals.user?.user_metadata?.first_name,
-        surname: locals.user?.user_metadata?.surname,
-        postcode: locals.user?.user_metadata?.postcode,
-        email_verified: locals.user?.email_confirmed_at ? true : false
+        id: user?.id,
+        email: user?.email,
+        first_name: user?.user_metadata?.first_name,
+        surname: user?.user_metadata?.surname,
+        postcode: user?.user_metadata?.postcode,
+        email_verified: user?.email_confirmed_at ? true : false
     };
 
     try {
-        // Use the token from locals consistently
+        // Use the token from session consistently
         const [subscriptionsResponse, addressesResponse] = await Promise.all([
             fetch(`${BACKEND_API_URL}/api/v1/user/user-subscriptions`, {
                 headers: {
@@ -151,13 +154,14 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 
 export const actions: Actions = {
 
-    submitAddress: async ({ request, locals }) => {
+    submitAddress: async ({ request, parent }) => {
+        const { session } = await parent();
 
-        if (!locals.session?.access_token) {
+        if (!session?.access_token) {
             return fail(401, { error: 'Unauthorized' });
         }
 
-        const jwt = locals.session.access_token;
+        const jwt = session.access_token;
 
         const formData = await request.formData();
         const address = {
@@ -180,12 +184,14 @@ export const actions: Actions = {
         }
 
     },
-    assignAddress: async ({ request, locals }) => {
-        if (!locals.session?.access_token) {
+    assignAddress: async ({ request, parent }) => {
+        const { session } = await parent();
+        
+        if (!session?.access_token) {
             return fail(401, { error: 'Unauthorized' });
         }
 
-        const jwt = locals.session.access_token;
+        const jwt = session.access_token;
         const formData = await request.formData();
 
         const addressId = String(formData.get('address_id'));
@@ -203,12 +209,14 @@ export const actions: Actions = {
             return fail(400, { error: error instanceof Error ? error.message : String(error) });
         }
     },
-    addressDelete: async ({ request, locals }) => {
-        if (!locals.session?.access_token) {
+    addressDelete: async ({ request, parent }) => {
+        const { session } = await parent();
+        
+        if (!session?.access_token) {
             return fail(401, { error: 'Unauthorized' });
         }
 
-        const jwt = locals.session.access_token;
+        const jwt = session.access_token;
         const formData = await request.formData();
         
         const addressId = formData.get('id');

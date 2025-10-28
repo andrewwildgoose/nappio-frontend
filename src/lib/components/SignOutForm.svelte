@@ -1,27 +1,27 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
     import { Button } from 'flowbite-svelte';
+    import { supabase } from '$lib/client/supabaseClient';
+    import { goto } from '$app/navigation';
 
-    function handleSignOut() {
-        return async ({ result }) => {
-            console.log(result);
-            if (result.type === 'success') {
-                window.location.href = '/auth';
-            }
-        };
+    let isSigningOut = false;
+
+    async function handleSignOut() {
+        isSigningOut = true;
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+            console.error('Sign out error:', error);
+        }
+        
+        await goto('/auth');
+        isSigningOut = false;
     }
 </script>
 
-<form 
-    action="/?/auth" 
-    method="POST" 
-    use:enhance={handleSignOut}
+<Button 
+    on:click={handleSignOut}
+    disabled={isSigningOut}
+    class="bg-tertiary! hover:bg-accent! text-text-colour font-ranchers text-xl rounded-none transition-colors duration-200 border-none"
 >
-    <input type="hidden" name="type" value="signout">
-    <Button 
-        type="submit"
-        class="bg-tertiary! hover:bg-accent! text-text-colour font-ranchers text-xl rounded-none transition-colors duration-200 border-none"
-    >
-        Sign Out
-    </Button>
-</form>
+    {isSigningOut ? 'Signing out...' : 'Sign Out'}
+</Button>
