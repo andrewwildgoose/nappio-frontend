@@ -1,10 +1,11 @@
 <script>
 	import AuthForm from '$lib/components/AuthForm.svelte';
+	import { replaceState } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
 		if (window.location.hash) {
-			history.replaceState(null, document.title, window.location.pathname + window.location.search);
+			replaceState('', window.location.pathname + window.location.search);
 		}
 	});
 </script>

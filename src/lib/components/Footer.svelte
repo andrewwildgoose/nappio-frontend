@@ -8,7 +8,9 @@
 		FooterLink
 	} from 'flowbite-svelte';
 
-	let isSignedIn = $derived(page.data.user != null);
+	import { user } from '$lib/stores/auth';
+	let isSignedIn = $derived($user != null);
+	
 </script>
 
 <Footer

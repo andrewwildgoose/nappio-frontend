@@ -43,7 +43,7 @@
 		message = '';
 
 		if (!email || !password || !first_name || !surname || !postcode) {
-			error = 'Missing required fields';
+			error = 'Please fill in all fields';
 			isSubmitting = false;
 			return;
 		}
@@ -66,7 +66,7 @@
 			isSubmitting = false;
 			return;
 		}
-
+		
 		// Redirect to success page
 		await goto(`/success?type=signup&email=${encodeURIComponent(email)}`);
 		isSubmitting = false;
