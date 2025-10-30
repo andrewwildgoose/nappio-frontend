@@ -242,7 +242,7 @@
 						id="birthdate"
 						bind:value={babyBirthdate}
 						required
-						class="bg-secondary! text-text-colour mx-auto h-full max-w-xs flex-1 rounded-none border-none pl-6 text-left text-2xl"
+						class="bg-secondary! text-text-colour mx-auto h-full flex-1 rounded-none border-none pl-6 text-left text-2xl"
 					/>
 				</div>
 
@@ -260,7 +260,7 @@
 						min="0.1"
 						step="0.1"
 						required
-						class="bg-secondary! text-text-colour mx-auto h-full max-w-xs flex-1 rounded-none border-none pl-6 text-left text-2xl [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+						class="bg-secondary! text-text-colour mx-auto h-full flex-1 rounded-none border-none pl-6 text-left text-2xl [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
 					/>
 				</div>
 			</div>
@@ -274,7 +274,7 @@
 				</p>
 
 				<div
-					class="border-text-colour mx-auto grid h-96 max-w-4xl grid-cols-1 border-1 md:grid-cols-2"
+					class="border-text-colour mx-auto grid max-w-4xl grid-cols-1 border-1 md:grid-cols-2"
 				>
 					<Button
 						class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-accent2 border-6' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2'} flex min-h-[300px] flex-col items-center justify-center gap-4 rounded-none shadow-md transition-all hover:shadow-lg`}

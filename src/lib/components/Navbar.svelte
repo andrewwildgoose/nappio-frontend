@@ -3,13 +3,11 @@
 	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
 	import { user } from '$lib/stores/auth';
 	let isSignedIn = $derived($user != null);
-	console.log('[Navbar] isSignedIn:', $user);
 	let activeUrl = $derived(page.url.pathname);
-	let activeClass =
-		'text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour bg-accent2';
+	let activeClass = 'text-text-colour rounded-none p-1 shadow-sm border-1 border-text-colour bg-accent2';
 	let nonActiveClass = 'text-text-colour hover:bg-transparent hover:text-accent2 p-1';
-	const ulClasses =
-		'!bg-transparent text-2xl text-text-colour rounded-none flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center';
+	const ulClasses = '!bg-transparent text-2xl text-text-colour rounded-none flex flex-col p-4 mt-4 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:text-sm font-bold border-0 dark:!bg-transparent dark:!border-0 md:text-center';
+
 </script>
 
 <Navbar
@@ -37,7 +35,7 @@
 	</span>
 	<NavHamburger
 		class="text-text-colour z-20 m-0 flex flex-1 justify-end rounded-none p-0 hover:bg-transparent! md:hidden"
-		menuClass="focus:outline-none hover:bg-transparent! focus:text-tertiary"
+		menuClass="focus:outline-none hover:bg-transparent! hover:cursor-pointer!"
 	/>
 	<NavUl
 		ulClass={ulClasses}
