@@ -205,18 +205,38 @@
 						</div>
 					</div>
 				</div>
+				<div class="bg-secondary border-text-colour border-1 border-t-0 p-6">
+					<p class="font-commissioner text-2xl">Service Area</p>
+					<div class="grid grid-cols-1 gap-4 p-6">
+						<div class="bg-background border-text-colour border-1 mb-4 p-6 shadow-sm">
+							<div class="flex flex-col items-center text-center">
+								<p class="text-m font-medium">
+									<i class="fa-solid fa-location-dot mr-2" style="color: #7cc4a7;"></i>
+									Our service is currently available in:
+									<span class="font-ranchers">{validPostcodes.join(', ')}</span>
+								</p>
+							</div>
+						</div>
+						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+							<div class="flex flex-col items-center text-center">
+								<p>If your postcode is not yet covered, register your interest by signing up to our newsletter and we'll keep you updated as our service area expands.</p>
+									<Button
+										class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! rounded-none border-none mt-2 text-m shadow-sm transition-colors duration-200"
+										size="md"
+										href="/newsletter"
+									>
+										My postcode isn't listed
+									</Button>
+							</div>
+						</div>						
+					</div>
+				</div>
 				{#if !isSignedIn}
 					<div class="p-8">
 						<div class="bg-primary border-accent mt-4 border-2 p-6 shadow-md">
 							<p class=" mb-2">
-								You'll need to set up your account with us before starting your subscription.
+								You'll need to sign in or set up your account with us before starting your subscription.
 							</p>
-							<!-- <Button
-                                on:click={goToSignIn}
-                                class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none"
-                            >
-                                Sign in or Register
-                            </Button> -->
 						</div>
 					</div>
 				{/if}

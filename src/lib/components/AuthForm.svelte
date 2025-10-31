@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { Button, Input, Alert, Label, Spinner } from 'flowbite-svelte';
+	import { Button, Input, Alert, Label, Checkbox, Spinner } from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { supabase } from '$lib/client/supabaseClient';
 
 	let isSubmitting = false;
 	let isSignUp = false;
+	let passwordHidden = true;
 	let error = '';
 	let message = '';
 
@@ -80,6 +81,16 @@
 			await handleSignIn();
 		}
 	}
+
+	function viewPassword() {
+		const x = document.getElementById("password-input") as HTMLInputElement;
+		if (x.type === "password") {
+			x.type = "text";
+		} else {
+			x.type = "password";
+		}
+		passwordHidden = !passwordHidden;
+	}
 </script>
 
 <div
@@ -120,7 +131,7 @@
 					bind:value={first_name}
 					type="text"
 					required
-					class="bg-secondary! border-accent! rounded-none border-2 border-solid"
+					class="bg-secondary! border-accent! rounded-none border-2 border-solid focus:ring-0"
 					disabled={isSubmitting}
 					placeholder="John"
 				/>
@@ -135,7 +146,7 @@
 					bind:value={surname}
 					type="text"
 					required
-					class="bg-secondary! border-accent! rounded-none border-2 border-solid"
+					class="bg-secondary! border-accent! rounded-none border-2 border-solid focus:ring-0"
 					disabled={isSubmitting}
 					placeholder="Doe"
 				/>
@@ -150,7 +161,7 @@
 					bind:value={postcode}
 					type="text"
 					required
-					class="bg-secondary! border-accent! rounded-none border-2 border-solid"
+					class="bg-secondary! border-accent! rounded-none border-2 border-solid focus:ring-0"
 					disabled={isSubmitting}
 					placeholder="SW1A 1AA"
 				/>
@@ -166,31 +177,45 @@
 				bind:value={email}
 				type="email"
 				required
-				class="bg-secondary! border-accent! rounded-none border-2 border-solid"
+				class="bg-secondary! border-accent! rounded-none border-2 border-solid focus:ring-0"
 				disabled={isSubmitting}
 				placeholder="your.email@here.com"
 			/>
 		</div>
 
-		<div>
+		<div class="flex flex-col">
 			<Label for="password-input" class="font-commissioner text-text-colour! mb-2 block text-xl">
 				Password
 			</Label>
-			<Input
-				id="password-input"
-				bind:value={password}
-				type="password"
-				required
-				class="bg-secondary! border-accent! rounded-none border-2 border-solid"
-				disabled={isSubmitting}
-				placeholder="••••••••"
-			/>
+			<div class="relative">
+				<Input
+					id="password-input"
+					bind:value={password}
+					type="password"
+					required
+					class="bg-secondary! border-accent! rounded-none border-2 border-solid pr-32 focus:ring-0"
+					disabled={isSubmitting}
+					placeholder="••••••••"
+				/>
+				<Button 
+					id="show-password" 
+					class="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-0 bg-transparent! border-none p-2" 
+					onclick={viewPassword}
+					size="xs"
+				>
+					{#if passwordHidden}
+						<i class="fa-solid fa-eye" style="color: #262625;"></i>
+					{:else}
+						<i class="fa-solid fa-eye-slash" style="color: #262625;"></i>
+					{/if}
+				</Button>
+			</div>
 		</div>
 
 		<div class="flex justify-center">
 			<Button
 				type="submit"
-				class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers rounded-none border-none text-3xl transition-colors duration-200"
+				class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers rounded-none border-none text-3xl transition-colors duration-200 focus:ring-0"
 				size="lg"
 				disabled={isSubmitting}
 			>

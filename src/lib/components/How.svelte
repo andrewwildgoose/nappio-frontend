@@ -4,7 +4,7 @@
 
 <!-- <div class="p-5 flex flex-col items-center justify-center text-center min-h-max w-full max-h-screen"> -->
 <div class="flex items-center justify-center pt-20 text-center">
-	<h2 class="text-text-colour font-ranchers m-5 text-5xl">How does it work . . . ?</h2>
+	<h2 class="text-text-colour font-ranchers m-5 text-5xl">How does it work?</h2>
 </div>
 <div class="flex flex-col items-center justify-center p-5 text-center">
 	<div class="bg-primary m-5 max-w-2xl p-5 shadow-sm">
