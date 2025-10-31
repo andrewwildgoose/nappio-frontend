@@ -199,7 +199,7 @@
 				/>
 				<Button 
 					id="show-password" 
-					class="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-0 bg-transparent! border-none p-2" 
+					class="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-0 bg-transparent! border-none p-2 hover:cursor-pointer hover:shadow-sm hover:bg-accent!" 
 					onclick={viewPassword}
 					size="xs"
 				>
