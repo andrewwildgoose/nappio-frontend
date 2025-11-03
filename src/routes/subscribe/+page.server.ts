@@ -1,13 +1,47 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import type { AddressFormData } from '$lib/types/address';
+import type { AddressFormData, UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	// Get session from cookies
 	const { user, session } = await getSessionFromCookies(cookies);
-	return { user, session };
+
+	let addresses: UserAddress[] = [];
+
+	if (session) {
+		try {
+
+			const jwt = session.access_token;
+			// Use the token from session consistently
+			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/user-addresses`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${jwt}`
+				}
+			});
+
+	
+			if (!addressesResponse.ok) {
+				console.error('HTTP error:', {
+					addresses: addressesResponse.status
+				});
+				throw new Error(
+					`HTTP error! status: ${addressesResponse.status}`
+				);
+			}
+
+			addresses = await addressesResponse.json();
+	
+			console.log('Available addresses:', addresses);
+
+		} catch (err) {
+			console.error('Error loading addresses:', err);
+			throw error(500, 'Failed to load addresses');
+		}
+	}
+	return { user, session, addresses };
 };
 
 export const actions = {
@@ -22,11 +56,14 @@ export const actions = {
 		const cancelUrl = '/subscribe';
 
 		const formData = await request.formData();
+		const addressId = formData.get('addressId') as string;
+		
 		const data = {
 			babyBirthdate: formData.get('babyBirthdate'),
 			babyWeight: Number(formData.get('babyWeight')),
 			wantNappyWraps: formData.get('wantNappyWraps') === 'true',
-			address: JSON.parse(formData.get('address') as string) as AddressFormData,
+			// If addressId exists, send it; otherwise send the full address object
+			...(addressId ? { addressId } : { address: JSON.parse(formData.get('address') as string) as AddressFormData }),
 			cancelUrl: cancelUrl
 		};
 

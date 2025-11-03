@@ -30,9 +30,41 @@
 	let babyWeight = $state(0);
 	let wantNappyWraps = $state(false);
 	let address = $state<AddressFormData>({} as AddressFormData);
+	let selectedAddressJson = $state('');
+	let selectedAddressId = $state<string | null>(null); // Track if using saved address
 
 	// Valid service area postcodes
 	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9'];
+
+	// Handle saved address selection
+	$effect(() => {
+		if (selectedAddressJson) {
+			try {
+				const parsedAddress = JSON.parse(selectedAddressJson);
+				address = { ...parsedAddress };
+				selectedAddressId = parsedAddress.id; // Track the saved address ID
+			} catch (e) {
+				console.error('Failed to parse selected address:', e);
+			}
+		} else {
+			// If no saved address selected, clear the ID so we create a new one
+			selectedAddressId = null;
+		}
+	});
+
+	// Watch for manual edits to address fields and clear saved address selection
+	let lastSavedAddress = $state<string>('');
+	$effect(() => {
+		const currentAddressString = JSON.stringify(address);
+		if (selectedAddressId && lastSavedAddress && currentAddressString !== lastSavedAddress) {
+			// User manually edited the address, so clear the saved address ID
+			selectedAddressId = null;
+			selectedAddressJson = '';
+		}
+		if (selectedAddressJson) {
+			lastSavedAddress = JSON.stringify(address);
+		}
+	});
 
 	// Format and validate postcode
 	function isValidServiceArea(postcode: string): boolean {
@@ -121,6 +153,7 @@
 	<input type="hidden" name="babyWeight" value={babyWeight} />
 	<input type="hidden" name="wantNappyWraps" value={wantNappyWraps} />
 	<input type="hidden" name="address" value={JSON.stringify(address)} />
+	<input type="hidden" name="addressId" value={selectedAddressId || ''} />
 	<!-- Progress indicator -->
 	<div class="mb-8">
 		<!-- Step titles - visible on md screens -->
@@ -349,6 +382,26 @@
 					delivery preferences.
 				</p>
 			</div>
+			{#if page.data.addresses && page.data.addresses.length > 0}
+				<div class="mb-4">
+					<Label class="font-commissioner text-text-colour! mb-1 block text-xl">
+						Select from your saved addresses
+					</Label>
+					<select
+						bind:value={selectedAddressJson}
+						class="bg-secondary! border-accent! rounded-none border-2 border-solid p-2 text-text-colour! w-full sm:w-96"
+					>
+						<option value="">Select an address</option>
+						{#each page.data.addresses as savedAddress}
+							<option value={JSON.stringify(savedAddress)}>
+								{savedAddress.address_line_1}, {savedAddress.city}, {savedAddress.postcode}
+							</option>
+						{/each}
+					</select>
+					<br><br>
+					<p class="mb-4 text-text-colour!">Or enter a new delivery address below:</p>
+				</div>
+			{/if}
 			<SubscriptionAddress bind:address />
 		{/if}
 	</div>

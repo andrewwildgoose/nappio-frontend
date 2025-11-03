@@ -1,5 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import type { UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { addAddress, assignAddress } from '$lib/api/address.server';
 import { createSupabaseServerClient, getSessionFromCookies } from '$lib/server/supabase';
@@ -29,18 +30,18 @@ interface AddressResponse {
 	address_notes?: string;
 }
 
-interface UserAddress {
-	id: string;
-	user_id: string;
-	address_line_1: string;
-	address_line_2?: string;
-	city: string;
-	postcode: string;
-	country: string;
-	address_notes?: string;
-	created_at?: string;
-	updated_at?: string;
-}
+// interface UserAddress {
+// 	id: string;
+// 	user_id: string;
+// 	address_line_1: string;
+// 	address_line_2?: string;
+// 	city: string;
+// 	postcode: string;
+// 	country: string;
+// 	address_notes?: string;
+// 	created_at?: string;
+// 	updated_at?: string;
+// }
 
 interface DeleteAddressResponse {
 	message: string;
