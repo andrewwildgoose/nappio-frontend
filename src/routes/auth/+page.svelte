@@ -10,6 +10,12 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Sign up or sign in - Nappio</title>
+	<meta name="description" content="Sign up or sign in to your Nappio account" />
+</svelte:head>
+
+
 <div class="flex min-h-dvh flex-col items-center justify-start">
 	<div class="h-full w-full items-center justify-center p-10">
 		<AuthForm />

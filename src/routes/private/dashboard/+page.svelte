@@ -91,6 +91,12 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Dashboard - Nappio</title>
+	<meta name="description" content="Your Nappio account dashboard" />
+</svelte:head>
+
+
 <div class="justify-top flex min-h-screen flex-col items-center p-4">
 	<div class="bg-background w-full max-w-2xl border p-8 shadow-lg">
 		<h1 class="font-ranchers mb-6 text-3xl">Welcome, {data.user.first_name}!</h1>

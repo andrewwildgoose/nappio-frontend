@@ -3,6 +3,12 @@
 	export let form; // This receives form data from the server
 </script>
 
+<svelte:head>
+	<title>Newsletter - Nappio</title>
+	<meta name="description" content="Subscribe to the Nappio newsletter for updates, news, and offers" />
+</svelte:head>
+
+
 <div class="m-8 flex flex-col items-center justify-center">
 	<div class="my-6 text-center text-4xl sm:text-5xl">
 		<h2 class="text-text-colour font-ranchers">SUBSCRIBE TO OUR NEWSLETTER</h2>

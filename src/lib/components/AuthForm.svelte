@@ -6,6 +6,7 @@
 
 	let isSubmitting = false;
 	let isSignUp = false;
+	let isForgotPassword = false;
 	let passwordHidden = true;
 	let error = '';
 	let message = '';
@@ -73,9 +74,36 @@
 		isSubmitting = false;
 	}
 
+	async function handleResetPassword() {
+		isSubmitting = true;
+		error = '';
+		message = '';
+
+		if (!email) {
+			error = 'Please enter your email address';
+			isSubmitting = false;
+			return;
+		}
+
+		const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+			redirectTo: `${window.location.origin}/update-password`
+		});
+
+		if (resetError) {
+			error = resetError.message;
+			isSubmitting = false;
+			return;
+		}
+
+		message = 'Password reset email sent! Check your inbox.';
+		isSubmitting = false;
+	}
+
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
-		if (isSignUp) {
+		if (isForgotPassword) {
+			await handleResetPassword();
+		} else if (isSignUp) {
 			await handleSignUp();
 		} else {
 			await handleSignIn();
@@ -99,10 +127,15 @@
 	<div class="mb-6 flex w-full justify-center">
 		<Button
 			color="light"
-			class="w-32 {!isSignUp
+			class="w-32 {!isSignUp && !isForgotPassword
 				? 'bg-tertiary! text-xl'
 				: 'bg-accent! text-l'} text-text-colour font-ranchers transition-text rounded-none border-none p-4 duration-100 hover:text-xl focus:ring-0"
-			on:click={() => (isSignUp = false)}
+			on:click={() => {
+				isSignUp = false;
+				isForgotPassword = false;
+				error = '';
+				message = '';
+			}}
 		>
 			Sign In
 		</Button>
@@ -111,14 +144,19 @@
 			class="w-32 {isSignUp
 				? 'bg-tertiary! text-xl'
 				: 'bg-accent! text-l'} text-text-colour font-ranchers transition-text rounded-none border-none p-4 duration-100 hover:text-xl focus:ring-0"
-			on:click={() => (isSignUp = true)}
+			on:click={() => {
+				isSignUp = true;
+				isForgotPassword = false;
+				error = '';
+				message = '';
+			}}
 		>
 			Sign Up
 		</Button>
 	</div>
 
 	<form onsubmit={handleSubmit} class="space-y-4">
-		{#if isSignUp}
+		{#if isSignUp && !isForgotPassword}
 			<div class="mb-6 w-full px-0 sm:w-96" transition:slide={{ duration: 300 }}>
 				<Label
 					for="first-name-input"
@@ -183,34 +221,68 @@
 			/>
 		</div>
 
-		<div class="flex flex-col">
-			<Label for="password-input" class="font-commissioner text-text-colour! mb-2 block text-xl">
-				Password
-			</Label>
-			<div class="relative">
-				<Input
-					id="password-input"
-					bind:value={password}
-					type="password"
-					required
-					class="bg-secondary! border-accent! rounded-none border-2 border-solid pr-32 focus:ring-0"
-					disabled={isSubmitting}
-					placeholder="••••••••"
-				/>
-				<Button 
-					id="show-password" 
-					class="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-0 bg-transparent! border-none p-2 hover:cursor-pointer hover:shadow-sm hover:bg-accent!" 
-					onclick={viewPassword}
-					size="xs"
-				>
-					{#if passwordHidden}
-						<i class="fa-solid fa-eye" style="color: #262625;"></i>
-					{:else}
-						<i class="fa-solid fa-eye-slash" style="color: #262625;"></i>
-					{/if}
-				</Button>
+		{#if !isForgotPassword}
+			<div class="flex flex-col">
+				<Label for="password-input" class="font-commissioner text-text-colour! mb-2 block text-xl">
+					Password
+				</Label>
+				<div class="relative">
+					<Input
+						id="password-input"
+						bind:value={password}
+						type="password"
+						required
+						class="bg-secondary! border-accent! rounded-none border-2 border-solid pr-32 focus:ring-0"
+						disabled={isSubmitting}
+						placeholder="••••••••"
+					/>
+					<Button 
+						id="show-password" 
+						class="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-0 bg-transparent! border-none p-2 hover:cursor-pointer hover:shadow-sm hover:bg-accent!" 
+						onclick={viewPassword}
+						size="xs"
+					>
+						{#if passwordHidden}
+							<i class="fa-solid fa-eye" style="color: #262625;"></i>
+						{:else}
+							<i class="fa-solid fa-eye-slash" style="color: #262625;"></i>
+						{/if}
+					</Button>
+				</div>
 			</div>
-		</div>
+		{/if}
+
+		{#if !isSignUp && !isForgotPassword}
+			<div class="flex justify-end">
+				<button
+					type="button"
+					class="text-sm text-accent hover:underline"
+					onclick={() => {
+						isForgotPassword = true;
+						error = '';
+						message = '';
+					}}
+				>
+					Forgot password?
+				</button>
+			</div>
+		{/if}
+
+		{#if isForgotPassword}
+			<div class="flex justify-end">
+				<button
+					type="button"
+					class="text-sm text-accent hover:underline"
+					onclick={() => {
+						isForgotPassword = false;
+						error = '';
+						message = '';
+					}}
+				>
+					Back to sign in
+				</button>
+			</div>
+		{/if}
 
 		<div class="flex justify-center">
 			<Button
@@ -221,6 +293,8 @@
 			>
 				{#if isSubmitting}
 					<Spinner class="mr-3" /> Loading...
+				{:else if isForgotPassword}
+					Reset Password
 				{:else}
 					{isSignUp ? 'Sign Up' : 'Sign In'}
 				{/if}
