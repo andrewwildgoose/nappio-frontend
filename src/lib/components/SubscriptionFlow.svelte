@@ -294,6 +294,7 @@
 						type="date"
 						id="birthdate"
 						bind:value={babyBirthdate}
+						max={new Date().toISOString().split('T')[0]}
 						required
 						class="bg-secondary! text-text-colour mx-auto h-full flex-1 rounded-none border-none pl-6 text-left text-2xl"
 					/>
@@ -383,7 +384,7 @@
 				</p>
 			</div>
 			{#if page.data.addresses && page.data.addresses.length > 0}
-				<div class="mb-4">
+				<div class="mb-4 text-center items-center">
 					<Label class="font-commissioner text-text-colour! mb-1 block text-xl">
 						Select from your saved addresses
 					</Label>
