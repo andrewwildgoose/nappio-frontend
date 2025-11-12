@@ -183,8 +183,15 @@
 		{#if currentStep === 0}
 			<!-- Info Step -->
 			<div class="text-text-colour text-center">
-				<h2 class="font-ranchers mb-4 text-4xl">Welcome to Nappio!</h2>
-				<p class="mb-4">We're excited to get you started with our nappy service.</p>
+				<div class="bg-accent border-text-colour border-1 p-6">
+					<h2 class="font-ranchers text-4xl">Welcome to Nappio!</h2>
+				</div>
+				
+				<div class="h-75 border-text-colour border-l-1 border-r-1 bg-[url(/images/standing-wrap.webp)] bg-cover bg-bottom shadow-sm md:h-100">
+				</div>
+				<div class="bg-tertiary border-text-colour border-1 p-6 mb-8">
+					<p>We're excited to get you started with our nappy service.</p>
+				</div>
 				<div class="bg-primary border-text-colour border-1 p-6">
 					<p class="font-commissioner text-2xl">Our subscription includes</p>
 					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-4">
@@ -217,6 +224,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-6">
 					<p class="font-commissioner text-2xl">Pricing Details</p>
 					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
@@ -334,9 +342,9 @@
 						class={`group p-6 ${wantNappyWraps ? 'bg-tertiary border-accent2 border-6' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2'} flex min-h-[300px] flex-col items-center justify-center gap-4 rounded-none shadow-md transition-all hover:shadow-lg`}
 						on:click={() => (wantNappyWraps = true)}
 					>
-						<div class="mb-4 h-64 w-full overflow-hidden">
+						<div class="mb-4 h-75 w-full overflow-hidden">
 							<img
-								src="/images/Nappy stock image 2 - Edited Cropped.JPG"
+								src="/images/image-banner-1/wraps-blue-bg.webp"
 								alt="Nappy wraps with stars pattern"
 								class="h-full w-full object-cover"
 							/>
@@ -353,9 +361,9 @@
 						class={`p-6 ${!wantNappyWraps ? 'bg-tertiary border-accent2 border-6 shadow-sm' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2 shadow-lg'} flex min-h-[300px] flex-col items-center justify-center gap-4 rounded-none transition-all hover:shadow-xl`}
 						on:click={() => (wantNappyWraps = false)}
 					>
-						<div class="relative mb-4 h-64 w-full overflow-hidden">
+						<div class="relative mb-4 h-75 w-full overflow-hidden">
 							<img
-								src="/images/Nappy stock image 2 - Edited Cropped.JPG"
+								src="/images/image-banner-1/wraps-blue-bg.webp"
 								alt="Nappy wraps with stars pattern"
 								class="h-full w-full object-cover opacity-50 grayscale"
 							/>

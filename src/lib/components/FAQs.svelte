@@ -30,6 +30,8 @@
 		</p>
 	</div>
 
+	<img src="/images/sitting-wrap.webp" alt="Baby in patterned wrap" class="mb-5 max-w-2xl shadow-sm border-1 border-text-colour" />
+
 	<h2 class="text-text-colour font-ranchers bg-tertiary w-full max-w-2xl border-b p-5 text-4xl">
 		FAQs
 	</h2>
