@@ -39,10 +39,10 @@
 	</div>
 
 	<div class="flex flex-col md:flex-row md:w-2xl md:max-w-full m-5 justify-center">
-		<img src="/images/cloth-nappies-1.webp" alt="cloth nappy stock" class="h-auto w-1/4 shadow-sm">
-		<img src="/images/image-banner-1/nathan-bike-focus.webp" alt="toddler on bike" class="h-auto w-1/4 shadow-sm">
-		<img src="/images/laundry-bin-gif.webp" alt="laundry bin gif" class="h-auto w-1/4 shadow-sm" />
-		<img src="/images/image-banner-1/anais-dropoff-1.webp" alt="nappy dropoff" class="h-auto w-1/4 shadow-sm">
+		<img src="/images/cloth-nappies-1.webp" alt="cloth nappy stock" class="h-auto w-full md:w-1/4 shadow-sm">
+		<img src="/images/image-banner-1/nathan-bike-focus.webp" alt="toddler on bike" class="h-auto w-full md:w-1/4 shadow-sm">
+		<img src="/images/laundry-bin-gif.webp" alt="laundry bin gif" class="h-auto w-full md:w-1/4 shadow-sm" />
+		<img src="/images/image-banner-1/anais-dropoff-1.webp" alt="nappy dropoff" class="h-auto w-full md:w-1/4 shadow-sm">
 
 	</div>
 
