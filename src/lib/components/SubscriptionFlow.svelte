@@ -184,7 +184,16 @@
 			<!-- Info Step -->
 			<div class="text-text-colour text-center">
 				<div class="bg-accent border-text-colour border-1 p-6">
-					<h2 class="font-ranchers text-4xl">Welcome to Nappio!</h2>
+					<span>
+						<h2 class="font-ranchers text-4xl text-black">Welcome to
+							<img
+								src="/images/logos/Nappio-Colour-Text-NoTag.png"
+								alt="Nappio"
+								class="inline-block h-12 align-bottom pb-0.5"
+							/>
+						</h2>
+					</span>
+					
 				</div>
 				
 				<div class="h-75 border-text-colour border-l-1 border-r-1 bg-[url(/images/standing-wrap.webp)] bg-cover bg-bottom shadow-sm md:h-100">
