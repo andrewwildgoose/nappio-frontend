@@ -43,8 +43,7 @@
 		<img src="/images/image-banner-1/nathan-bike-focus.webp" alt="toddler on bike" class="h-auto w-full md:w-1/4 shadow-sm">
 		<img src="/images/laundry-bin-gif.webp" alt="laundry bin gif" class="h-auto w-full md:w-1/4 shadow-sm" />
 		<img src="/images/image-banner-1/anais-dropoff-1.webp" alt="nappy dropoff" class="h-auto w-full md:w-1/4 shadow-sm">
-
-	</div>
+	</div>	
 
 	<h2 class="text-text-colour font-ranchers m-5 text-4xl">Easy peasy!</h2>
 
@@ -55,4 +54,6 @@
 	>
 		Get Started
 	</Button>
+
+
 </div>
