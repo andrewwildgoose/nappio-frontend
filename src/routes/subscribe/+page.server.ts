@@ -61,7 +61,9 @@ export const actions = {
 		const data = {
 			babyBirthdate: formData.get('babyBirthdate'),
 			babyWeight: Number(formData.get('babyWeight')),
-			wantNappyWraps: formData.get('wantNappyWraps') === 'true',
+			// Marked for removal - leaving in as may reintroduce later
+			// wantNappyWraps: formData.get('wantNappyWraps') === 'true',
+			serviceLevel: formData.get('serviceLevel'),
 			// If addressId exists, send it; otherwise send the full address object
 			...(addressId ? { addressId } : { address: JSON.parse(formData.get('address') as string) as AddressFormData }),
 			cancelUrl: cancelUrl

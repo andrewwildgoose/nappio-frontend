@@ -6,6 +6,7 @@
 	import { Button, Input, Label, Alert, Spinner, P } from 'flowbite-svelte';
 	import SubscriptionAddress from './SubscriptionAddress.svelte';
 	import type { AddressFormData } from '$lib/types/address';
+	import { PUBLIC_SUBSCRIPTIONS_ENABLED } from '$env/static/public';
 
 	// Auth check
 	let isSignedIn = $derived(page.data.user != null);
@@ -13,6 +14,9 @@
 	console.log('User data in Subscription Flow:', page.data.user != null);
 
 	// export let priceId: string;
+
+	// Redirect if subscriptions are disabled
+	let subscriptionsEnabled = $derived(PUBLIC_SUBSCRIPTIONS_ENABLED === 'true');
 
 	// Flow state management
 	let currentStep = $state(0);
@@ -28,7 +32,8 @@
 	// Form data
 	let babyBirthdate = $state('');
 	let babyWeight = $state(0);
-	let wantNappyWraps = $state(false);
+	// let wantNappyWraps = $state(false);
+	let serviceLevel = $state('full-time'); // 'part-time' or 'full-time'
 	let address = $state<AddressFormData>({} as AddressFormData);
 	let selectedAddressJson = $state('');
 	let selectedAddressId = $state<string | null>(null); // Track if using saved address
@@ -77,10 +82,10 @@
 
 	// Step validation
 	let canProceed = $derived<Record<number, boolean>>({
-		0: isSignedIn, // Info step always valid
-		1: isSignedIn && Boolean(babyBirthdate) && babyWeight > 0,
-		2: isSignedIn, // Nappy wraps selection always valid
-		3: isSignedIn && Boolean(address.postcode) && isValidServiceArea(address.postcode) // Check if postcode is in service area
+		0: isSignedIn && subscriptionsEnabled, // Info step always valid
+		1: isSignedIn && subscriptionsEnabled && Boolean(babyBirthdate) && babyWeight > 0,
+		2: isSignedIn && subscriptionsEnabled, // Nappy wraps selection always valid
+		3: isSignedIn && subscriptionsEnabled && Boolean(address.postcode) && isValidServiceArea(address.postcode) // Check if postcode is in service area
 	});
 
 	// Function to handle auth redirect
@@ -91,7 +96,7 @@
 	const steps = [
 		{ title: '1. Welcome to Nappio', component: 'InfoStep' },
 		{ title: '2. About Your Baby', component: 'BabyDetailsStep' },
-		{ title: '3. Additional Items', component: 'NappyWrapStep' },
+		{ title: '3. Nappy Quantity', component: 'ServiceLevelStep' },
 		{ title: '4. Delivery Address', component: 'AddressStep' }
 	];
 
@@ -151,7 +156,8 @@
 >
 	<input type="hidden" name="babyBirthdate" value={babyBirthdate} />
 	<input type="hidden" name="babyWeight" value={babyWeight} />
-	<input type="hidden" name="wantNappyWraps" value={wantNappyWraps} />
+	<input type="hidden" name="serviceLevel" value={serviceLevel} />
+	<!-- <input type="hidden" name="wantNappyWraps" value={wantNappyWraps} /> -->
 	<input type="hidden" name="address" value={JSON.stringify(address)} />
 	<input type="hidden" name="addressId" value={selectedAddressId || ''} />
 	<!-- Progress indicator -->
@@ -281,7 +287,15 @@
 						</div>						
 					</div>
 				</div>
-				{#if !isSignedIn}
+				{#if !subscriptionsEnabled}
+					<div class="p-8">
+						<div class="bg-primary border-accent mt-4 border-2 p-6 shadow-md">
+							<p class=" mb-2">
+								We've been overwhelmed by demand and don't have capacity for new subscriptions at this time. Please sign up to our newsletter to be notified when we reopen subscriptions.
+							</p>
+						</div>
+					</div>
+				{:else if !isSignedIn}
 					<div class="p-8">
 						<div class="bg-primary border-accent mt-4 border-2 p-6 shadow-md">
 							<p class=" mb-2">
@@ -336,7 +350,67 @@
 				</div>
 			</div>
 		{:else if currentStep === 2}
-			<!-- Nappy Wraps Step -->
+			<!-- Service Level Step -->
+			<div class="items-center space-y-8 text-center">
+				<h2 class="font-ranchers mb-4 text-4xl">How frequently will you be using cloth nappies?</h2>
+				<p class="mx-auto mb-4 max-w-2xl">
+					<br>Every baby is different! Choose the service level that best fits your needs.<br><br>
+					We have options for part time use, intended to be used in conjunction with single-use nappies.<br><br> 
+					Or full-time use, for babies in cloth nappies all day, every day.<br><br>
+					Select the option you think suits you best and we'll provide the appropriate number of nappies, you can always change this later.
+				</p>
+
+				<div
+					class="border-text-colour mx-auto grid max-w-4xl grid-cols-1 border-1 md:grid-cols-2"
+				>
+					<Button
+						class={`group p-6 ${serviceLevel === 'part-time' ? 'bg-tertiary border-accent2 border-6' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2'} flex min-h-[200px] flex-col items-center justify-center gap-4 rounded-none shadow-md transition-all hover:shadow-lg`}
+						on:click={() => (serviceLevel = 'part-time')}
+					>
+						<!-- <div class="mb-4 h-75 w-full overflow-hidden">
+							<img
+								src="/images/image-banner-1/wraps-blue-bg.webp"
+								alt="Nappy wraps with stars pattern"
+								class="h-full w-full object-cover"
+							/>
+						</div> -->
+						<span
+							class={`font-commissioner text-text-colour ${serviceLevel === 'part-time' ? 'text-3xl' : 'text-3xl'}`}
+						>
+						<i class="fa-solid fa-calendar-day text-text-colour text-3xl"></i>
+							Part-time use
+						</span>
+						<p class="text-text-colour mt-2 text-sm">£15/week</p>
+					</Button>
+
+					<Button
+						class={`p-6 ${serviceLevel === 'full-time' ? 'bg-tertiary border-accent2 border-6 shadow-sm' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2 shadow-lg'} flex min-h-[200px] flex-col items-center justify-center gap-4 rounded-none transition-all hover:shadow-xl`}
+						on:click={() => (serviceLevel = 'full-time')}
+					>
+						<!-- <div class="relative mb-4 h-75 w-full overflow-hidden">
+							<img
+								src="/images/image-banner-1/wraps-blue-bg.webp"
+								alt="Nappy wraps with stars pattern"
+								class="h-full w-full object-cover opacity-50 grayscale"
+							/>
+							<div class="absolute inset-0 flex items-center justify-center">
+								<i class="fa-solid fa-ban fa-4x" style="color: #f7b6af;"></i>
+							</div>
+						</div> -->
+
+						<span
+							class={`font-commissioner text-text-colour ${serviceLevel === 'full-time' ? 'text-3xl' : 'text-3xl'}`}
+						>
+						<i class="fa-solid fa-calendar-week text-text-colour text-3xl"></i>
+							Full-time use
+						</span>
+						<p class="text-text-colour mt-2 text-sm">£20/week</p>
+					</Button>
+				</div>
+			</div>
+		<!-- Marked for removal - leaving in as may reintroduce later -->
+		<!-- {:else if currentStep === 2}
+			Nappy Wraps Step
 			<div class="items-center space-y-8 text-center">
 				<h2 class="font-ranchers mb-4 text-4xl">Would you like to rent nappy wraps?</h2>
 				<p class="mx-auto mb-4 max-w-2xl">
@@ -389,7 +463,7 @@
 						<p class="text-text-colour mt-2 text-sm">I'll provide my own wraps</p>
 					</Button>
 				</div>
-			</div>
+			</div> -->
 		{:else if currentStep === 3}
 			<!-- Address Step -->
 			<div class="items-center space-y-8 text-center">
@@ -463,12 +537,19 @@
 					{/if}
 				</Button>
 			</div>
+		{:else if !subscriptionsEnabled}
+			<Button
+				class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none shadow-md transition-shadow hover:shadow-lg"
+				href="/newsletter"
+				>
+				Sign up for updates
+			</Button>
 		{:else if !isSignedIn}
 			<Button
 				on:click={goToSignIn}
 				class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none shadow-md transition-shadow hover:shadow-lg"
 			>
-				Sign in to Continue
+				Sign in to continue
 			</Button>
 		{:else}
 			<Button

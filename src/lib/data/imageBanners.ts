@@ -9,13 +9,13 @@ export const bannerImages = {
 	 */
 	main: [
 		'/images/image-banner-1/anais-dropoff-1.webp',
-		'/images/image-banner-1/wraps-blue-bg.webp',
+		'/images/image-banner-1/wrap_stack_3_blue_square.webp',
 		'/images/image-banner-1/nathan-crayons-focus.webp',
-		'/images/image-banner-1/wraps-two-green-bg.webp',
+		'/images/image-banner-1/wrap_stack_4_green_square.webp',
 		'/images/image-banner-1/nathan-bike-focus.webp',
-		'/images/image-banner-1/wraps-orange-bg.webp',
+		'/images/image-banner-1/wrap_stack_5_orange_square.webp',
 		'/images/image-banner-1/nathan-wraps.webp',
-		'/images/image-banner-1/wraps-three-pink-bg.webp'
+		'/images/image-banner-1/wrap_stack_6_pink_square.webp'
 	],
 
 	// Add more banner collections as needed:
