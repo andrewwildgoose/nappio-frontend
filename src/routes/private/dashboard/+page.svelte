@@ -14,6 +14,9 @@
 	let isAddressesExpanded = false;
 	let isSubscriptionsExpanded = false;
 
+	let managingSubscription: boolean = false;
+	let selectedSubscriptionId: string | null = null;
+
 	let selectedAddress: (typeof data.addresses)[0] | null = null;
 
 	// State for address selection
@@ -89,6 +92,25 @@
 		// Reset selection state
 		selectingAddressFor = null;
 	}
+
+	function handleManageSubscription(subscriptionId: string) {
+		if (managingSubscription && selectedSubscriptionId === subscriptionId) {
+			// Collapse if the same subscription is clicked again
+			managingSubscription = false;
+			selectedSubscriptionId = null;
+		} else {
+			managingSubscription = true;
+			selectedSubscriptionId = subscriptionId;
+		}
+	}
+
+	function handleContactUs(subscriptionId: string) {
+        const subject = encodeURIComponent(`Subscription Inquiry - ${data.user.email}`);
+        const body = encodeURIComponent(
+            `Subscription ID: ${subscriptionId}\n\nPlease select your query type:\n[ ] Billing Question\n[ ] Delivery Issue\n[ ] Product Question\n[ ] Pause Subscription\n[ ] Cancel Subscription\n[ ] Other\n\nYour message:\n`
+        );
+        window.open(`mailto:info@nappio.co.uk?subject=${subject}&body=${body}`, '_blank');
+    }
 </script>
 
 <svelte:head>
@@ -219,61 +241,74 @@
 														</ul>
 													</div>
 												{/if}
-
-												{#if subscription.address}
-													<div class="mt-2">
-														<p><strong>Delivery Address:</strong></p>
-														<p>{subscription.address.address_line_1}</p>
-														{#if subscription.address.address_line_2}
-															<p>{subscription.address.address_line_2}</p>
+												<Button
+                                                    color="light"
+                                                    class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-l flex w-full mt-4 items-center justify-between rounded-none border-none transition-colors duration-200"
+                                                    onclick={() => handleManageSubscription(subscription.id)}
+                                                >
+                                                    <span>{managingSubscription && selectedSubscriptionId === subscription.id ? 'Collapse' : 'Manage Subscription'}</span>
+                                                    <i
+                                                        class={managingSubscription && selectedSubscriptionId === subscription.id ? 'fa-solid fa-minus fa-md' : 'fa-solid fa-plus fa-md'}
+                                                    ></i>
+                                                </Button>
+												{#if managingSubscription && selectedSubscriptionId === subscription.id}
+													<div transition:slide={{ duration: 500, easing: cubicInOut }} class="p-4 bg-accent2/10">
+														{#if subscription.address}
+															<div class="mt-2">
+																<p><strong>Delivery Address:</strong></p>
+																<p>{subscription.address.address_line_1}</p>
+																{#if subscription.address.address_line_2}
+																	<p>{subscription.address.address_line_2}</p>
+																{/if}
+																<p>{subscription.address.city}</p>
+																<p>{subscription.address.postcode}</p>
+															</div>
+														{:else}
+															<div class="mt-2">
+																<p class="mb-2 text-sm italic">No delivery address specified</p>
+															</div>
 														{/if}
-														<p>{subscription.address.city}</p>
-														<p>{subscription.address.postcode}</p>
-														<Button
-															color="light"
-															class="bg-tertiary! hover:bg-accent! text-text-colour! font-commissioner text-l mt-2 rounded-none border-none transition-colors duration-200"
-															onclick={() => (selectingAddressFor = subscription)}
-														>
-															Change Address
-														</Button>
-													</div>
-												{:else}
-													<div class="mt-2">
-														<p class="mb-2 text-sm italic">No delivery address specified</p>
-														<Button
-															color="light"
-															class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200"
-															onclick={() => (selectingAddressFor = subscription)}
-														>
-															Select Address
-														</Button>
-													</div>
-												{/if}
-
-												{#if selectingAddressFor?.id === subscription.id}
-													<div class="mt-4 border-t pt-4">
-														<p class="font-commissioner mb-2">Select a delivery address:</p>
-														<div class="space-y-2">
-															{#each data.addresses as address}
-																<button
-																	class="hover:bg-accent hover:text-text-colour w-full rounded border p-2 text-left transition-colors duration-200"
-																	onclick={() => handleAddressAssign(subscription, address)}
-																>
-																	<p class="font-bold">{address.address_line_1}</p>
-																	{#if address.address_line_2}
-																		<p>{address.address_line_2}</p>
-																	{/if}
-																	<p>{address.city}, {address.postcode}</p>
-																</button>
-															{/each}
+															<Button
+																color="light"
+																class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-l w-full rounded-none border-none transition-colors duration-200"
+																onclick={() => (selectingAddressFor = selectingAddressFor?.id === subscription.id ? null : subscription)}
+															>
+																{selectingAddressFor?.id === subscription.id ? 'Cancel' : subscription.address ? 'Change Address' : 'Select Address'}
+															</Button>
+														{#if selectingAddressFor?.id === subscription.id}
+                                                            <div class="mt-4 border-t pt-4" transition:slide={{ duration: 500, easing: cubicInOut }}>
+                                                                <p class="font-commissioner mb-2">Select a delivery address:</p>
+                                                                <div class="space-y-2">
+                                                                    {#each data.addresses as address}
+                                                                        <button
+                                                                            class="hover:bg-tertiary! hover:text-text-colour! w-full rounded border p-2 text-left transition-colors duration-200"
+                                                                            onclick={() => handleAddressAssign(subscription, address)}
+                                                                        >
+                                                                            <p class="font-bold">{address.address_line_1}</p>
+                                                                            {#if address.address_line_2}
+                                                                                <p>{address.address_line_2}</p>
+                                                                            {/if}
+                                                                            <p>{address.city}, {address.postcode}</p>
+                                                                        </button>
+                                                                    {/each}
+                                                                </div>
+                                                            </div>
+                                                        {/if}
+														<div class="mt-4 border-t pt-4">
+															<p class="font-commissioner mb-2"><strong>Subscription Details</strong></p>
+															<p><strong>Started On:</strong> {formatDate(subscription.start_date)}</p>
+															<p><strong>Next Billing Date:</strong> {formatDate(subscription.next_payment_date)}</p><br>
+															<p>We're still adding features that will allow you to fully manage your subscription here. If there's anything you'd like to do which you can't do here, please contact us via email by clicking the button below or emailing us at <strong>info@nappio.co.uk</strong>.</p>
 														</div>
-														<Button
-															color="light"
-															class="font-commissioner text-l mt-2 w-full rounded-none bg-gray-200 text-gray-700 hover:bg-gray-300"
-															onclick={() => (selectingAddressFor = null)}
-														>
-															Cancel
-														</Button>
+														<div class="mt-4">
+															<Button
+																color="light"
+																class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-commissioner text-l w-full rounded-none border-none transition-colors duration-200"
+																onclick={() => handleContactUs(subscription.id)}
+															>
+																Contact Us About This Subscription
+															</Button>
+														</div>
 													</div>
 												{/if}
 											</div>
