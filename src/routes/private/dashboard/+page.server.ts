@@ -47,6 +47,10 @@ interface DeleteAddressResponse {
 	message: string;
 }
 
+interface PauseSubscriptionResponse {
+	message: string;
+}
+
 export const load: PageServerLoad = async ({ cookies }) => {
 	// Get session from cookies
 	const { session, user } = await getSessionFromCookies(cookies);
@@ -100,15 +104,15 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		const subscriptions: SubscriptionDetailsResponse[] = await subscriptionsResponse.json();
 		const addresses: UserAddress[] = await addressesResponse.json();
 
-		console.log('Raw subscriptions:', subscriptions);
-		console.log('Available addresses:', addresses);
+		// console.log('Raw subscriptions:', subscriptions);
+		// console.log('Available addresses:', addresses);
 
 		// Match addresses to subscriptions
 		const subscriptionsWithAddresses = subscriptions.map((subscription) => {
 			if (subscription.address_id) {
-				console.log(
-					`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`
-				);
+				// console.log(
+				// 	`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`
+				// );
 				const matchedAddress = addresses.find((addr) => addr.id === subscription.address_id);
 
 				if (matchedAddress) {
@@ -121,9 +125,9 @@ export const load: PageServerLoad = async ({ cookies }) => {
 						address: matchedAddress
 					};
 				} else {
-					console.log(
-						`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`
-					);
+					// console.log(
+					// 	`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`
+					// );
 					return {
 						...subscription,
 						address: null
@@ -131,14 +135,14 @@ export const load: PageServerLoad = async ({ cookies }) => {
 				}
 			}
 
-			console.log(`Subscription ${subscription.id} has no address_id`);
+			// console.log(`Subscription ${subscription.id} has no address_id`);
 			return {
 				...subscription,
 				address: null
 			};
 		});
 
-		console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
+		// console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
 
 		return {
 			user: {
@@ -245,5 +249,49 @@ export const actions: Actions = {
 			success: true,
 			message: data.message
 		};
-	}
+	},
+	pauseSubscription: async ({ request, cookies }) => {
+		// Get session from cookies
+		const { session } = await getSessionFromCookies(cookies);
+
+		if (!session?.access_token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const jwt = session.access_token;
+		const formData = await request.formData();
+
+		const subscriptionId = formData.get('id');
+		const pauseUntil = formData.get('pause_until');
+
+		console.log({
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${jwt}`
+			},
+			body: JSON.stringify({ subscription_id: subscriptionId, pause_until: pauseUntil || null })
+		});
+
+		const response = await fetch(`${BACKEND_API_URL}/api/v1/pause-subscription`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${jwt}`
+			},
+			body: JSON.stringify({ subscription_id: subscriptionId, pause_until: pauseUntil || null })
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			return fail(response.status, {
+				error: errorData.detail || 'Failed to pause subscription'
+			});
+		}
+
+		const data: PauseSubscriptionResponse = await response.json();
+		return {
+			success: true,
+			message: data.message
+		};
+	},
 } satisfies Actions;

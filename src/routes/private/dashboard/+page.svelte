@@ -7,7 +7,7 @@
 	// import { goto } from '$app/navigation';
 	import SignOutForm from '$lib/components/SignOutForm.svelte';
 	import AddressForm from '$lib/components/AddressForm.svelte';
-	// import { addAddress, assignAddress } from '$lib/api/address.server';
+	import DashboardSubscription from '$lib/components/DashboardSubscription.svelte';
 
 	export let data: PageData;
 	let showAddressForm = false;
@@ -15,9 +15,6 @@
 	let isSubscriptionsExpanded = false;
 
 	let selectedAddress: (typeof data.addresses)[0] | null = null;
-
-	// State for address selection
-	let selectingAddressFor: (typeof data.subscriptions)[0] | null = null;
 
 	function handleAddressDelete(address: (typeof data.addresses)[0]) {
 		// Create and submit form programmatically
@@ -45,49 +42,6 @@
 	// Helper function to format date
 	function formatDate(dateString: string) {
 		return new Date(dateString).toLocaleDateString('en-GB');
-	}
-
-	// Helper function to format currency
-	function formatCurrency(amount: number) {
-		return new Intl.NumberFormat('en-GB', {
-			style: 'currency',
-			currency: 'GBP'
-		}).format(amount);
-	}
-
-	function handleAddressAssign(
-		subscription: (typeof data.subscriptions)[0],
-		address: (typeof data.addresses)[0]
-	) {
-		// Create and submit form programmatically
-		const form = document.createElement('form');
-		form.method = 'POST';
-		form.action = '?/assignAddress';
-
-		const actionInput = document.createElement('input');
-		actionInput.type = 'hidden';
-		actionInput.name = 'action';
-		actionInput.value = 'assign';
-
-		const addressInput = document.createElement('input');
-		addressInput.type = 'hidden';
-		addressInput.name = 'address_id';
-		addressInput.value = address.id;
-
-		const subscriptionInput = document.createElement('input');
-		subscriptionInput.type = 'hidden';
-		subscriptionInput.name = 'subscription_id';
-		subscriptionInput.value = subscription.id;
-
-		form.appendChild(actionInput);
-		form.appendChild(addressInput);
-		form.appendChild(subscriptionInput);
-		document.body.appendChild(form);
-		form.submit();
-		document.body.removeChild(form);
-
-		// Reset selection state
-		selectingAddressFor = null;
 	}
 </script>
 
@@ -198,87 +152,7 @@
 						{#if data.subscriptions && data.subscriptions.length > 0}
 							<div class="space-y-4">
 								{#each data.subscriptions as subscription}
-									<div class="bg-background border p-4 shadow-sm">
-										<div class="flex justify-between">
-											<div class="w-full">
-												<p class="font-commissioner mb-2">
-													<strong>Status:</strong>
-													{subscription.status}
-												</p>
-												<!-- Subscription Items -->
-												{#if subscription.items && subscription.items.length > 0}
-													<div class="bg-tertiary/10 mt-3 rounded p-2">
-														<p class="font-commissioner mb-2"><strong>Included Items:</strong></p>
-														<ul class="space-y-1">
-															{#each subscription.items as item}
-																<li class="flex justify-between text-sm">
-																	<span>{item.name}</span>
-																	<span>{formatCurrency(item.price)}</span>
-																</li>
-															{/each}
-														</ul>
-													</div>
-												{/if}
-
-												{#if subscription.address}
-													<div class="mt-2">
-														<p><strong>Delivery Address:</strong></p>
-														<p>{subscription.address.address_line_1}</p>
-														{#if subscription.address.address_line_2}
-															<p>{subscription.address.address_line_2}</p>
-														{/if}
-														<p>{subscription.address.city}</p>
-														<p>{subscription.address.postcode}</p>
-														<Button
-															color="light"
-															class="bg-tertiary! hover:bg-accent! text-text-colour! font-commissioner text-l mt-2 rounded-none border-none transition-colors duration-200"
-															onclick={() => (selectingAddressFor = subscription)}
-														>
-															Change Address
-														</Button>
-													</div>
-												{:else}
-													<div class="mt-2">
-														<p class="mb-2 text-sm italic">No delivery address specified</p>
-														<Button
-															color="light"
-															class="bg-accent! hover:bg-tertiary! text-text-colour! hover:text-accent! font-commissioner text-l rounded-none transition-colors duration-200"
-															onclick={() => (selectingAddressFor = subscription)}
-														>
-															Select Address
-														</Button>
-													</div>
-												{/if}
-
-												{#if selectingAddressFor?.id === subscription.id}
-													<div class="mt-4 border-t pt-4">
-														<p class="font-commissioner mb-2">Select a delivery address:</p>
-														<div class="space-y-2">
-															{#each data.addresses as address}
-																<button
-																	class="hover:bg-accent hover:text-text-colour w-full rounded border p-2 text-left transition-colors duration-200"
-																	onclick={() => handleAddressAssign(subscription, address)}
-																>
-																	<p class="font-bold">{address.address_line_1}</p>
-																	{#if address.address_line_2}
-																		<p>{address.address_line_2}</p>
-																	{/if}
-																	<p>{address.city}, {address.postcode}</p>
-																</button>
-															{/each}
-														</div>
-														<Button
-															color="light"
-															class="font-commissioner text-l mt-2 w-full rounded-none bg-gray-200 text-gray-700 hover:bg-gray-300"
-															onclick={() => (selectingAddressFor = null)}
-														>
-															Cancel
-														</Button>
-													</div>
-												{/if}
-											</div>
-										</div>
-									</div>
+									<DashboardSubscription {subscription} addresses={data.addresses} />
 								{/each}
 							</div>
 						{:else}
