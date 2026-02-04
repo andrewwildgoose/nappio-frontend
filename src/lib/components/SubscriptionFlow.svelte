@@ -39,7 +39,7 @@
 	let selectedAddressId = $state<string | null>(null); // Track if using saved address
 
 	// Valid service area postcodes
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9'];
+	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
 
 	// Handle saved address selection
 	$effect(() => {
@@ -207,61 +207,61 @@
 				<div class="bg-tertiary border-text-colour border-1 p-6 mb-8">
 					<p>We're excited to get you started with our nappy service.</p>
 				</div>
-				<div class="bg-primary border-text-colour border-1 p-6">
+				<div class="bg-primary border-text-colour border-1 p-4 md:p-6">
 					<p class="font-commissioner text-2xl">Our subscription includes</p>
 					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-4">
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<i class="fa-solid fa-baby mb-4 text-3xl" style="color: #262625;"></i>
-								<p class="font-medium">Weekly delivery of clean nappies</p>
+								<p class="font-medium">Enough cloth nappies to meet your weekly needs</p>
 							</div>
 						</div>
 
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<i class="fa-solid fa-bicycle mb-4 text-3xl" style="color: #262625;"></i>
-								<p class="font-medium">Collection of used nappies</p>
+								<p class="font-medium">Weekly drop and off and collection</p>
 							</div>
 						</div>
 
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<i class="fa-solid fa-soap mb-4 text-3xl" style="color: #262625;"></i>
-								<p class="font-medium">Professional cleaning service</p>
+								<p class="font-medium">Professional laundering</p>
 							</div>
 						</div>
 
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
-								<i class="fa-solid fa-leaf mb-4 text-3xl" style="color: #262625;"></i>
-								<p class="font-medium">Environmentally friendly solution</p>
+								<i class="fa-solid fa-suitcase mb-4 text-3xl" style="color: #262625;"></i>
+								<p class="font-medium">All extras you need to cloth nappy like a pro</p>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-6">
+				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-4 md:p-6">
 					<p class="font-commissioner text-2xl">Pricing Details</p>
 					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<p>
-									To get started, there's a one-off setup cost of <strong>£40</strong>, which covers
-									everything you need to get started.
+									To get started, there's a one-off set-up cost of <strong>£40</strong>, 
+									which covers the cost of all the extras, plus an at-home visit to show you the ropes.
 								</p>
 							</div>
 						</div>
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<p>
-									After that, it's just <strong>£20 per week</strong>, paid on our
-									collection/delivery day (Tuesday) — less than the cost of a night out!
+									After that, a part-time subscription costs <strong>£16</strong> a week and a full-time subscription costs <strong>£20</strong> a week, 
+									paid on delivery/collection day.
 								</p>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="bg-secondary border-text-colour border-1 border-t-0 p-6">
+				<div class="bg-secondary border-text-colour border-1 border-t-0 p-4 md:p-6">
 					<p class="font-commissioner text-2xl">Service Area</p>
 					<div class="grid grid-cols-1 gap-4 p-6">
 						<div class="bg-background border-text-colour border-1 mb-4 p-6 shadow-sm">
@@ -310,8 +310,7 @@
 			<div class="items-center space-y-4 text-center">
 				<h2 class="font-ranchers mb-4 text-4xl">Tell us about your baby</h2>
 				<p class="mb-4">
-					We use this information to make sure your baby gets the most appropriate size of nappies
-					and to help identify when they outgrow them.
+					We use this information to make sure your baby gets the right size nappies.
 				</p>
 
 				<div
@@ -351,15 +350,80 @@
 			</div>
 		{:else if currentStep === 2}
 			<!-- Service Level Step -->
-			<div class="items-center space-y-8 text-center">
-				<h2 class="font-ranchers mb-4 text-4xl">How frequently will you be using cloth nappies?</h2>
-				<p class="mx-auto mb-4 max-w-2xl">
-					<br>Every baby is different! Choose the service level that best fits your needs.<br><br>
-					We have options for part time use, intended to be used in conjunction with single-use nappies.<br><br> 
-					Or full-time use, for babies in cloth nappies all day, every day.<br><br>
-					Select the option you think suits you best and we'll provide the appropriate number of nappies, you can always change this later.
-				</p>
-
+			<div class="items-center text-center">
+				<h2 class="font-ranchers mb-4 text-4xl">Do you need a part-time or full-time subscription?</h2>
+				<div class="bg-tertiary border-text-colour border-1 p-4 md:p-6">
+					<p>
+						Every family is different! Choose the subscription type that best suits your needs based on our guidance below.
+					</p>
+				</div>
+				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-6 shadow-sm">
+					<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+							<div class="flex flex-col items-center text-center">
+								<span
+									class="font-commissioner text-text-colour text-2xl mb-4"
+								>
+								<i class="fa-solid fa-calendar-day text-text-colour text-2xl"></i>
+									Part-time use
+								</span>
+								<p>
+									Part-timers get up to 25 nappies a week. 
+									This subscription works well for those who want to mix with some disposables or wash-at-home cloth nappies. 
+									Part-timers get 3 waterproof nappy covers.
+								</p>
+							</div>
+						</div>
+						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+							<div class="flex flex-col items-center text-center">
+								<span
+									class="font-commissioner text-text-colour text-2xl mb-4"
+								>
+								<i class="fa-solid fa-calendar-day text-text-colour text-2xl"></i>
+									Full-time use
+								</span>
+								<p>
+									Full-timers get as many nappies as they need - usually around 40 nappies. 
+									We recommend this option for people going all in with cloth and using it around the clock. Full-timers get 6 waterproof 
+									covers and boosters to add to nappies overnight.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bg-secondary border-text-colour border-1 border-t-0 p-4 md:p-6 space-y-4">
+					<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+						<p class="mb-4">
+							Both subscriptions include all the extras you will need, including:
+						</p>
+						<ul class="list-disc list-inside text-left md:indent-36">
+							<li><strong>smell-proof nappy bin</strong> </li>
+							<li><strong>laundry bag</strong></li>
+							<li><strong>dry bag</strong> (for storing nappies outside on collection day)</li>
+							<li><strong>waterproof covers.</strong></li>
+						</ul>
+					</div>
+					<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+						<p>
+							You can switch between part and full-time any time you like. Most customers like to start with part-time and graduate to full-time 
+							as they become cloth nappy pros. Some switch back down to part-time when their baby starts nursery.
+						</p>
+					</div>
+				</div>
+				<div class="bg-accent border-text-colour border-1 border-t-0 p-4 md:p-6 mb-8">
+					<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
+						<p>
+							Not sure which subscription will work best for you? No problem. Email us at <a
+									href="mailto:info@nappio.co.uk"
+									class="text-accent!"
+									onclick={(e) => {
+										e.preventDefault();
+										window.open('mailto:info@nappio.co.uk', '_blank');
+									}}>info@nappio.co.uk</a
+								> and we can help you make the right decision for you.
+						</p>
+					</div>
+				</div>
 				<div
 					class="border-text-colour mx-auto grid max-w-4xl grid-cols-1 border-1 md:grid-cols-2"
 				>
@@ -380,7 +444,7 @@
 						<i class="fa-solid fa-calendar-day text-text-colour text-3xl"></i>
 							Part-time use
 						</span>
-						<p class="text-text-colour mt-2 text-sm">£15/week</p>
+						<p class="text-text-colour mt-2 text-sm">£16/week</p>
 					</Button>
 
 					<Button
@@ -549,7 +613,7 @@
 				on:click={goToSignIn}
 				class="bg-tertiary! hover:bg-text-colour! text-text-colour hover:text-tertiary font-commissioner rounded-none shadow-md transition-shadow hover:shadow-lg"
 			>
-				Sign in to continue
+				Sign in or sign up to continue
 			</Button>
 		{:else}
 			<Button

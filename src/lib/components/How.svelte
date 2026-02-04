@@ -7,34 +7,30 @@
 	<h2 class="text-text-colour font-ranchers m-5 text-5xl">How does it work?</h2>
 </div>
 <div class="flex flex-col items-center justify-center p-5 text-center">
-	<div class="bg-primary m-5 max-w-2xl p-5 shadow-sm">
-		<h3 class="text-text-colour font-ranchers text-2xl">We Provide the Nappies</h3>
+	<div class="bg-primary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">We provide the nappies and all the extras you need</h3>
 		<p>
-			We will provide you with advice and support as your baby grows to cloth nappy like a pro.
-			We'll give you enough for the whole week.
+			We give you enough organic cotton nappies to meet your weekly needs. Our prices include all extras - waterproof covers, laundry bags, a smell-proof nappy bin and a dry bag to keep your nappies protected from the rain on your doorstep.
 		</p>
 	</div>
 
-	<div class="bg-secondary m-5 max-w-2xl p-5 shadow-sm">
-		<h3 class="text-text-colour font-ranchers text-2xl">You Use Them, We Collect Them</h3>
+	<div class="bg-secondary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">You use them, we collect them</h3>
 		<p>
-			Pop the used nappies into the bag we provide. No need to rinse or do anything, just store them
-			until collection day.
+			No need to rinse, just remove the dirty nappies and store them in the smell-proof nappy bin until collection day.
 		</p>
 	</div>
 
-	<div class="bg-tertiary m-5 max-w-2xl p-5 shadow-sm">
-		<h3 class="text-text-colour font-ranchers text-2xl">Weekly Pick-Up & Drop-Off</h3>
+	<div class="bg-tertiary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">Weekly pick-up & drop-off</h3>
 		<p>
-			Once a week, we'll collect the used nappies and deliver a fresh, professionally cleaned batch
-			straight to your door.
+			Once a week, we collect the used nappies and deliver a fresh, sparkling clean batch straight to your door.
 		</p>
 	</div>
-	<div class="bg-accent m-5 max-w-2xl p-5 shadow-sm">
-		<h3 class="text-text-colour font-ranchers text-2xl">We Do the Dirty Work</h3>
+	<div class="bg-accent m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">We do the dirty work</h3>
 		<p>
-			We wash, sanitise, and dry the nappies using baby-safe, eco-friendly detergents and
-			high-standard cleaning processes.
+			Our nappies are laundered and sanitised using professional processes.
 		</p>
 	</div>
 

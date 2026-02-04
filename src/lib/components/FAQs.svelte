@@ -59,22 +59,24 @@
 				class="bg-background/50 p-4 text-left"
 			>
 				<p>
-					We make cloth nappies easy. Each week, Nappio drops off a fresh bundle of clean cloth
-					nappies and picks up the used ones from your doorstep. For newborns, we will start you off
-					with 40, for older babies, 35. But every baby is different, and we'll adjust the quantity
-					so you always have just the right amount.
+					The short answer… everything! We include everything you need to use cloth nappies successfully 
+					in our service: organic cotton nappies, waterproof covers, a smell-proof nappy bin, laundry 
+					bags and a dry bag to keep your nappies protected from the rain on your doorstep.
+					
 				</p>
 				<br />
-				<p>
-					We provide the nappies, laundry bag, and a nappy bin. All you need are a few wraps to go
-					over the cloth nappies. Each wrap will last you a few nappy changes (but usually need
-					changing for a number 2!) and you keep hold of these - they can just be popped in a normal
-					wash at home.
+				<p class="mb-2">
+					We offer two subscriptions, part-time and full-time:
 				</p>
+				<ul class="list-disc list-inside">
+					<li class="mb-2">
+						Part-timers get up to 25 nappies a week. This subscription works well for those who want to mix with some disposables or wash-at-home cloth nappies.
+					</li>
+					<li>Full-timers get as many nappies as they need - usually around 40 nappies. This subscription works well for those who want to go all-in with cloth. We also provide additional boosters for use at night-time.</li>
+				</ul>
 				<br />
 				<p>
-					You can rent wraps from us for a little extra cost each month or buy them from our
-					website.
+					You can switch between part and full-time any time you like. Most customers like to start with part-time and graduate to full-time when they become cloth nappy pros. Some switch back down to part-time when their baby starts nursery.
 				</p>
 			</div>
 		{/if}
@@ -124,7 +126,7 @@
 			aria-expanded={expandedStates.pickup}
 		>
 			<h3 class="text-text-colour font-commissioner mr-2 text-left text-2xl">
-				How do we organise pick-up and drop-off?
+				Do I need to be at home for the weekly pick-up/drop-off?
 			</h3>
 			<i
 				class={expandedStates.pickup ? 'fa-solid fa-minus fa-lg' : 'fa-solid fa-plus fa-lg'}
@@ -137,16 +139,15 @@
 				class="bg-background/50 p-4 text-left"
 			>
 				<p>
-					Once you sign up, we'll get in touch to find the best pick-up/drop-off spot near your
-					home. If you live in a flat, we can get creative with bike sheds and other hidden corners.
-					You don't need to be at home.
+					You don't need to be at home for pick-up/drop-off. We will agree a spot for you to leave your 
+					dirties and for us to drop off your clean nappies.
 				</p>
 				<br />
-				<p>Once a week, we'll collect the used nappies and provide clean ones.</p>
-				<br />
 				<p>
-					We'll also pop by your home at a time that suits you to give you a quick 121 on how to use
-					our nappies - it's super easy.
+					Once you sign up, we'll get in touch to arrange a time that suits you to deliver your Nappio 
+					kit to your home and give you a 121 on how to use our nappies. At this meeting, we can decide 
+					on the best spot for pick-up/drop-off. This might be your doorstep, a bin shed or another hidden 
+					corner. We can get creative!
 				</p>
 			</div>
 		{/if}
@@ -175,8 +176,40 @@
 				class="bg-background/50 p-4 text-left"
 			>
 				<p>
-					We use professional-grade machines, hot water, and baby-safe detergents. Every nappy is
-					returned to you clean, fresh, and ready to use.
+					Our professional laundry system sanitises the nappies using industrial machines, hot water and baby-safe 
+					detergents. Nappies are delivered to you clean, fresh, and ready to use.
+				</p>
+			</div>
+		{/if}
+	</div>
+
+	<!-- Self-washing Section -->
+	<div class="w-full max-w-2xl border-b shadow-sm">
+		<button
+			type="button"
+			class="bg-secondary hover:bg-tertiary flex w-full items-center justify-between p-5"
+			on:click={() => (expandedStates.cleaning = !expandedStates.cleaning)}
+			on:keydown={(e) => e.key === 'Enter' && (expandedStates.cleaning = !expandedStates.cleaning)}
+			aria-expanded={expandedStates.cleaning}
+		>
+			<h3 class="text-text-colour font-commissioner mr-2 text-left text-2xl">
+				Do I need to do any washing myself?
+			</h3>
+			<i
+				class={expandedStates.cleaning ? 'fa-solid fa-minus fa-lg' : 'fa-solid fa-plus fa-lg'}
+				style="color: #262625;"
+			></i>
+		</button>
+		{#if expandedStates.cleaning}
+			<div
+				transition:slide={{ duration: 300, easing: cubicInOut }}
+				class="bg-background/50 p-4 text-left"
+			>
+				<p>
+					Our organic cotton cloth nappies absorb most of the pee and poop, leaving us to do the dirtiest job! 
+					However, as part of the service, we will give you a set of waterproof covers to go over the top of 
+					our nappies. These last for a few changes, and you wash these yourself at home. They can be washed 
+					at 30-40 degrees with other laundry and air-dry super-fast.
 				</p>
 			</div>
 		{/if}
@@ -241,20 +274,15 @@
 				class="bg-background/50 p-4 text-left"
 			>
 				<p>
-					To get you started, there's a one-off sign up cost of £40. This covers the cost of setting
-					you up a Nappio account, getting all your equipment ready for you to use and an at-home
-					visit to teach you how to use the nappies.
+					To get you started, there's a one-off set-up cost of £40. This covers the costs of all the 
+					extras you need (like laundry bags, a smell-proof bin, a dry bag to store nappies on collection 
+					day and waterproof covers that are yours to use while you are a Nappio customer) and your 
+					at-home visit.
 				</p>
 				<br />
 				<p>
-					After that, prices start at £20 a week, paid on collection/delivery day (Tuesday). Less
-					than the cost of a night out! (Which let's face it, may not be on the agenda so much these
-					days anyway…)
-				</p>
-				<br />
-				<p>
-					For an extra fee of £2.00 per week, you can rent wraps from us (or purchase them directly
-					from our website).
+					After that, a part-time subscription (up to 25 nappies a week) costs £16 a week and a full-time 
+					subscription (as many nappies as you need, but usually around 40) costs £20 a week.
 				</p>
 			</div>
 		{/if}
