@@ -3,7 +3,7 @@
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	export let data: {
-		type: 'payment_intent' | 'payment' | 'newsletter' | 'signup' | 'error';
+		type: 'payment_intent' | 'payment' | 'start_up_payment' | 'newsletter' | 'signup' | 'error';
 		amountTotal?: number;
 		customerEmail?: string;
 		email?: string;
@@ -18,6 +18,12 @@
 		payment: {
 			title: 'Payment Successful!',
 			content: `Thank you for your payment of £${data.amountTotal}. A confirmation email has been sent to ${data.customerEmail}.`
+		},
+		start_up_payment: {
+			title: 'Payment Successful!',
+			content: `Thank you for paying the setup cost of £${data.amountTotal}. A confirmation email has been sent to ${data.customerEmail}. 
+					<br><br>We will also reach out to you by email within 48 hours to arrange your at-home visit and get you started with Nappio. 
+					<br><br>If you don't hear from us, check your spam or feel free to reach out to us at <a href="mailto:info@nappio.co.uk"><strong>info@nappio.co.uk</strong></a>. We will get back to you ASAP.`
 		},
 		newsletter: {
 			title: 'Newsletter Signup Successful!',
@@ -39,6 +45,7 @@
 	const getRedirectInfo = (type: typeof data.type) => {
 		switch (type) {
 			case 'payment':
+			case 'start_up_payment':
 			case 'payment_intent':
 				return { url: '/private/dashboard', text: 'Go to Dashboard' };
 			case 'signup':
@@ -58,7 +65,7 @@
 		class="bg-tertiary text-text-colour font-commissioner mx-auto max-w-4xl p-8 text-center shadow-lg"
 	>
 		<h1 class="font-ranchers mb-6 text-4xl">{currentMessage.title}</h1>
-		<p class="mx-auto mb-8 max-w-2xl text-center text-xl">{currentMessage.content}</p>
+		<p class="mx-auto mb-8 max-w-2xl text-center text-xl">{@html currentMessage.content}</p>
 		<div class="mt-8 items-end">
 			<Button
 				href={redirectInfo.url}
