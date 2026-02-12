@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { enhance, applyAction } from '$app/forms';
@@ -23,6 +24,7 @@
 	let previousStepValue = $state(0);
 	let isSubmitting = $state(false);
 	let error = $state<string | null>(null);
+	let formElement: HTMLFormElement;
 
 	// Track direction for animation
 	$effect(() => {
@@ -135,20 +137,25 @@
 		};
 	};
 
-	function nextStep() {
+	async function nextStep() {
 		if (currentStep < steps.length - 1 && canProceed[currentStep]) {
 			currentStep++;
+			await tick();
+			formElement?.scrollIntoView({ behavior: 'auto', block: 'start' });
 		}
 	}
 
-	function previousStep() {
+	async function previousStep() {
 		if (currentStep > 0) {
 			currentStep--;
+			await tick();
+			formElement?.scrollIntoView({ behavior: 'auto', block: 'start' });
 		}
 	}
 </script>
 
 <form
+	bind:this={formElement}
 	method="POST"
 	action="?/createSubscription"
 	use:enhance={handleEnhanceSubmit}
@@ -307,14 +314,15 @@
 			</div>
 		{:else if currentStep === 1}
 			<!-- Baby Details Step -->
-			<div class="items-center space-y-4 text-center">
-				<h2 class="font-ranchers mb-4 text-4xl">Tell us about your baby</h2>
-				<p class="mb-4">
-					We use this information to make sure your baby gets the right size nappies.
-				</p>
-
+			<div class="items-center text-center">
+				<div class="bg-tertiary border-text-colour border-1 p-4 md:p-6">
+					<h2 class="font-ranchers mb-4 text-4xl">Tell us about your baby</h2>
+					<p class="mb-4">
+						We use this information to make sure your baby gets the right size nappies.
+					</p>					
+				</div>
 				<div
-					class="bg-primary border-text-colour mb-0 flex h-48 flex-col items-center justify-center gap-2 border-1 md:flex-row"
+					class="bg-primary border-text-colour border-t-0 mb-0 flex h-48 flex-col items-center justify-center gap-2 border-1 md:flex-row"
 				>
 					<Label
 						class="font-commissioner text-bottom text-text-colour flex-1 pt-12 text-left text-xl md:pt-0 md:pl-6"
@@ -351,8 +359,8 @@
 		{:else if currentStep === 2}
 			<!-- Service Level Step -->
 			<div class="items-center text-center">
-				<h2 class="font-ranchers mb-4 text-4xl">Do you need a part-time or full-time subscription?</h2>
 				<div class="bg-tertiary border-text-colour border-1 p-4 md:p-6">
+					<h2 class="font-ranchers mb-4 text-4xl">Do you need a part-time or full-time subscription?</h2>
 					<p>
 						Every family is different! Choose the subscription type that best suits your needs based on our guidance below.
 					</p>
@@ -531,34 +539,41 @@
 		{:else if currentStep === 3}
 			<!-- Address Step -->
 			<div class="items-center space-y-8 text-center">
-				<h2 class="font-ranchers mb-4 text-4xl">Where will we be delivering to?</h2>
-				<p class="mx-auto mb-4 max-w-2xl">
-					Let us know your main delivery address, this is where we'll hold your introductory session
-					and your subsequent collections and deliveries.<br />You can also add notes about your
-					delivery preferences.
-				</p>
+				<div class="bg-tertiary border-text-colour border-1 p-4 md:p-6">
+					<h2 class="font-ranchers mb-4 text-4xl">Where will we be delivering to?</h2>
+					<p class="mx-auto mb-4 max-w-2xl">
+						Let us know your main delivery address, this is where we'll hold your introductory session
+						and your subsequent collections and deliveries.<br />You can also add notes about your
+						delivery preferences.
+					</p>					
+				</div>
+
 			</div>
 			{#if page.data.addresses && page.data.addresses.length > 0}
-				<div class="mb-4 text-center items-center">
-					<Label class="font-commissioner text-text-colour! mb-1 block text-xl">
-						Select from your saved addresses
-					</Label>
-					<select
-						bind:value={selectedAddressJson}
-						class="bg-secondary! border-accent! rounded-none border-2 border-solid p-2 text-text-colour! w-full sm:w-96"
-					>
-						<option value="">Select an address</option>
-						{#each page.data.addresses as savedAddress}
-							<option value={JSON.stringify(savedAddress)}>
-								{savedAddress.address_line_1}, {savedAddress.city}, {savedAddress.postcode}
-							</option>
-						{/each}
-					</select>
-					<br><br>
-					<p class="mb-4 text-text-colour!">Or enter a new delivery address below:</p>
+				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-6 shadow-sm">
+					<div class="mb-4 text-center items-center">
+						<Label class="font-commissioner text-text-colour! mb-1 block text-xl">
+							Select from your saved addresses
+						</Label>
+						<select
+							bind:value={selectedAddressJson}
+							class="bg-secondary! border-accent! rounded-none border-2 border-solid p-2 text-text-colour! w-full sm:w-96"
+						>
+							<option value="">Select an address</option>
+							{#each page.data.addresses as savedAddress}
+								<option value={JSON.stringify(savedAddress)}>
+									{savedAddress.address_line_1}, {savedAddress.city}, {savedAddress.postcode}
+								</option>
+							{/each}
+						</select>
+						<br><br>
+						<p class="mb-4 text-text-colour!">Or enter a new delivery address below.</p>
+					</div>				
 				</div>
 			{/if}
-			<SubscriptionAddress bind:address />
+			<div class="bg-primary border-text-colour border-1 border-t-0 p-4 md:p-6 space-y-4">
+				<SubscriptionAddress bind:address />
+			</div>
 		{/if}
 	</div>
 
