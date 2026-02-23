@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import { supabase } from '$lib/client/supabaseClient';
+    import { logger } from '$lib/logger';
 
     let errorMessage = $state('');
 
@@ -13,11 +14,8 @@
         const error = searchParams.get('error') || hashParams.get('error');
         const errorDescription = searchParams.get('error_description') || hashParams.get('error_description');
 
-        console.log('Callback - Search params:', searchParams.toString());
-        console.log('Callback - Hash params:', hashParams.toString());
-
         if (error) {
-            console.error('Auth error:', error, errorDescription);
+            logger.error('Authentication error during callback');
             errorMessage = errorDescription || error;
             setTimeout(() => goto(`/?error=${encodeURIComponent(error)}`), 3000);
             return;
@@ -28,8 +26,6 @@
         const accessToken = hashParams.get('access_token');
         
         if (code || accessToken) {
-            console.log('Auth callback detected, waiting for session...');
-            
             // Wait a moment for Supabase to process the callback and set session
             // detectSessionInUrl handles this automatically
             await new Promise(resolve => setTimeout(resolve, 1500));
@@ -38,20 +34,19 @@
             const { data: { session } } = await supabase.auth.getSession();
             
             if (session) {
-                console.log('Session confirmed! Redirecting to dashboard...');
                 await goto('/private/dashboard');
                 return;
             }
             
             // No session after waiting
-            console.error('No session found after callback');
+            logger.error('No session established after auth callback');
             errorMessage = 'Authentication failed. Please try again.';
             setTimeout(() => goto('/auth'), 3000);
             return;
         }
 
         // No valid params
-        console.error('No auth parameters found in URL');
+        logger.error('Auth callback received with no valid parameters');
         errorMessage = 'Invalid confirmation link';
         setTimeout(() => goto('/?error=invalid_callback'), 3000);
     });

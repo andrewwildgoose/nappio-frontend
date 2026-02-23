@@ -1,7 +1,6 @@
 import { BACKEND_API_URL } from '$env/static/private';
 
 export async function addAddress(address: any, jwt: string | undefined) {
-	console.log('Adding customer address');
 	const response = await fetch(`${BACKEND_API_URL}/api/v1/user/add-address`, {
 		method: 'POST',
 		headers: {
@@ -12,7 +11,6 @@ export async function addAddress(address: any, jwt: string | undefined) {
 	});
 	const data = await response.json();
 	if (!response.ok) throw new Error(data.detail || 'Failed to add address');
-	console.log('Address added successfully');
 	return data;
 }
 
@@ -31,6 +29,5 @@ export async function assignAddress(
 	});
 	const data = await response.json();
 	if (!response.ok) throw new Error(data.detail || 'Failed to assign address');
-	console.log('Address assigned successfully');
 	return data;
 }

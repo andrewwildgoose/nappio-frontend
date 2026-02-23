@@ -2,6 +2,7 @@
 	import { Button } from 'flowbite-svelte';
 	import { supabase } from '$lib/client/supabaseClient';
 	import { goto } from '$app/navigation';
+	import { logger } from '$lib/logger';
 
 	let isSigningOut = false;
 
@@ -10,7 +11,7 @@
 		const { error } = await supabase.auth.signOut();
 
 		if (error) {
-			console.error('Sign out error:', error);
+			logger.error('Sign out failed');
 		}
 
 		await goto('/auth');

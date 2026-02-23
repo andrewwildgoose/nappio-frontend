@@ -18,12 +18,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	 * `next` is preserved for now, because it's needed in the error case.
 	 */
 	const redirectTo = new URL(url);
-	console.log('Verifying OTP with params:', { type, token_hash, next });
-	console.log('Redirect URL before cleanup:', redirectTo.toString());
 	redirectTo.pathname = next;
 	redirectTo.searchParams.delete('token_hash');
 	redirectTo.searchParams.delete('type');
-	console.log('Redirect URL after cleanup:', redirectTo.toString());
 
 	if (token_hash && type) {
 		const { error } = await supabase.auth.verifyOtp({ type, token_hash });

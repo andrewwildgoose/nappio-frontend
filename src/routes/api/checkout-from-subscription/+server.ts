@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
+import { logger } from '$lib/logger';
 
 export const POST: RequestHandler = async ({ request, url, locals }) => {
 	if (!locals.user) {
@@ -45,7 +46,7 @@ export const POST: RequestHandler = async ({ request, url, locals }) => {
 
 		return json(data);
 	} catch (error) {
-		console.error('Checkout creation error:', error);
+		logger.error('Checkout creation failed', { status: 500 });
 		return json({ error: 'Failed to create checkout session' }, { status: 500 });
 	}
 };

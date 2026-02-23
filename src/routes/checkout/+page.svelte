@@ -8,7 +8,6 @@
 
 	onMount(() => {
 		subscriptionId = page.url.searchParams.get('subscription_id') || '';
-		console.log('Subscription ID:', subscriptionId);
 
 		// If we reach this point, it means the server-side redirect didn't work
 		// We can implement a client-side fallback here if needed

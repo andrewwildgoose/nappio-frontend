@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData, UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
+import { logger } from '$lib/logger';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	// Get session from cookies
@@ -22,22 +23,17 @@ export const load: PageServerLoad = async ({ cookies }) => {
 				}
 			});
 
-	
 			if (!addressesResponse.ok) {
-				console.error('HTTP error:', {
-					addresses: addressesResponse.status
-				});
+				logger.error('Failed to fetch user addresses', { status: addressesResponse.status });
 				throw new Error(
 					`HTTP error! status: ${addressesResponse.status}`
 				);
 			}
 
 			addresses = await addressesResponse.json();
-	
-			console.log('Available addresses:', addresses);
 
 		} catch (err) {
-			console.error('Error loading addresses:', err);
+			logger.error('Error loading addresses');
 			throw error(500, 'Failed to load addresses');
 		}
 	}
@@ -86,7 +82,6 @@ export const actions = {
 			});
 
 			const responseData = await response.json();
-			console.log('Subscription creation response:', responseData);
 
 			if (!response.ok) {
 				return fail(400, {
@@ -95,8 +90,6 @@ export const actions = {
 			}
 
 			const { checkout_url, session_id } = responseData;
-			console.log('Received checkout URL:', checkout_url);
-			console.log('Received session ID:', session_id);
 
 			if (!checkout_url) {
 				return fail(500, { error: 'No checkout URL received' });
@@ -108,7 +101,7 @@ export const actions = {
 				session_id
 			};
 		} catch (err) {
-			console.error('Error creating subscription:', err);
+			logger.error('Error creating subscription');
 			throw error(500, 'Failed to create subscription');
 		}
 	}

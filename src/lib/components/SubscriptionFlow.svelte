@@ -12,8 +12,6 @@
 	// Auth check
 	let isSignedIn = $derived(page.data.user != null);
 
-	console.log('User data in Subscription Flow:', page.data.user != null);
-
 	// export let priceId: string;
 
 	// Redirect if subscriptions are disabled
@@ -50,8 +48,8 @@
 				const parsedAddress = JSON.parse(selectedAddressJson);
 				address = { ...parsedAddress };
 				selectedAddressId = parsedAddress.id; // Track the saved address ID
-			} catch (e) {
-				console.error('Failed to parse selected address:', e);
+			} catch {
+				error = 'Failed to load selected address. Please try again.';
 			}
 		} else {
 			// If no saved address selected, clear the ID so we create a new one
