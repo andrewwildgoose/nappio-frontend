@@ -1,10 +1,8 @@
 <script>
-	import { page } from '$app/state';
 	import {
 		Footer,
 		FooterCopyright,
 		FooterLinkGroup,
-		FooterBrand,
 		FooterLink
 	} from 'flowbite-svelte';
 
@@ -55,7 +53,9 @@
 					>Sign In</FooterLink
 				>
 			{/if}
-			<!-- <FooterLink aClass="hover:text-tertiary! font-commissioner font-bold" href="/">Privacy Policy</FooterLink> -->
+			<FooterLink aClass="hover:underline font-commissioner font-bold" href="/privacy-policy"
+				>Privacy Policy</FooterLink
+			>
 		</FooterLinkGroup>
 	</div>
 	<hr class="border-text-colour dark:border-text-colour my-6 sm:mx-auto lg:my-8" />

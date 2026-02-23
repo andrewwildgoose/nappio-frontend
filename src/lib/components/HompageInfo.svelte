@@ -5,19 +5,11 @@
 	<div class="flex flex-col justify-center p-2">
 		<!-- <div class="min-h-max my-3 text-2xl sm:text-5xl"> -->
 		<div class="my-6 text-4xl sm:text-5xl">
-			<!-- <img
+			<img
 					src="/images/logos/Nappio-v3-Clear.png"
 					alt="Nappio"
-					class="inline-block h-80 align-bottom"
-				/> -->
-			<h2 class="text-text-colour font-ranchers">
-			<img
-					src="/images/logos/Nappio-Colour-Text-NoTag.png"
-					alt="Nappio"
-					class="inline-block h-24 align-bottom mb-4"
+					class="inline-block max-h-80 align-bottom"
 				/>
-				<br/>CLOTH<br/>NAPPY<br/>SERVICE
-			</h2>
 		</div>
 		<div class="text-text-colour font-commissioner my-3 min-h-max text-base sm:text-xl">
 			<p>Organic cotton cloth nappies delivered to your doorstep every week.</p>

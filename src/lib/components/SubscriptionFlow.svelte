@@ -253,16 +253,23 @@
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<p>
-									To get started, there's a one-off set-up cost of <strong>£40</strong>, 
-									which covers the cost of all the extras, plus an at-home visit to show you the ropes.
+									There's a <strong>one-off £40 set-up fee</strong>, which covers all extras 
+									(laundry bags, smell-proof bin, waterproof covers and a dry bag) 
+									plus an at-home visit to show you how to use the nappies.
+								</p>
+								<p class="mt-4">
+									The fee is taken at checkout when you confirm your subscription. 
+									We'll then contact you within 48 hours to arrange your home visit and get you started.
 								</p>
 							</div>
 						</div>
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<p>
-									After that, a part-time subscription costs <strong>£16</strong> a week and a full-time subscription costs <strong>£20</strong> a week, 
-									paid on delivery/collection day.
+									After your home visit and once we've agreed your start date, your weekly subscription begins on the day your first batch of nappies is delivered.
+								</p>
+								<p class="mt-4">
+									A part-time subscription (up to 25 nappies per week) is <strong>£16 per week</strong>, and a full-time subscription (usually around 40 nappies, or as many as you need) is <strong>£20 per week</strong>.
 								</p>
 							</div>
 						</div>

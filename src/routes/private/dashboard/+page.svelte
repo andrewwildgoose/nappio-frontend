@@ -209,7 +209,7 @@
 						e.key === 'Enter' && (isSubscriptionsExpanded = !isSubscriptionsExpanded)}
 					aria-expanded={isSubscriptionsExpanded}
 				>
-					<strong class="font-commissioner mb-2 text-xl">Your Subscriptions</strong>
+					<strong class="font-commissioner mb-2 text-xl">Manage Your Subscriptions</strong>
 					<i
 						class={isSubscriptionsExpanded ? 'fa-solid fa-minus fa-lg' : 'fa-solid fa-plus fa-lg'}
 						style="color: #262625;"
