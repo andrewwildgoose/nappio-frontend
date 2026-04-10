@@ -1,7 +1,9 @@
 import type { LayoutLoad } from './$types';
-import { supabase } from '$lib/client/supabaseClient';
+import { createSupabaseBrowserClient } from '$lib/client/supabaseClient';
 
-export const load: LayoutLoad = async () => {
+export const load: LayoutLoad = async ({ fetch }) => {
+	const supabase = createSupabaseBrowserClient(fetch);
+
 	const {
 		data: { session }
 	} = await supabase.auth.getSession();

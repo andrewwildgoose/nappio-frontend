@@ -576,7 +576,7 @@
 					</div>				
 				</div>
 			{/if}
-			<div class="bg-primary border-text-colour border-1 border-t-0 p-4 md:p-6 space-y-4">
+			<div class="bg-accent2 border-text-colour border-1 border-t-0 p-4 md:p-6 space-y-4">
 				<SubscriptionAddress bind:address />
 			</div>
 		{/if}

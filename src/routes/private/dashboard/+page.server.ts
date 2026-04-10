@@ -48,7 +48,7 @@ interface DeleteAddressResponse {
 	message: string;
 }
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	// Get session from cookies
 	const { session, user } = await getSessionFromCookies(cookies);
 

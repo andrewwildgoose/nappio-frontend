@@ -5,7 +5,7 @@ import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { logger } from '$lib/logger';
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	// Get session from cookies
 	const { user, session } = await getSessionFromCookies(cookies);
 
