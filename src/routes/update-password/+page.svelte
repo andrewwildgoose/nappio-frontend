@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '$lib/client/supabaseClient';
 	import { goto } from '$app/navigation';
+	import { logger } from '$lib/logger';
 
 	let isLoading = $state(true);
 	let isAuthenticated = $state(false);
@@ -17,14 +18,14 @@
 			if (error) throw error;
 		} catch (err: any) {
 			// Not fatal if there's no code in URL
-			console.warn('Code exchange:', err?.message ?? err);
+			logger.warn('Code exchange skipped', { reason: err?.message ?? 'no code in URL' });
 		}
 
 		// Now check current session / user
 		const { data, error: sessionErr } = await supabase.auth.getSession();
 		
 		if (sessionErr) {
-			console.error('Session error:', sessionErr);
+			logger.error('Failed to retrieve auth session');
 			error = 'Failed to read auth session. Please request a new password reset link.';
 			isLoading = false;
 			setTimeout(() => goto('/auth'), 3000);
@@ -33,14 +34,13 @@
 
 		if (!data.session) {
 			// Not signed in — show an appropriate message
-			console.error('No active session found');
+			logger.error('No active session found for password update');
 			error = 'No active session found. The reset link may be expired or invalid.';
 			isLoading = false;
 			setTimeout(() => goto('/auth'), 3000);
 			return;
 		}
 
-		console.log('Session confirmed! User:', data.session.user?.email);
 		isAuthenticated = true;
 		isLoading = false;
 	});

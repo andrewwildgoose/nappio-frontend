@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { Actions, ActionResult } from '@sveltejs/kit';
+import { logger } from '$lib/logger';
 
 // Interface for the data sent to the backend when subscribing
 interface SubscribeData {
@@ -34,11 +35,6 @@ interface BackendError {
 		  }>;
 }
 
-// export const load: PageServerLoad = async (event) => {
-//     console.log('Checking requireUnauth.');
-//     await requireUnauth(event);
-// };
-
 // Define actions for the page
 export const actions = {
 	// Action to handle newsletter subscription
@@ -68,7 +64,6 @@ export const actions = {
 
 			// Handle successful subscription
 			if (response.ok) {
-				console.log('Subscription successful:', result);
 				return {
 					status: 'success',
 					email: email // Return success status and email
@@ -76,7 +71,6 @@ export const actions = {
 			}
 
 			// Handle expected errors (e.g., validation errors, duplicate email)
-			console.log('Error from backend:', (result as BackendError).detail);
 			let errorMessage: string;
 
 			// Determine the error message based on the backend response
@@ -99,7 +93,7 @@ export const actions = {
 			});
 		} catch (error) {
 			// Handle unexpected errors (e.g., network issues)
-			console.error('Unexpected error:', error);
+			logger.error('Newsletter subscription failed', { status: 500 });
 			throw redirect(303, '/error'); // Redirect to an error page
 		}
 	}

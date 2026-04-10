@@ -2,7 +2,6 @@
 	import { Button, Input, Alert, Label, Spinner } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { supabase } from '$lib/client/supabaseClient';
-    import { session } from '$lib/stores/auth';
 
 	let isSubmitting = false;
 	let passwordHidden = true;
@@ -36,13 +35,9 @@
 			return;
 		}
 
-		console.log('Updating password for user:', $session?.user?.email);
-
 		const { data, error } = await supabase.auth.updateUser({
 			password: password
 		});
-
-		console.log('Update result:', data);
 
 		if (error) {
 			updateError = error.message;

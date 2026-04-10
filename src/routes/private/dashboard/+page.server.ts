@@ -4,6 +4,7 @@ import type { UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { addAddress, assignAddress } from '$lib/api/address.server';
 import { createSupabaseServerClient, getSessionFromCookies } from '$lib/server/supabase';
+import { logger } from '$lib/logger';
 
 interface SubscriptionDetailsResponse {
 	id: string;
@@ -88,9 +89,9 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		]);
 
 		if (!subscriptionsResponse.ok || !addressesResponse.ok) {
-			console.error('HTTP error:', {
-				subscriptions: subscriptionsResponse.status,
-				addresses: addressesResponse.status
+			logger.error('Failed to fetch user data', {
+				subscriptionsStatus: subscriptionsResponse.status,
+				addressesStatus: addressesResponse.status
 			});
 			throw new Error(
 				`HTTP error! status: ${subscriptionsResponse.status}, ${addressesResponse.status}`
@@ -100,30 +101,17 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		const subscriptions: SubscriptionDetailsResponse[] = await subscriptionsResponse.json();
 		const addresses: UserAddress[] = await addressesResponse.json();
 
-		console.log('Raw subscriptions:', subscriptions);
-		console.log('Available addresses:', addresses);
-
 		// Match addresses to subscriptions
 		const subscriptionsWithAddresses = subscriptions.map((subscription) => {
 			if (subscription.address_id) {
-				console.log(
-					`Finding address match for subscription ${subscription.id} with address_id ${subscription.address_id}`
-				);
 				const matchedAddress = addresses.find((addr) => addr.id === subscription.address_id);
 
 				if (matchedAddress) {
-					console.log(
-						`Found matching address for subscription ${subscription.id}:`,
-						matchedAddress
-					);
 					return {
 						...subscription,
 						address: matchedAddress
 					};
 				} else {
-					console.log(
-						`No matching address found for subscription ${subscription.id} with address_id ${subscription.address_id}`
-					);
 					return {
 						...subscription,
 						address: null
@@ -131,14 +119,11 @@ export const load: PageServerLoad = async ({ cookies }) => {
 				}
 			}
 
-			console.log(`Subscription ${subscription.id} has no address_id`);
 			return {
 				...subscription,
 				address: null
 			};
 		});
-
-		console.log('Final subscriptions with addresses:', subscriptionsWithAddresses);
 
 		return {
 			user: {
@@ -148,7 +133,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 			addresses
 		};
 	} catch (error) {
-		console.error('Error fetching data:', error);
+		logger.error('Error fetching dashboard data');
 		return {
 			user: userData,
 			subscriptions: [],
@@ -179,7 +164,6 @@ export const actions: Actions = {
 			postcode: formData.get('postcode') as string,
 			address_notes: formData.get('address_notes') as string
 		};
-		console.log('Address submitted in server:', address);
 
 		try {
 			const data = await addAddress(address, jwt);
@@ -201,11 +185,6 @@ export const actions: Actions = {
 
 		const addressId = String(formData.get('address_id'));
 		const subscriptionId = String(formData.get('subscription_id'));
-
-		console.log('Starting address assignment:', {
-			addressId,
-			subscriptionId
-		});
 
 		try {
 			const data = await assignAddress(addressId, subscriptionId, jwt);

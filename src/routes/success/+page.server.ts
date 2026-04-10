@@ -2,6 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
+import { logger } from '$lib/logger';
 
 interface PaymentResponse {
 	amount_total: number;
@@ -10,10 +11,6 @@ interface PaymentResponse {
 }
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
-	// Log incoming parameters for debugging
-	console.log('Full URL:', url.href);
-	console.log('Query Parameters:', Object.fromEntries(url.searchParams));
-
 	const sessionId = url.searchParams.get('session_id');
 	const email = url.searchParams.get('email');
 	const type = url.searchParams.get('type');
@@ -46,7 +43,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 			// If the API call fails, return an error response
 			if (!response.ok) {
-				console.error('payment details error:', response.status);
+				logger.error('Failed to fetch payment details', { status: response.status });
 				return {
 					type: 'error' as const,
 					message: 'Failed to fetch payment details'
@@ -90,7 +87,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 		} catch (error) {
 			// Handle any network errors or unexpected failures
-			console.error('Error fetching payment details:', error);
+			logger.error('Error fetching payment details');
 			return {
 				type: 'error' as const,
 				message: 'Failed to fetch payment details'

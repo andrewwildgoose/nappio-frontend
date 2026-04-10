@@ -18,7 +18,6 @@
 
 		// Listen for auth changes
 		const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
-			console.log('[Layout] Auth state changed:', _event);
 			session.set(newSession);
 			user.set(newSession?.user ?? null);
 			loading.set(false);
