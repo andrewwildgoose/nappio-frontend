@@ -23,8 +23,8 @@
 	<h3 class="mb-2 text-xl font-bold">2.1 Personal Identification Information</h3>
 	<ul class="mb-5 list-disc space-y-1 pl-6 text-base leading-7">
 		<li>Parent/guardian name</li>
-		<li>Child’s name</li>
-		<li>Child’s date of birth (for sizing)</li>
+		<li>Child's name</li>
+		<li>Child's date of birth (for sizing)</li>
 		<li>Contact details (email address, phone number)</li>
 		<li>
 			Postcode/home address (for ascertaining if you live in areas where Nappio operates and for
