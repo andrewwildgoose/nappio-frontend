@@ -1,50 +1,55 @@
 <script>
-    import {Button} from 'flowbite-svelte';
+	import { Button } from 'flowbite-svelte';
 </script>
 
 <!-- <div class="p-5 flex flex-col items-center justify-center text-center min-h-max w-full max-h-screen"> -->
-<div class="pt-20 flex items-center justify-center text-center">
-    <h2 class="m-5 text-5xl text-text-colour font-ranchers">How does it work?</h2>
+<div class="flex items-center justify-center pt-20 text-center">
+	<h2 class="text-text-colour font-ranchers m-5 text-5xl">How does it work?</h2>
 </div>
-<div class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center p-5 text-center">
+	<div class="bg-primary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">We provide the nappies and all the extras you need</h3>
+		<p>
+			We give you enough organic cotton nappies to meet your weekly needs. Our prices include all extras - waterproof covers, laundry bags, a smell-proof nappy bin and a dry bag to keep your nappies protected from the rain on your doorstep.
+		</p>
+	</div>
+
+	<div class="bg-secondary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">You use them, we collect them</h3>
+		<p>
+			No need to rinse, just remove the dirty nappies and store them in the smell-proof nappy bin until collection day.
+		</p>
+	</div>
+
+	<div class="bg-tertiary m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">Weekly pick-up & drop-off</h3>
+		<p>
+			Once a week, we collect the used nappies and deliver a fresh, sparkling clean batch straight to your door.
+		</p>
+	</div>
+	<div class="bg-accent m-5 w-9/10 max-w-2xl p-5 shadow-sm">
+		<h3 class="text-text-colour font-ranchers text-2xl">We do the dirty work</h3>
+		<p>
+			Our nappies are laundered and sanitised using professional processes.
+		</p>
+	</div>
+
+	<div class="flex flex-col md:flex-row md:w-2xl md:max-w-full m-5 justify-center">
+		<img src="/images/cloth-nappies-1.webp" alt="cloth nappy stock" class="h-auto w-full md:w-1/4 shadow-sm">
+		<img src="/images/image-banner-1/nathan-bike-focus.webp" alt="toddler on bike" class="h-auto w-full md:w-1/4 shadow-sm">
+		<img src="/images/laundry-bin-gif.webp" alt="laundry bin gif" class="h-auto w-full md:w-1/4 shadow-sm" />
+		<img src="/images/image-banner-1/anais-dropoff-1.webp" alt="nappy dropoff" class="h-auto w-full md:w-1/4 shadow-sm">
+	</div>	
+
+	<h2 class="text-text-colour font-ranchers m-5 text-4xl">Easy peasy!</h2>
+
+	<Button
+		class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers mt-5 rounded-none border-none p-8 text-3xl shadow-sm transition-colors duration-200"
+		size="lg"
+		href="/subscribe"
+	>
+		Get Started
+	</Button>
 
 
-    <div class="p-10 max-w-2xl flex flex-col items-center justify-center text-center">
-        <div class="m-5 p-5 bg-primary w-full shadow-sm">
-            <h3 class="text-2xl text-text-colour font-ranchers">We Provide the Nappies</h3>
-            <p>
-                We'll provide you with enough organic cotton nappies to last you the whole week. 
-            </p>
-        </div>
-
-        <div class="m-5 p-5 bg-secondary w-full shadow-sm">
-            <h3 class="text-2xl text-text-colour font-ranchers">You Use Them, We Collect Them</h3>
-            <p>
-                Pop the used nappies into the bag we provide. No need to rinse or do anything, just store them until collection day.
-            </p>
-        </div>
-
-        <div class="m-5 p-5 bg-tertiary w-full shadow-sm">
-            <h3 class="text-2xl text-text-colour font-ranchers">Weekly Pick-Up & Drop-Off</h3>
-            <p>
-                Once a week, we'll collect the used nappies and deliver a fresh, professionally cleaned batch straight to your door.
-            </p>
-        </div>
-        <div class="m-5 p-5 bg-accent w-full shadow-sm">
-            <h3 class="text-2xl text-text-colour font-ranchers">We Do the Dirty Work</h3>
-            <p>
-                We wash, sanitise, and dry the nappies using baby-safe, eco-friendly detergents and high-standard cleaning processes.
-            </p> 
-        </div>
-    </div>
-
-    <h2 class="m-5 text-4xl text-text-colour font-ranchers">Easy peasy!</h2>
-
-    <Button 
-        class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! font-ranchers text-3xl border-none rounded-none transition-colors duration-200 mt-5 p-8 shadow-sm" 
-        size="lg"
-        href="/newsletter"
-    >
-        Get Started
-    </Button>
 </div>
