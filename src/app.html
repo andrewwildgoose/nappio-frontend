@@ -4,11 +4,12 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/images/logos/Nappio-v2-square.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
 		/>
-		
+
 		<!-- Cookiebot -->
 		<script
 			id="Cookiebot"
@@ -18,25 +19,37 @@
 			type="text/javascript"
 		></script>
 
-		<!-- Google tag (gtag.js) -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-Z525F4HP8R"
-			type="text/plain"
-			data-cookieconsent="statistics"
-		></script>
-
-		<script type="text/plain" data-cookieconsent="statistics">
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', 'G-Z525F4HP8R');
+		<!-- Google Tag Manager -->
+		<script>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-N2RSWZ4V');
 		</script>
+		<!-- End Google Tag Manager -->
 
 		<script src="https://kit.fontawesome.com/14f74d0de1.js" crossorigin="anonymous"></script>
 		%sveltekit.head%
 	</head>
+
 	<body data-sveltekit-preload-data="hover">
+		<!-- Google Tag Manager (noscript) -->
+		<noscript>
+			<iframe
+				src="https://www.googletagmanager.com/ns.html?id=GTM-N2RSWZ4V"
+				height="0"
+				width="0"
+				style="display: none; visibility: hidden"
+			></iframe>
+		</noscript>
+		<!-- End Google Tag Manager (noscript) -->
+
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
