@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ request, url, locals }) => {
 		const jwt = session?.access_token;
 
 		// Call your backend to create checkout session from subscription
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/create-checkout-from-subscription`, {
+		const response = await fetch(`${BACKEND_API_URL}/api/v1/subscriptions/checkout`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${jwt}`,

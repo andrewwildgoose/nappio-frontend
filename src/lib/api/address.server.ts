@@ -1,7 +1,7 @@
 import { BACKEND_API_URL } from '$env/static/private';
 
 export async function addAddress(address: any, jwt: string | undefined) {
-	const response = await fetch(`${BACKEND_API_URL}/api/v1/user/add-address`, {
+	const response = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export async function assignAddress(
 	subscriptionId: string,
 	jwt: string | undefined
 ) {
-	const response = await fetch(`${BACKEND_API_URL}/api/v1/user/assign-subscription-address`, {
+	const response = await fetch(`${BACKEND_API_URL}/api/v1/user/subscription-address`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

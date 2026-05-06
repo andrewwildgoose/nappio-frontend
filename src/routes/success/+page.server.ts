@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 			// Call our backend API to retrieve payment details from Stripe
 			// The backend uses the session_id to fetch the checkout session from Stripe
-			const response = await fetch(`${BACKEND_API_URL}/api/v1/payment-completed-details`, {
+			const response = await fetch(`${BACKEND_API_URL}/api/v1/payments/details`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${jwt}`,
