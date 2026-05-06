@@ -31,7 +31,7 @@ This implementation allows users to click a link in an email that will direct th
 
 1. User clicks email link: `https://yoursite.com/checkout?subscription_id=sub_123456`
 2. Server extracts `subscriptionId` from query parameters
-3. Server calls backend API: `POST /api/v1/create-checkout-from-subscription`
+3. Server calls backend API: `POST /api/v1/subscriptions/checkout`
 4. Server receives checkout URL and immediately redirects user
 5. User lands on Stripe checkout page
 
@@ -52,7 +52,7 @@ This implementation allows users to click a link in an email that will direct th
 Your backend needs to implement this endpoint:
 
 ```typescript
-POST /api/v1/create-checkout-from-subscription
+POST /api/v1/subscriptions/checkout
 Headers:
   - Authorization: Bearer {jwt_token}
   - Content-Type: application/json
@@ -110,7 +110,7 @@ The implementation includes comprehensive error handling:
 
 ## Next Steps
 
-1. **Backend Implementation:** Implement the `/api/v1/create-checkout-from-subscription` endpoint
+1. **Backend Implementation:** Implement the `/api/v1/subscriptions/checkout` endpoint
 2. **Email System:** Integrate the checkout URL generation into your email system
 3. **Database Updates:** Ensure subscription status tracking is in place
 4. **Testing:** Test the full flow with real Stripe checkout sessions

@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 	try {
 		// Call your backend API to create checkout session for the subscription
-		const requestUrl = `${BACKEND_API_URL}/api/v1/create-checkout-from-subscription`;
+		const requestUrl = `${BACKEND_API_URL}/api/v1/subscriptions/checkout`;
 
 		const response = await fetch(requestUrl, {
 			method: 'POST',

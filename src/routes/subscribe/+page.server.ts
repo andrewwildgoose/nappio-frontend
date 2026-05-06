@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 
 			const jwt = session.access_token;
 			// Use the token from session consistently
-			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/user-addresses`, {
+			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${jwt}`
@@ -72,7 +72,7 @@ export const actions = {
 				throw error(401, 'No valid session');
 			}
 
-			const response = await fetch(`${BACKEND_API_URL}/api/v1/start-subscription`, {
+			const response = await fetch(`${BACKEND_API_URL}/api/v1/subscriptions`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
