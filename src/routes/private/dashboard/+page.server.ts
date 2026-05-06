@@ -74,7 +74,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	try {
 		// Use the token from session consistently
 		const [subscriptionsResponse, addressesResponse] = await Promise.all([
-			fetch(`${BACKEND_API_URL}/api/v1/user/subscription`, {
+			fetch(`${BACKEND_API_URL}/api/v1/user/subscriptions`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${jwt}`
