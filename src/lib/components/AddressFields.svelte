@@ -7,7 +7,7 @@
 	export let disabled = false;
 	export let mode: 'subscription' | 'order' | 'dashboard' = 'dashboard';
 
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
+	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SW17', 'SE24'];
 
 	// Format postcode by removing spaces and converting to uppercase
 	function formatPostcode(postcode: string): string {

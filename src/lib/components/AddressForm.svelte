@@ -17,8 +17,8 @@
 
 	let isSubmitting = $state(false);
 
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
-
+	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SW17', 'SE24'];
+	
 	function handleSubmit() {
 		isSubmitting = true;
 		return async ({ result }) => {
