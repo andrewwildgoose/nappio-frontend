@@ -134,7 +134,7 @@
 				required
 				class="bg-secondary! border-accent! rounded-none border-2 border-solid"
 				disabled={isSubmitting}
-				placeholder="We currently serve SW2, SW4, SW8 and SW9"
+				placeholder="We currently serve SW2, SW4, SW8, SW9, SW17 and SE24"
 			/>
 		</div>
 
