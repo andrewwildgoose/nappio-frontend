@@ -3,8 +3,9 @@
 	import type { AddressFormData } from '$lib/types/address';
 
 	export let address: AddressFormData;
+	export let serviceAreaPostcodes: string[] = [];
 </script>
 
 <div class="mx-auto w-full max-w-md">
-	<AddressFields bind:address mode="order" />
+	<AddressFields bind:address mode="order" {serviceAreaPostcodes}/>
 </div>

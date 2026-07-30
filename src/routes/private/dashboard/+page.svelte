@@ -161,7 +161,7 @@
 							</div>
 							{#if showAddressForm}
 								<div class="mt-4">
-									<AddressForm action="?/submitAddress" initialAddress={selectedAddress} />
+									<AddressForm action="?/submitAddress" initialAddress={selectedAddress} serviceAreaPostcodes={data.serviceAreaPostcodes}/>
 								</div>
 							{/if}
 							{#if data.addresses && data.addresses.length > 0}

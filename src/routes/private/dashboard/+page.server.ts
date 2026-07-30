@@ -4,6 +4,7 @@ import type { UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { addAddress, assignAddress } from '$lib/api/address.server';
 import { createSupabaseServerClient, getSessionFromCookies } from '$lib/server/supabase';
+import { fetchServiceAreaPostcodes } from '$lib/data/serviceAreas';
 import { logger } from '$lib/logger';
 
 interface SubscriptionDetailsResponse {
@@ -87,6 +88,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 				}
 			})
 		]);
+		const serviceAreaPostcodes = await fetchServiceAreaPostcodes(fetch);
 
 		if (!subscriptionsResponse.ok || !addressesResponse.ok) {
 			logger.error('Failed to fetch user data', {
@@ -130,14 +132,16 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 				...userData
 			},
 			subscriptions: subscriptionsWithAddresses,
-			addresses
+			addresses,
+			serviceAreaPostcodes
 		};
 	} catch (error) {
 		logger.error('Error fetching dashboard data');
 		return {
 			user: userData,
 			subscriptions: [],
-			addresses: []
+			addresses: [],
+			serviceAreaPostcodes: []
 		};
 	}
 };
