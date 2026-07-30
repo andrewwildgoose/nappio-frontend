@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData, UserAddress } from '$lib/types/address';
 import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
+import { fetchServiceAreaPostcodes } from '$lib/data/serviceAreas';
 import { logger } from '$lib/logger';
 
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
@@ -10,7 +11,9 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	const { user, session } = await getSessionFromCookies(cookies);
 
 	let addresses: UserAddress[] = [];
-
+	
+	const serviceAreaPostcodes = await fetchServiceAreaPostcodes(fetch);
+	
 	if (session) {
 		try {
 
@@ -37,7 +40,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 			throw error(500, 'Failed to load addresses');
 		}
 	}
-	return { user, session, addresses };
+	return { user, session, addresses, serviceAreaPostcodes };
 };
 
 export const actions = {
