@@ -1,6 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData, UserAddress } from '$lib/types/address';
+import type { AppliedVoucher } from '$lib/types/voucher';
 import { BACKEND_API_URL } from '$env/static/private';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { fetchServiceAreaPostcodes } from '$lib/data/serviceAreas';
@@ -11,12 +12,11 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	const { user, session } = await getSessionFromCookies(cookies);
 
 	let addresses: UserAddress[] = [];
-	
+
 	const serviceAreaPostcodes = await fetchServiceAreaPostcodes(fetch);
-	
+
 	if (session) {
 		try {
-
 			const jwt = session.access_token;
 			// Use the token from session consistently
 			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
@@ -28,14 +28,11 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 
 			if (!addressesResponse.ok) {
 				logger.error('Failed to fetch user addresses', { status: addressesResponse.status });
-				throw new Error(
-					`HTTP error! status: ${addressesResponse.status}`
-				);
+				throw new Error(`HTTP error! status: ${addressesResponse.status}`);
 			}
 
 			addresses = await addressesResponse.json();
-
-		} catch (err) {
+		} catch {
 			logger.error('Error loading addresses');
 			throw error(500, 'Failed to load addresses');
 		}
@@ -56,7 +53,28 @@ export const actions = {
 
 		const formData = await request.formData();
 		const addressId = formData.get('addressId') as string;
-		
+		const rawVoucher = formData.get('voucher');
+		let voucher: AppliedVoucher | undefined;
+
+		if (typeof rawVoucher === 'string' && rawVoucher) {
+			try {
+				const parsedVoucher = JSON.parse(rawVoucher);
+
+				if (
+					typeof parsedVoucher?.code !== 'string' ||
+					typeof parsedVoucher?.postcode !== 'string' ||
+					typeof parsedVoucher?.discount_code !== 'string' ||
+					typeof parsedVoucher?.voucher_type !== 'string'
+				) {
+					return fail(400, { error: 'Invalid voucher data' });
+				}
+
+				voucher = parsedVoucher;
+			} catch {
+				return fail(400, { error: 'Invalid voucher data' });
+			}
+		}
+
 		const data = {
 			babyBirthdate: formData.get('babyBirthdate'),
 			babyWeight: Number(formData.get('babyWeight')),
@@ -64,15 +82,18 @@ export const actions = {
 			// wantNappyWraps: formData.get('wantNappyWraps') === 'true',
 			serviceLevel: formData.get('serviceLevel'),
 			// If addressId exists, send it; otherwise send the full address object
-			...(addressId ? { addressId } : { address: JSON.parse(formData.get('address') as string) as AddressFormData }),
-			cancelUrl: cancelUrl
+			...(addressId
+				? { addressId }
+				: { address: JSON.parse(formData.get('address') as string) as AddressFormData }),
+			cancelUrl: cancelUrl,
+			...(voucher ? { voucher } : {})
 		};
 
 		try {
 			const jwt = session?.access_token;
 
 			if (!jwt) {
-				throw error(401, 'No valid session');
+				return fail(401, { error: 'No valid session' });
 			}
 
 			const response = await fetch(`${BACKEND_API_URL}/api/v1/subscriptions`, {
@@ -88,7 +109,7 @@ export const actions = {
 
 			if (!response.ok) {
 				return fail(400, {
-					error: responseData.error || 'Subscription creation failed'
+					error: responseData.detail || responseData.error || 'Subscription creation failed'
 				});
 			}
 
@@ -103,7 +124,7 @@ export const actions = {
 				checkout_url,
 				session_id
 			};
-		} catch (err) {
+		} catch {
 			logger.error('Error creating subscription');
 			throw error(500, 'Failed to create subscription');
 		}
