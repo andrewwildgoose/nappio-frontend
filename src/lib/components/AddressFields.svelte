@@ -6,8 +6,7 @@
 	export let address: AddressFormData;
 	export let disabled = false;
 	export let mode: 'subscription' | 'order' | 'dashboard' = 'dashboard';
-
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
+	export let serviceAreaPostcodes: string[] = [];
 
 	// Format postcode by removing spaces and converting to uppercase
 	function formatPostcode(postcode: string): string {
@@ -19,7 +18,7 @@
 		if (!postcode) return true;
 		if (postcode.length < 3) return true;
 		const formattedPostcode = formatPostcode(postcode);
-		return validPostcodes.some((validCode) =>
+		return serviceAreaPostcodes.some((validCode) =>
 			formattedPostcode.startsWith(validCode.replace(/\s+/g, ''))
 		);
 	}
@@ -106,9 +105,9 @@
 					{#if mode === 'subscription' || mode === 'order'}
 						<i class="fa-solid fa-location-dot mr-2" style="color: #7cc4a7;"></i>
 						Our service is currently available in:
-						<span class="font-ranchers">{validPostcodes.join(', ')}</span>
+						<span class="font-ranchers">{serviceAreaPostcodes.join(', ')}</span>
 					{:else}
-						Note: This address is outside our delivery area ({validPostcodes.join(', ')}).
+						Note: This address is outside our delivery area ({serviceAreaPostcodes.join(', ')}).
 					{/if}
 				</p>
 			</div>
@@ -125,7 +124,7 @@
 			bind:value={address.postcode}
 			{disabled}
 			class="bg-secondary! border-accent! rounded-none border-2 border-solid"
-			placeholder="We currently serve SW2, SW4, SW8 and SW9"
+			placeholder="We currently serve {serviceAreaPostcodes.join(', ')}"
 		/>
 	</div>
 	<div class="mb-4 w-full px-0 sm:w-96">

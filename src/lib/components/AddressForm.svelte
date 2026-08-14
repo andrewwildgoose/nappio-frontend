@@ -10,15 +10,14 @@
 		priceId = null, // Plan ID for context
 		initialAddress = null, // Address to pre-populate
 		onSubmit = undefined,
-		useEnhance = false
+		useEnhance = false,
+		serviceAreaPostcodes = []
 	} = $props();
 
 	// let form: AddressFormData;
 
 	let isSubmitting = $state(false);
-
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
-
+	
 	function handleSubmit() {
 		isSubmitting = true;
 		return async ({ result }) => {
@@ -114,11 +113,11 @@
 		</div>
 
 		<div class="mb-4 w-full px-0 sm:w-96">
-			{#if form.postcode.length > 2 && !validPostcodes.some((pc) => form.postcode
+			{#if form.postcode.length > 2 && !serviceAreaPostcodes.some((pc) => form.postcode
 						.toUpperCase()
 						.startsWith(pc))}
 				<p class="mb-2 text-red-500">
-					We don't currently operate in your postcode, our current areas are {validPostcodes.join(
+					We don't currently operate in your postcode, our current areas are {serviceAreaPostcodes.join(
 						', '
 					)}.
 				</p>
@@ -134,7 +133,7 @@
 				required
 				class="bg-secondary! border-accent! rounded-none border-2 border-solid"
 				disabled={isSubmitting}
-				placeholder="We currently serve SW2, SW4, SW8 and SW9"
+				placeholder="We currently serve {serviceAreaPostcodes.join(', ')}"
 			/>
 		</div>
 

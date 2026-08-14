@@ -37,10 +37,11 @@
 	let address = $state<AddressFormData>({} as AddressFormData);
 	let selectedAddressJson = $state('');
 	let selectedAddressId = $state<string | null>(null); // Track if using saved address
+	let voucherCode = $state('');
+	let validOrNoVoucher = $derived(voucherCode.trim() === '' || validateVoucher(voucherCode));
 
 	// Valid service area postcodes
-	const validPostcodes = ['SW2', 'SW4', 'SW8', 'SW9', 'SE24'];
-
+	let serviceAreaPostcodes = $derived(page.data.serviceAreaPostcodes ?? []);
 	// Handle saved address selection
 	$effect(() => {
 		if (selectedAddressJson) {
@@ -74,10 +75,20 @@
 	// Format and validate postcode
 	function isValidServiceArea(postcode: string): boolean {
 		if (!postcode) return false;
-		const formattedPostcode = postcode.replace(/\s+/g, '').toUpperCase();
-		return validPostcodes.some((validCode) =>
-			formattedPostcode.startsWith(validCode.replace(/\s+/g, ''))
-		);
+		const formatted = postcode.replace(/\s+/g, '').toUpperCase();
+		return serviceAreaPostcodes.some((pc) => formatted.startsWith(pc));
+	}
+
+	// Validate voucher code (placeholder logic)
+	function validateVoucher(voucherCode: string): boolean {
+		// Placeholder: Assume voucher is valid if not provided
+		if (voucherCode.trim() === '') return true;
+
+		else {
+			// Need to call backend to validate voucher code
+		}
+
+		return true;
 	}
 
 	// Step validation
@@ -85,7 +96,8 @@
 		0: isSignedIn && subscriptionsEnabled, // Info step always valid
 		1: isSignedIn && subscriptionsEnabled && Boolean(babyBirthdate) && babyWeight > 0,
 		2: isSignedIn && subscriptionsEnabled, // Nappy wraps selection always valid
-		3: isSignedIn && subscriptionsEnabled && Boolean(address.postcode) && isValidServiceArea(address.postcode) // Check if postcode is in service area
+		3: isSignedIn && subscriptionsEnabled && Boolean(address.postcode) && isValidServiceArea(address.postcode), // Check if postcode is in service area
+		4: isSignedIn && subscriptionsEnabled && Boolean(validOrNoVoucher) // RNFL Voucher Step
 	});
 
 	// Function to handle auth redirect
@@ -97,7 +109,8 @@
 		{ title: '1. Welcome to Nappio', component: 'InfoStep' },
 		{ title: '2. About Your Baby', component: 'BabyDetailsStep' },
 		{ title: '3. Nappy Quantity', component: 'ServiceLevelStep' },
-		{ title: '4. Delivery Address', component: 'AddressStep' }
+		{ title: '4. Delivery Address', component: 'AddressStep' },
+		{ title: '5. RNFL Voucher', component: 'VoucherStep' }
 	];
 
 	const handleEnhanceSubmit: SubmitFunction = ({ formElement, formData, action, cancel }) => {
@@ -213,7 +226,7 @@
 					<p>We're excited to get you started with our nappy service.</p>
 				</div>
 				<div class="bg-primary border-text-colour border-1 p-4 md:p-6">
-					<p class="font-commissioner text-2xl">Our subscription includes</p>
+					<h3 class="font-commissioner text-2xl">Our subscription includes</h3>
 					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-4">
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
@@ -246,10 +259,11 @@
 				</div>
 
 				<div class="bg-accent2 border-text-colour border-1 border-t-0 p-4 md:p-6">
-					<p class="font-commissioner text-2xl">Pricing Details</p>
-					<div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
+					<h3 class="font-commissioner text-2xl">Pricing Details</h3>
+					<div class="grid grid-cols-1 gap-4 p-6 pb-4 md:grid-cols-2">
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
+							<h4 class="font-ranchers text-xl mb-2">Getting started</h4>
 								<p>
 									There's a <strong>one-off £40 set-up fee</strong>, which covers all extras 
 									(laundry bags, smell-proof bin, waterproof covers and a dry bag) 
@@ -263,6 +277,7 @@
 						</div>
 						<div class="bg-background border-text-colour border-1 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
+								<h4 class="font-ranchers text-xl mb-2">Subscription</h4>
 								<p>
 									After your home visit and once we've agreed your start date, your weekly subscription begins on the day your first batch of nappies is delivered.
 								</p>
@@ -272,16 +287,38 @@
 							</div>
 						</div>
 					</div>
+					<div class="bg-background border-text-colour border-1 p-6 m-6 mt-0 mb-0 shadow-sm">
+						<div class="flex flex-col items-center text-center">
+							<h4 class="font-ranchers text-xl mb-2">Help with the set-up fee</h4>
+							<p>
+								You can apply for a voucher provided by <strong>Real Nappies For London</strong> which will cover the set-up fee.<br>
+
+								<Button
+									class="bg-tertiary! hover:bg-text-colour! text-text-colour! hover:text-tertiary! rounded-none border-none mt-2 text-m shadow-sm transition-colors duration-200"
+									size="md"
+									onclick={(e) => {
+										e.preventDefault();
+										window.open('https://www.realnappiesforlondon.org.uk/apply/', '_blank');
+									}}
+								>
+									Find out more and sign up for a voucher
+								</Button>
+							</p>
+							<p class="mt-4">
+								Once you have your voucher you'll be able to enter the voucher code just before the checkout step of this subscription process and your set-up fee will be waived.
+							</p>
+						</div>
+					</div>
 				</div>
 				<div class="bg-secondary border-text-colour border-1 border-t-0 p-4 md:p-6">
-					<p class="font-commissioner text-2xl">Service Area</p>
+					<h3 class="font-commissioner text-2xl">Service Area</h3>
 					<div class="grid grid-cols-1 gap-4 p-6">
 						<div class="bg-background border-text-colour border-1 mb-4 p-6 shadow-sm">
 							<div class="flex flex-col items-center text-center">
 								<p class="text-m font-medium">
 									<i class="fa-solid fa-location-dot mr-2" style="color: #7cc4a7;"></i>
-									Our service is currently available in:
-									<span class="font-ranchers">{validPostcodes.join(', ')}</span>
+									Our service is currently available in:<br>
+									<span class="font-ranchers">{serviceAreaPostcodes.join(', ')}</span>
 								</p>
 							</div>
 						</div>
@@ -577,7 +614,7 @@
 				</div>
 			{/if}
 			<div class="bg-accent2 border-text-colour border-1 border-t-0 p-4 md:p-6 space-y-4">
-				<SubscriptionAddress bind:address />
+				<SubscriptionAddress bind:address serviceAreaPostcodes={serviceAreaPostcodes}/>
 			</div>
 		{/if}
 	</div>
@@ -589,7 +626,7 @@
 					{#if !isValidServiceArea(address.postcode)}
 						<i class="fa-solid fa-location-dot mr-2" style="color: #7cc4a7;"></i>
 						Our service is currently available in:
-						<span class="font-ranchers">{validPostcodes.join(', ')}</span>
+						<span class="font-ranchers">{serviceAreaPostcodes.join(', ')}</span>
 					{/if}
 				</p>
 			</div>
