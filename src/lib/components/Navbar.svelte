@@ -68,6 +68,7 @@
 		<NavLi href="/">Home</NavLi>
 		<NavLi href="/about">About</NavLi>
 		<NavLi href="/subscribe">Subscribe</NavLi>
+		<NavLi href="/shop">Shop</NavLi>
 		<NavLi href="/newsletter">Newsletter</NavLi>
 		{#if isSignedIn}
 			<NavLi href="/private/dashboard">Dashboard</NavLi>
