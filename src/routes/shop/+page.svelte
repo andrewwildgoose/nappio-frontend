@@ -2,6 +2,7 @@
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form } = $props<{ data: PageData; form?: ActionData }>();
+	let selectedAddressId = $state('');
 
 	function getProductName(product: PageData['products'][number]) {
 		return product.name?.trim() || 'Product';
@@ -38,8 +39,10 @@
 <div class="min-h-screen px-4 py-8">
 	<div class="mx-auto w-full max-w-5xl">
 		<div class="mb-8 text-center">
-			<h1 class="font-ranchers mb-2 text-5xl text-text-colour">Shop</h1>
-			<p class="font-commissioner text-lg text-text-colour">Browse products and checkout securely.</p>
+			<h1 class="font-ranchers text-text-colour mb-2 text-5xl">Shop</h1>
+			<p class="font-commissioner text-text-colour text-lg">
+				Browse products and checkout securely.
+			</p>
 		</div>
 
 		{#if data.loadError}
@@ -51,26 +54,28 @@
 		{/if}
 
 		{#if data.products.length === 0}
-			<div class="border bg-background p-8 text-center text-text-colour">
+			<div class="bg-background text-text-colour border p-8 text-center">
 				No products are currently available.
 			</div>
 		{:else}
 			<form method="POST" action="?/checkout" class="space-y-8">
 				<section>
-					<h2 class="font-commissioner mb-4 text-2xl text-text-colour">Products</h2>
+					<h2 class="font-commissioner text-text-colour mb-4 text-2xl">Products</h2>
 					<div class="grid gap-4 md:grid-cols-2">
 						{#each data.products as product (product.id)}
-							<div class="flex flex-col justify-between border bg-background p-4">
+							<div class="bg-background flex flex-col justify-between border p-4">
 								<div>
-									<h3 class="font-commissioner text-xl text-text-colour">{getProductName(product)}</h3>
+									<h3 class="font-commissioner text-text-colour text-xl">
+										{getProductName(product)}
+									</h3>
 									{#if getProductDescription(product)}
-										<p class="mt-2 text-text-colour">{getProductDescription(product)}</p>
+										<p class="text-text-colour mt-2">{getProductDescription(product)}</p>
 									{/if}
 								</div>
 								<div class="mt-4 flex items-end justify-between gap-3">
-									<p class="font-bold text-text-colour">{formatCurrency(product)}</p>
+									<p class="text-text-colour font-bold">{formatCurrency(product)}</p>
 									<div>
-										<label class="mb-1 block text-sm text-text-colour" for={`qty_${product.id}`}>
+										<label class="text-text-colour mb-1 block text-sm" for={`qty_${product.id}`}>
 											Qty
 										</label>
 										<input
@@ -80,7 +85,7 @@
 											min="0"
 											max="99"
 											value="0"
-											class="w-20 border border-accent bg-secondary p-2 text-text-colour"
+											class="border-accent bg-secondary text-text-colour w-20 border p-2"
 										/>
 									</div>
 								</div>
@@ -89,20 +94,21 @@
 					</div>
 				</section>
 
-				<section class="border bg-background p-6">
-					<h2 class="font-commissioner mb-4 text-2xl text-text-colour">Checkout details</h2>
+				<section class="bg-background border p-6">
+					<h2 class="font-commissioner text-text-colour mb-4 text-2xl">Checkout details</h2>
 
 					{#if data.isSignedIn}
-						<p class="mb-4 text-text-colour">Signed in as <strong>{data.userEmail}</strong></p>
+						<p class="text-text-colour mb-4">Signed in as <strong>{data.userEmail}</strong></p>
 						{#if data.addresses.length > 0}
 							<div class="mb-4">
-								<label class="mb-2 block font-semibold text-text-colour" for="addressId">
+								<label class="text-text-colour mb-2 block font-semibold" for="addressId">
 									Select a saved address
 								</label>
 								<select
 									id="addressId"
 									name="addressId"
-									class="w-full border border-accent bg-secondary p-2 text-text-colour"
+									bind:value={selectedAddressId}
+									class="border-accent bg-secondary text-text-colour w-full border p-2"
 								>
 									<option value="">Use a new address</option>
 									{#each data.addresses as address (address.id)}
@@ -115,7 +121,7 @@
 						{/if}
 					{:else}
 						<div class="mb-4">
-							<label class="mb-2 block font-semibold text-text-colour" for="guest_email">
+							<label class="text-text-colour mb-2 block font-semibold" for="guest_email">
 								Email address
 							</label>
 							<input
@@ -123,71 +129,75 @@
 								name="guest_email"
 								type="email"
 								required
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 								placeholder="you@example.com"
 							/>
 						</div>
 					{/if}
 
-					<h3 class="font-commissioner mb-3 text-xl text-text-colour">Delivery address</h3>
+					<h3 class="font-commissioner text-text-colour mb-3 text-xl">Delivery address</h3>
 					<div class="grid gap-4 md:grid-cols-2">
 						<div>
-							<label class="mb-1 block text-text-colour" for="address_line_1">Address line 1</label>
+							<label class="text-text-colour mb-1 block" for="address_line_1">Address line 1</label>
 							<input
 								id="address_line_1"
 								name="address_line_1"
 								type="text"
-								required={!data.isSignedIn}
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								required={!data.isSignedIn || selectedAddressId === ''}
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							/>
 						</div>
 						<div>
-							<label class="mb-1 block text-text-colour" for="address_line_2">Address line 2 (optional)</label>
+							<label class="text-text-colour mb-1 block" for="address_line_2"
+								>Address line 2 (optional)</label
+							>
 							<input
 								id="address_line_2"
 								name="address_line_2"
 								type="text"
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							/>
 						</div>
 						<div>
-							<label class="mb-1 block text-text-colour" for="city">City</label>
+							<label class="text-text-colour mb-1 block" for="city">City</label>
 							<input
 								id="city"
 								name="city"
 								type="text"
-								required={!data.isSignedIn}
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								required={!data.isSignedIn || selectedAddressId === ''}
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							/>
 						</div>
 						<div>
-							<label class="mb-1 block text-text-colour" for="postcode">Postcode</label>
+							<label class="text-text-colour mb-1 block" for="postcode">Postcode</label>
 							<input
 								id="postcode"
 								name="postcode"
 								type="text"
-								required={!data.isSignedIn}
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								required={!data.isSignedIn || selectedAddressId === ''}
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							/>
 						</div>
 						<div>
-							<label class="mb-1 block text-text-colour" for="country">Country</label>
+							<label class="text-text-colour mb-1 block" for="country">Country</label>
 							<input
 								id="country"
 								name="country"
 								type="text"
-								required={!data.isSignedIn}
+								required={!data.isSignedIn || selectedAddressId === ''}
 								placeholder="United Kingdom"
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							/>
 						</div>
 						<div class="md:col-span-2">
-							<label class="mb-1 block text-text-colour" for="address_notes">Address notes (optional)</label>
+							<label class="text-text-colour mb-1 block" for="address_notes"
+								>Address notes (optional)</label
+							>
 							<textarea
 								id="address_notes"
 								name="address_notes"
 								rows="3"
-								class="w-full border border-accent bg-secondary p-2 text-text-colour"
+								class="border-accent bg-secondary text-text-colour w-full border p-2"
 							></textarea>
 						</div>
 					</div>

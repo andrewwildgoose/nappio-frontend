@@ -1,9 +1,10 @@
-import { BACKEND_API_URL } from '$env/static/private';
 import { fail, isRedirect, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import type { UserAddress } from '$lib/types/address';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { logger } from '$lib/logger';
+
+const BACKEND_API_URL = process.env.BACKEND_API_URL;
 
 interface ShopProduct {
 	id: string;
@@ -28,7 +29,11 @@ function buildAddressFromForm(formData: FormData) {
 	const address_notes = String(formData.get('address_notes') || '').trim();
 
 	const hasAnyAddressField =
-		Boolean(address_line_1) || Boolean(city) || Boolean(postcode) || Boolean(country) || Boolean(address_line_2);
+		Boolean(address_line_1) ||
+		Boolean(city) ||
+		Boolean(postcode) ||
+		Boolean(country) ||
+		Boolean(address_line_2);
 
 	if (!hasAnyAddressField) {
 		return null;
@@ -51,6 +56,10 @@ function buildAddressFromForm(formData: FormData) {
 }
 
 async function fetchProducts(fetchFn: typeof fetch): Promise<ShopProduct[]> {
+	if (!BACKEND_API_URL) {
+		throw new Error('BACKEND_API_URL is not configured');
+	}
+
 	const productsResponse = await fetchFn(`${BACKEND_API_URL}/api/v1/shop/products`);
 
 	if (!productsResponse.ok) {
@@ -74,12 +83,12 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 		loadError = 'We could not load products right now. Please try again shortly.';
 	}
 
-	if (session?.access_token) {
+	if (session?.access_token && BACKEND_API_URL) {
 		try {
 			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `******
+					Authorization: 'Bearer ' + session.access_token
 				}
 			});
 
@@ -101,37 +110,45 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 };
 
 export const actions: Actions = {
-	checkout: async ({ fetch, request, cookies }) => {
+	checkout: async ({ fetch, request, cookies, url }) => {
 		const formData = await request.formData();
 		const { session } = await getSessionFromCookies(cookies);
 
-		let products: ShopProduct[] = [];
-		try {
-			products = await fetchProducts(fetch);
-		} catch {
-			return fail(500, { error: 'Unable to process checkout because products could not be loaded.' });
+		const items: { product_id: string; quantity: number }[] = [];
+		for (const [key, value] of formData.entries()) {
+			if (!key.startsWith('qty_')) {
+				continue;
+			}
+
+			const productId = key.slice('qty_'.length).trim();
+			if (!productId) {
+				continue;
+			}
+
+			const quantity = Number.parseInt(String(value), 10);
+			if (Number.isNaN(quantity) || quantity < 1) {
+				continue;
+			}
+
+			if (quantity > 99) {
+				return fail(400, { error: 'Maximum quantity per product is 99.' });
+			}
+
+			items.push({
+				product_id: productId,
+				quantity
+			});
 		}
-
-		const items = products
-			.map((product) => {
-				const quantityRaw = String(formData.get(`qty_${product.id}`) ?? '0');
-				const quantity = Number.parseInt(quantityRaw, 10);
-				if (!Number.isInteger(quantity) || quantity < 1) {
-					return null;
-				}
-
-				return {
-					product_id: product.id,
-					quantity
-				};
-			})
-			.filter((item): item is { product_id: string; quantity: number } => item !== null);
 
 		if (items.length === 0) {
 			return fail(400, { error: 'Please select at least one product.' });
 		}
 
-		const cancel_url = '/shop';
+		if (!BACKEND_API_URL) {
+			return fail(500, { error: 'Checkout is currently unavailable. Please try again later.' });
+		}
+
+		const cancel_url = `${url.origin}/shop`;
 		const addressResult = buildAddressFromForm(formData);
 		if (addressResult && 'error' in addressResult) {
 			return fail(400, { error: addressResult.error });
@@ -166,7 +183,7 @@ export const actions: Actions = {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
-						Authorization: `******
+						Authorization: 'Bearer ' + session.access_token
 					},
 					body: JSON.stringify(payload)
 				});
@@ -186,7 +203,8 @@ export const actions: Actions = {
 			}
 
 			const guest_email = String(formData.get('guest_email') || '').trim();
-			if (!guest_email || !guest_email.includes('@')) {
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(guest_email)) {
 				return fail(400, { error: 'Please provide a valid email address.' });
 			}
 
