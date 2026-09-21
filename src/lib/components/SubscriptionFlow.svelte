@@ -720,7 +720,7 @@
 				<div class="border-text-colour mx-auto grid max-w-4xl grid-cols-1 border-1 md:grid-cols-2">
 					<Button
 						type="button"
-						class={`group p-6 ${hasVoucher === 'yes' ? 'bg-tertiary border-accent2 border-6' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2'} flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-none shadow-md transition-all hover:shadow-lg`}
+						class={`group p-6 ${hasVoucher === 'yes' ? 'bg-tertiary border-accent2 border-6' : 'bg-secondary border-primary hover:bg-accent2 hover:border-accent2 border-2'} flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-none shadow-md transition-all hover:shadow-lg`}
 						on:click={() => selectVoucherChoice('yes')}
 					>
 						<span class="font-commissioner text-text-colour text-3xl">Yes</span>
@@ -729,7 +729,7 @@
 
 					<Button
 						type="button"
-						class={`p-6 ${hasVoucher === 'no' ? 'bg-tertiary border-accent2 border-6 shadow-sm' : 'bg-primary border-primary hover:bg-accent2 hover:border-accent2 border-2 shadow-lg'} flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-none transition-all hover:shadow-xl`}
+						class={`p-6 ${hasVoucher === 'no' ? 'bg-tertiary border-accent2 border-6 shadow-sm' : 'bg-secondary border-primary hover:bg-accent2 hover:border-accent2 border-2 shadow-lg'} flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-none transition-all hover:shadow-xl`}
 						on:click={() => selectVoucherChoice('no')}
 					>
 						<span class="font-commissioner text-text-colour text-3xl">No</span>
@@ -738,7 +738,7 @@
 				</div>
 
 				{#if hasVoucher === 'yes'}
-					<div class="bg-accent2 border-text-colour space-y-4 border-1 border-t-0 p-4 md:p-6">
+					<div class="bg-accent2 border-text-colour space-y-4 border-1 p-4 md:p-6">
 						<div class="mx-auto max-w-md text-left">
 							<Label
 								for="voucher-code"

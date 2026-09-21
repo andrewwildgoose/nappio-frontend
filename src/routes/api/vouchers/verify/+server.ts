@@ -1,21 +1,14 @@
 import { json } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { BACKEND_API_URL } from '$env/static/private';
 import type { RequestHandler } from './$types';
 import { logger } from '$lib/logger';
+import { getSessionFromCookies } from '$lib/server/supabase';
 
-type VoucherRouteLocals = {
-	user?: unknown;
-	safeGetSession: () => Promise<{
-		session: {
-			access_token?: string;
-		} | null;
-	}>;
-};
 
-export const POST: RequestHandler = async ({ request, locals }) => {
-	const routeLocals = locals as VoucherRouteLocals;
+export const POST: RequestHandler = async ({ request, cookies }) => {
+	const { user, session } = await getSessionFromCookies(cookies);
 
-	if (!routeLocals.user) {
+	if (!user) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
@@ -26,14 +19,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Voucher code and postcode are required' }, { status: 400 });
 		}
 
-		const { session } = await routeLocals.safeGetSession();
 		const jwt = session?.access_token;
 
 		if (!jwt) {
 			return json({ error: 'No valid session' }, { status: 401 });
 		}
 
-		const response = await fetch(`${env.BACKEND_API_URL}/api/v1/vouchers/verify`, {
+		const response = await fetch(`${BACKEND_API_URL}/api/v1/vouchers/verify`, {
 			method: 'POST',
 			headers: {
 				Authorization: 'Bearer ' + jwt,
@@ -46,6 +38,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		});
 
 		const data = await response.json();
+
+		console.log('Voucher verification response:', data);
 
 		return json(data, { status: response.status });
 	} catch {
