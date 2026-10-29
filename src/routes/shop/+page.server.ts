@@ -3,13 +3,13 @@ import type { Actions, PageServerLoad } from './$types';
 import type { UserAddress } from '$lib/types/address';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { logger } from '$lib/logger';
-
-const BACKEND_API_URL = process.env.BACKEND_API_URL;
+import { BACKEND_API_URL } from '$env/static/private';
 
 interface ShopProduct {
 	id: string;
 	name?: string;
 	description?: string;
+	image_url?: string;
 	price?: number;
 	unit_amount?: number;
 	currency?: string;
@@ -60,7 +60,16 @@ async function fetchProducts(fetchFn: typeof fetch): Promise<ShopProduct[]> {
 		throw new Error('BACKEND_API_URL is not configured');
 	}
 
+	logger.info('Fetching products from backend API', {
+		url: `${BACKEND_API_URL}/api/v1/shop/products`
+	});
+
 	const productsResponse = await fetchFn(`${BACKEND_API_URL}/api/v1/shop/products`);
+
+	logger.info('Products response received', {
+		status: productsResponse.status,
+		ok: productsResponse.ok
+	});
 
 	if (!productsResponse.ok) {
 		throw new Error(`Failed to load products: ${productsResponse.status}`);
@@ -77,9 +86,15 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 
 	let products: ShopProduct[] = [];
 	try {
+		logger.info('Loading shop products');
 		products = await fetchProducts(fetch);
-	} catch {
-		logger.error('Error loading shop products');
+		logger.info('Shop products loaded successfully', {
+			products: products
+		});
+	} catch (error) {
+		logger.error('Error loading shop products', {
+			error: error instanceof Error ? error.message : String(error)
+		});
 		loadError = 'We could not load products right now. Please try again shortly.';
 	}
 

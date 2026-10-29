@@ -15,7 +15,7 @@
 	function formatCurrency(product: PageData['products'][number]) {
 		const amount =
 			typeof product.price === 'number'
-				? product.price
+				? product.price / 100
 				: typeof product.unit_amount === 'number'
 					? product.unit_amount / 100
 					: null;
@@ -28,6 +28,10 @@
 			style: 'currency',
 			currency: (product.currency || 'GBP').toUpperCase()
 		}).format(amount);
+	}
+
+	function getProductImageURL(product: PageData['products'][number]) {
+		return product.image_url || '/placeholder-image.jpg';
 	}
 </script>
 
@@ -63,11 +67,18 @@
 					<h2 class="font-commissioner text-text-colour mb-4 text-2xl">Products</h2>
 					<div class="grid gap-4 md:grid-cols-2">
 						{#each data.products as product (product.id)}
-							<div class="bg-background flex flex-col justify-between border p-4">
+							<div class="bg-background flex flex-col justify-between border p-4 max-w-8/10">
 								<div>
 									<h3 class="font-commissioner text-text-colour text-xl">
 										{getProductName(product)}
 									</h3>
+									{#if getProductImageURL(product)}
+										<img
+											src={getProductImageURL(product)}
+											alt={getProductName(product)}
+											class="mt-2 w-full object-cover"
+										/>
+									{/if}
 									{#if getProductDescription(product)}
 										<p class="text-text-colour mt-2">{getProductDescription(product)}</p>
 									{/if}
