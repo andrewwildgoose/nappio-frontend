@@ -1,11 +1,11 @@
 import { json } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import type { RequestHandler } from './$types';
 import { logger } from '$lib/logger';
 
 export const GET: RequestHandler = async ({ request, locals: { supabase } }) => {
     try {
-        const response = await fetch(`${BACKEND_API_URL}/api/v1/service/service-areas`, {
+        const response = await backendFetch(`/api/v1/service/service-areas`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
