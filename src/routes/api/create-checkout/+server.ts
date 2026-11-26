@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import type { RequestHandler } from './$types';
 import { logger } from '$lib/logger';
 
@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request, locals: { supabase } }) =>
 	try {
 		const { priceId } = await request.json();
 
-		const response = await fetch(`${BACKEND_API_URL}/api/create-checkout`, {
+		const response = await backendFetch(`/api/create-checkout`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${jwt}`,

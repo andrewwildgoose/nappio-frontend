@@ -2,7 +2,7 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import type { AddressFormData, UserAddress } from '$lib/types/address';
 import type { AppliedVoucher } from '$lib/types/voucher';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { fetchServiceAreaPostcodes } from '$lib/data/serviceAreas';
 import { logger } from '$lib/logger';
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 		try {
 			const jwt = session.access_token;
 			// Use the token from session consistently
-			const addressesResponse = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
+			const addressesResponse = await backendFetch(`/api/v1/user/addresses`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${jwt}`
@@ -96,7 +96,7 @@ export const actions = {
 				return fail(401, { error: 'No valid session' });
 			}
 
-			const response = await fetch(`${BACKEND_API_URL}/api/v1/subscriptions`, {
+			const response = await backendFetch(`/api/v1/subscriptions`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

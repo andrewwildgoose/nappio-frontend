@@ -1,6 +1,6 @@
 import { error, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { logger } from '$lib/logger';
 
@@ -27,9 +27,9 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 	try {
 		// Call your backend API to create checkout session for the subscription
-		const requestUrl = `${BACKEND_API_URL}/api/v1/subscriptions/checkout`;
+		const requestPath = `/api/v1/subscriptions/checkout`;
 
-		const response = await fetch(requestUrl, {
+		const response = await backendFetch(requestPath, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${jwt}`,

@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { logger } from '$lib/logger';
 
 /** @type {import('./$types').PageServerLoad} */
@@ -11,7 +11,7 @@ export async function load({ url }) {
 	}
 
 	try {
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/newsletter/verify`, {
+		const response = await backendFetch(`/api/v1/newsletter/verify`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
