@@ -78,12 +78,20 @@
 					name="postcode"
 					required
 					maxlength="4"
+					pattern={'[A-Za-z]{1,2}[0-9][A-Za-z0-9]?'}
+					title="The first half of a UK postcode, e.g. SW2 or EC1A"
 					value={form?.postcode ?? ''}
 					class="bg-secondary! rounded-none border-none shadow-sm"
 					size="lg"
 					placeholder="SW2"
 				/>
 			</div>
+		</div>
+
+		<!-- Honeypot: hidden from people, but bots tend to fill every field. Do not remove. -->
+		<div class="honeypot" aria-hidden="true">
+			<label for="company-input">Company</label>
+			<input id="company-input" type="text" name="company" tabindex="-1" autocomplete="off" />
 		</div>
 
 		<Button
@@ -100,3 +108,13 @@
 		</Button>
 	</form>
 </div>
+
+<style>
+	.honeypot {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+</style>
