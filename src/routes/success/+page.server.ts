@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { getSessionFromCookies } from '$lib/server/supabase';
 import { logger } from '$lib/logger';
 
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 			// Call our backend API to retrieve payment details from Stripe
 			// The backend uses the session_id to fetch the checkout session from Stripe
-			const response = await fetch(`${BACKEND_API_URL}/api/v1/payments/details`, {
+			const response = await backendFetch(`/api/v1/payments/details`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${jwt}`,

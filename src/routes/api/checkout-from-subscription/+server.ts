@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
 import { logger } from '$lib/logger';
@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ request, url, locals }) => {
 		const jwt = session?.access_token;
 
 		// Call your backend to create checkout session from subscription
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/subscriptions/checkout`, {
+		const response = await backendFetch(`/api/v1/subscriptions/checkout`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${jwt}`,

@@ -1,7 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import type { UserAddress } from '$lib/types/address';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { addAddress, assignAddress } from '$lib/api/address.server';
 import { createSupabaseServerClient, getSessionFromCookies } from '$lib/server/supabase';
 import { fetchServiceAreaPostcodes } from '$lib/data/serviceAreas';
@@ -75,13 +75,13 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	try {
 		// Use the token from session consistently
 		const [subscriptionsResponse, addressesResponse] = await Promise.all([
-			fetch(`${BACKEND_API_URL}/api/v1/user/subscriptions`, {
+			backendFetch(`/api/v1/user/subscriptions`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${jwt}`
 				}
 			}),
-			fetch(`${BACKEND_API_URL}/api/v1/user/addresses`, {
+			backendFetch(`/api/v1/user/addresses`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${jwt}`
@@ -209,7 +209,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 
 		const addressId = formData.get('id');
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/user/addresses/${addressId}`, {
+		const response = await backendFetch(`/api/v1/user/addresses/${addressId}`, {
 			method: 'DELETE',
 			headers: {
 				Authorization: `Bearer ${jwt}`

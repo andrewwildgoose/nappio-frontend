@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import { logger } from '$lib/logger';
 
 // UK postcode outward code (first half), e.g. SW2, M1, EC1A. Mirrors backend validation.
@@ -41,7 +41,7 @@ export const actions = {
 		}
 
 		try {
-			const response = await fetch(`${BACKEND_API_URL}/api/v1/newsletter/subscribe`, {
+			const response = await backendFetch(`/api/v1/newsletter/subscribe`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

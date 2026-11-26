@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import type { RequestHandler } from './$types';
 import { logger } from '$lib/logger';
 import { getSessionFromCookies } from '$lib/server/supabase';
@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			return json({ error: 'No valid session' }, { status: 401 });
 		}
 
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/vouchers/verify`, {
+		const response = await backendFetch(`/api/v1/vouchers/verify`, {
 			method: 'POST',
 			headers: {
 				Authorization: 'Bearer ' + jwt,

@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { BACKEND_API_URL } from '$env/static/private';
+import { backendFetch } from '$lib/server/backend';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
 import { logger } from '$lib/logger';
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const jwt = session?.access_token;
 
 		// Call backend to validate the voucher code
-		const response = await fetch(`${BACKEND_API_URL}/api/v1/vouchers/validate`, {
+		const response = await backendFetch(`/api/v1/vouchers/validate`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${jwt}`,
